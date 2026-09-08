@@ -142,6 +142,14 @@ export default function Home() {
             <a href="#projects">Projects</a>
             <a href="#about">About</a>
             <a href="#areas">Service Areas</a>
+            <a
+              href="https://www.instagram.com/formadpb/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="FORMA on Instagram (opens in a new tab)"
+            >
+              Instagram <span aria-hidden="true">↗</span>
+            </a>
             <a href="#consultation">Start a Project</a>
           </nav>
         </details>
@@ -509,6 +517,14 @@ export default function Home() {
             <a href="#about">About FORMA</a>
             <a href="#areas">Service Areas</a>
             <a href="#consultation">Start a Project</a>
+            <a
+              href="https://www.instagram.com/formadpb/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="FORMA on Instagram (opens in a new tab)"
+            >
+              Instagram <span aria-hidden="true">↗</span>
+            </a>
           </div>
           <div>
             <strong>South Bay</strong>
