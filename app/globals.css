@@ -1176,6 +1176,319 @@ details[open] > summary .expand-symbol::after {
     display: none;
   }
 }
+.contact-with-form {
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  align-items: start;
+  gap: clamp(32px, 5vw, 80px);
+}
+.contact-with-form h2 {
+  font-size: clamp(48px, 5.5vw, 84px);
+}
+.consultation-form {
+  min-width: 0;
+  padding: clamp(22px, 3vw, 40px);
+  background: var(--paper);
+  border: 1px solid var(--line);
+}
+.form-progress {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  list-style: none;
+  gap: 12px;
+  padding: 0;
+  margin: 0 0 34px;
+}
+.form-progress li {
+  border-top: 2px solid var(--line);
+  padding-top: 12px;
+  color: var(--muted);
+  font-size: 0.75rem;
+  line-height: 1.5;
+}
+.form-progress .is-active {
+  border-color: var(--forest);
+  color: var(--forest);
+}
+.form-step-number {
+  display: block;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  margin-bottom: 4px;
+}
+.form-kicker {
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+.consultation-form h3 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(27px, 2.3vw, 35px);
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+}
+.form-intro {
+  font-size: 0.875rem;
+  color: var(--muted);
+  margin-top: 14px;
+  line-height: 1.6;
+}
+.form-body,
+.project-options {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+.form-body {
+  margin-top: 28px;
+}
+.form-field {
+  display: grid;
+  gap: 8px;
+  margin-top: 20px;
+}
+.form-field:first-child {
+  margin-top: 0;
+}
+.form-field label,
+.project-options legend {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1.5;
+}
+.form-field label span {
+  color: var(--muted);
+  font-weight: 400;
+}
+.form-field input,
+.form-field select,
+.form-field textarea {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid #a9aea5;
+  border-radius: 0;
+  background: #fff;
+  padding: 12px;
+  color: var(--ink);
+  font: inherit;
+  font-size: 1rem;
+  min-height: 48px;
+}
+.form-field textarea {
+  resize: vertical;
+}
+.consultation-form input:focus-visible,
+.consultation-form select:focus-visible,
+.consultation-form textarea:focus-visible {
+  outline: 2px solid var(--forest);
+  outline-offset: 3px;
+}
+.form-field [aria-invalid="true"] {
+  border-color: #9f3429;
+}
+.project-option-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 12px;
+}
+.project-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 12px;
+  min-height: 54px;
+  border: 1px solid var(--line);
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  cursor: pointer;
+}
+.project-option:has(input:checked) {
+  background: #f0f4ef;
+  border-color: var(--forest);
+}
+.project-option input,
+.form-consent input {
+  width: 17px;
+  height: 17px;
+  flex: 0 0 17px;
+  accent-color: var(--forest);
+}
+.form-row {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 16px;
+  margin-top: 20px;
+}
+.form-row .form-field {
+  margin-top: 0;
+}
+.form-help {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--muted);
+  line-height: 1.55;
+  margin-top: 8px;
+}
+.form-consent {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  margin-top: 24px;
+  cursor: pointer;
+}
+.form-consent input {
+  margin-top: 3px;
+}
+.field-error {
+  display: block;
+  color: #9f3429;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  margin-top: 4px;
+}
+.form-error-summary {
+  border-left: 3px solid #9f3429;
+  background: #fcf4f1;
+  padding: 16px;
+  margin-top: 20px;
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+.form-error-summary ul {
+  padding-left: 20px;
+  margin: 10px 0 0;
+}
+.form-error-summary a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.form-actions {
+  display: flex;
+  gap: 20px;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 30px;
+}
+.form-actions .button {
+  border: 0;
+  cursor: pointer;
+  font-size: 0.875rem;
+  padding: 17px 24px;
+  justify-content: center;
+  min-height: 52px;
+}
+.form-back,
+.project-review button {
+  border: 0;
+  background: none;
+  padding: 8px 0;
+  cursor: pointer;
+  font-size: 0.8125rem;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  color: var(--ink);
+}
+.form-back {
+  margin-right: auto;
+  min-height: 44px;
+}
+.consultation-form button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.form-availability {
+  margin-top: 18px;
+  padding: 14px;
+  background: var(--soft);
+  font-size: 0.8125rem;
+  line-height: 1.6;
+}
+.project-review {
+  padding: 18px;
+  background: var(--soft);
+  margin-bottom: 24px;
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+.project-review > div:first-child {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.project-review .eyebrow {
+  font-size: 0.625rem;
+  margin: 0;
+}
+.project-review dl {
+  margin: 14px 0 4px;
+}
+.project-review dl > div {
+  display: grid;
+  grid-template-columns: 55px 1fr;
+  gap: 12px;
+}
+.project-review dt {
+  color: var(--muted);
+}
+.project-review dd {
+  margin: 0;
+}
+.review-notes {
+  white-space: pre-wrap;
+  border-top: 1px solid var(--line);
+  margin-top: 12px;
+  padding-top: 12px;
+}
+.form-trap {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+.form-success > p:not(.eyebrow) {
+  margin: 24px 0;
+  line-height: 1.7;
+  font-size: 0.9375rem;
+}
+@media (max-width: 900px) {
+  .contact-with-form {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  .consultation-form {
+    max-width: 680px;
+    width: 100%;
+  }
+}
+@media (max-width: 480px) {
+  .consultation-form {
+    padding: 20px;
+  }
+  .project-option-grid {
+    grid-template-columns: 1fr;
+  }
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .form-actions {
+    gap: 12px;
+  }
+  .form-actions .button {
+    padding: 16px;
+    flex: 1;
+  }
+}
 @media (prefers-reduced-motion: no-preference) {
   .hero-content {
     animation: arrive 0.9s ease-out both;

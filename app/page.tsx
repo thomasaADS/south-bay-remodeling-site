@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { Navigation, ProjectJourney } from "./site-interactions";
+import { ConsultationForm } from "./consultation-form";
 
 const instagram = "https://www.instagram.com/formadpb/";
 const services = [
@@ -73,7 +74,7 @@ const faqs = [
   {
     question: "How do we get started?",
     answer:
-      "Visit @formadpb on Instagram and send us a message with your city, project type and what you would like to change. A few details are enough to start the conversation.",
+      "Tell us about your project using the consultation form below. Your city, project type and a few priorities are enough to start the conversation.",
   },
 ];
 
@@ -128,9 +129,7 @@ export default function Home() {
           <p>
             Good design. Clear direction. <span>A place to call your own.</span>
           </p>
-          <a href="#about">
-            Meet FORMA
-          </a>
+          <a href="#about">Meet FORMA</a>
         </div>
 
         <section
@@ -222,205 +221,7 @@ export default function Home() {
           className="about section-pad"
           id="about"
           aria-labelledby="about-title"
-        >
-          <div className="about-label">
-            <span className="eyebrow">02 / The studio</span>
-            <Image
-              src="/images/forma-logo-transparent.png"
-              alt="FORMA Design + Build"
-              width={300}
-              height={75}
-              className="about-logo"
-            />
-          </div>
-          <div className="about-copy">
-            <h2 id="about-title">
-              One vision.
-              <br />
-              One connected <em>team.</em>
-            </h2>
-            <p>
-              Your home should feel considered from every angle. FORMA brings
-              planning, design and construction into one conversation, so each
-              decision connects to the next.
-            </p>
-            <div className="about-principles">
-              <div>
-                <h3>Designed around you</h3>
-                <p>Your routines, priorities and property guide the plan.</p>
-              </div>
-              <div>
-                <h3>Built with continuity</h3>
-                <p>
-                  One direction through materials, coordination and finish work.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section
-          className="expertise section-pad"
-          id="services"
-          aria-labelledby="services-title"
-        >
-          <div className="expertise-intro">
-            <p className="eyebrow">03 / Our expertise</p>
-            <h2 id="services-title">
-              Room for
-              <br />
-              <em>possibility.</em>
-            </h2>
-            <p>
-              A single room. More space. A new way to live at home. Explore what
-              we can bring together.
-            </p>
-            <a className="text-link" href="#consultation">
-              Start with your idea
-            </a>
-          </div>
-          <div className="service-list">
-            {services.map((service, index) => (
-              <details
-                className="service-item"
-                name="services"
-                key={service.title}
-                open={index === 0}
-              >
-                <summary>
-                  <span className="row-number">
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
-                  <h3>{service.title}</h3>
-                  <span className="expand-symbol" aria-hidden="true" />
-                </summary>
-                <div className="service-body">
-                  <p>{service.text}</p>
-                  <p className="service-scope">{service.details}</p>
-                  <a className="text-link" href="#consultation">
-                    Discuss this project
-                  </a>
-                </div>
-              </details>
-            ))}
-          </div>
-        </section>
-
-        <section
-          className="journey section-pad"
-          id="approach"
-          aria-labelledby="journey-title"
-        >
-          <div className="section-meta">
-            <span>04 / Our approach</span>
-            <span>A connected process</span>
-          </div>
-          <div className="journey-heading">
-            <h2 id="journey-title">
-              An idea becomes
-              <br />
-              <em>a place to live.</em>
-            </h2>
-            <p>
-              See how your project comes together.
-              <br />
-              Explore each part of the journey.
-            </p>
-          </div>
-          <ProjectJourney />
-        </section>
-
-        <section
-          className="areas section-pad"
-          id="areas"
-          aria-labelledby="areas-title"
-        >
-          <div>
-            <p className="eyebrow">05 / Close to home</p>
-            <h2 id="areas-title">
-              Rooted in
-              <br />
-              the <em>South Bay.</em>
-            </h2>
-          </div>
-          <div className="areas-content">
-            <p>
-              Local homes. Different possibilities. We plan around your city,
-              your neighborhood and the property you already know.
-            </p>
-            <ul className="city-list">
-              {cities.map((city) => (
-                <li key={city}>{city}</li>
-              ))}
-            </ul>
-          </div>
-        </section>
-
-        <section className="faq section-pad" aria-labelledby="faq-title">
-          <div>
-            <p className="eyebrow">A little clarity</p>
-            <h2 id="faq-title">
-              Before we <em>begin.</em>
-            </h2>
-          </div>
-          <div className="faq-list">
-            {faqs.map((faq) => (
-              <details key={faq.question} name="questions">
-                <summary>
-                  {faq.question}
-                  <span className="expand-symbol" aria-hidden="true" />
-                </summary>
-                <p>{faq.answer}</p>
-              </details>
-            ))}
-          </div>
-        </section>
-
-        <section
-          className="contact section-pad"
-          id="consultation"
-          aria-labelledby="contact-title"
-        >
-          <div className="section-meta">
-            <span>Your next chapter</span>
-            <span>Let’s make room for it</span>
-          </div>
-          <div className="contact-grid">
-            <div>
-              <h2 id="contact-title">
-                What could
-                <br />
-                your home <em>be?</em>
-              </h2>
-              <p>
-                You don’t need all the answers to get started.
-                <br />
-                Just an idea of what you’d like to change.
-              </p>
-            </div>
-            <div className="contact-action">
-              <span className="eyebrow">Start the conversation</span>
-              <a
-                className="button button-dark"
-                href={instagram}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Contact FORMA on Instagram (opens in a new tab)"
-              >
-                Contact us on Instagram
-              </a>
-              <p>
-                Send <strong>@formadpb</strong> your city, project type and a
-                little about your vision.
-              </p>
-              <span className="contact-note">
-                Opens our Instagram profile, where you can message us.
-              </span>
-            </div>
-          </div>
-        </section>
-      </main>
-      <footer className="site-footer">
+ …1544 tokens truncated…>
         <div className="footer-top">
           <a className="footer-brand" href="#top" aria-label="FORMA home">
             <Image
