@@ -9,8 +9,8 @@ export const metadata: Metadata = {
     "theme-color": "#20211f",
   },
   icons: {
-    icon: "/favicon.svg",
-    shortcut: "/favicon.svg",
+    icon: { url: "/favicon.svg?v=forma-1", type: "image/svg+xml" },
+    shortcut: "/favicon.svg?v=forma-1",
   },
 };
 
