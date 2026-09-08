@@ -40,7 +40,7 @@ export function Navigation() {
         ))}
       </nav>
       <a className="header-contact" href="#consultation" onClick={closeMenu}>
-        Let’s talk <span aria-hidden="true">↗</span>
+        Let’s talk
       </a>
       <details
         className="mobile-menu"
@@ -74,10 +74,10 @@ export function Navigation() {
             aria-label="FORMA on Instagram (opens in a new tab)"
             onClick={closeMenu}
           >
-            Instagram ↗
+            Instagram
           </a>
           <a href="#consultation" onClick={closeMenu}>
-            Start a project ↗
+            Start a project
           </a>
         </nav>
       </details>
@@ -159,9 +159,6 @@ export function ProjectJourney() {
           >
             <span>{stage.number}</span>
             {stage.name}
-            <span className="stage-direction" aria-hidden="true">
-              ↗
-            </span>
           </button>
         ))}
       </div>

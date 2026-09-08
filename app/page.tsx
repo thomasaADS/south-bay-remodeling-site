@@ -76,9 +76,6 @@ const faqs = [
       "Visit @formadpb on Instagram and send us a message with your city, project type and what you would like to change. A few details are enough to start the conversation.",
   },
 ];
-function Arrow() {
-  return <span aria-hidden="true">↗</span>;
-}
 
 export default function Home() {
   return (
@@ -117,14 +114,11 @@ export default function Home() {
                   final detail.
                 </p>
                 <a className="button button-light" href="#consultation">
-                  Let’s talk about your home <Arrow />
+                  Let’s talk about your home
                 </a>
               </div>
               <a className="hero-explore" href="#projects">
                 <span>Explore the vision</span>
-                <span className="round-arrow" aria-hidden="true">
-                  ↓
-                </span>
               </a>
             </div>
           </div>
@@ -135,7 +129,7 @@ export default function Home() {
             Good design. Clear direction. <span>A place to call your own.</span>
           </p>
           <a href="#about">
-            Meet FORMA <Arrow />
+            Meet FORMA
           </a>
         </div>
 
@@ -176,7 +170,7 @@ export default function Home() {
                   <h3>The heart of the home.</h3>
                 </div>
                 <a href="#services" aria-label="Explore kitchen remodeling">
-                  <Arrow />
+                  Explore
                 </a>
               </figcaption>
               <p className="material-note">
@@ -199,7 +193,7 @@ export default function Home() {
                   <h3>A little more calm.</h3>
                 </div>
                 <a href="#services" aria-label="Explore bathroom remodeling">
-                  <Arrow />
+                  Explore
                 </a>
               </figcaption>
               <p className="material-note">
@@ -219,7 +213,7 @@ export default function Home() {
               rel="noopener noreferrer"
               aria-label="Visit FORMA on Instagram (opens in a new tab)"
             >
-              More from FORMA on Instagram <Arrow />
+              More from FORMA on Instagram
             </a>
           </div>
         </section>
@@ -282,7 +276,7 @@ export default function Home() {
               we can bring together.
             </p>
             <a className="text-link" href="#consultation">
-              Start with your idea <Arrow />
+              Start with your idea
             </a>
           </div>
           <div className="service-list">
@@ -304,7 +298,7 @@ export default function Home() {
                   <p>{service.text}</p>
                   <p className="service-scope">{service.details}</p>
                   <a className="text-link" href="#consultation">
-                    Discuss this project <Arrow />
+                    Discuss this project
                   </a>
                 </div>
               </details>
@@ -413,7 +407,7 @@ export default function Home() {
                 rel="noopener noreferrer"
                 aria-label="Contact FORMA on Instagram (opens in a new tab)"
               >
-                Contact us on Instagram <Arrow />
+                Contact us on Instagram
               </a>
               <p>
                 Send <strong>@formadpb</strong> your city, project type and a
@@ -452,14 +446,14 @@ export default function Home() {
               rel="noopener noreferrer"
               aria-label="FORMA on Instagram (opens in a new tab)"
             >
-              Instagram <Arrow />
+              Instagram
             </a>
           </nav>
         </div>
         <div className="footer-bottom">
           <span>© 2026 FORMA Design + Build</span>
           <span>From plan to place.</span>
-          <a href="#top">Back to top ↑</a>
+          <a href="#top">Back to top</a>
         </div>
       </footer>
     </>

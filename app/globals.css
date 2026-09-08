@@ -126,20 +126,9 @@ p {
   border-bottom: 1px solid currentColor;
   font-size: 0.875rem;
 }
-.text-link span,
-.button > span,
-.header-contact > span {
-  font-size: 1.35em;
-  transition: transform 0.2s ease;
-}
-.text-link:hover span,
-.button:hover > span,
-.header-contact:hover > span {
-  transform: translate(3px, -3px);
-}
 .button {
   display: inline-flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   gap: 32px;
   padding: 19px 24px;
@@ -283,22 +272,9 @@ p {
 .hero-explore {
   display: flex;
   align-items: center;
-  gap: 20px;
+  min-height: 44px;
+  border-bottom: 1px solid currentColor;
   font-size: 0.875rem;
-}
-.round-arrow {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  border: 1px solid #ffffff80;
-  font-size: 1.3rem;
-  transition: background 0.2s;
-}
-.hero-explore:hover .round-arrow {
-  background: #ffffff20;
 }
 .hero-caption {
   position: absolute;
@@ -409,8 +385,9 @@ figcaption a {
   min-height: 44px;
   display: grid;
   place-items: center;
-  border: 1px solid var(--line);
-  font-size: 1.3rem;
+  border-bottom: 1px solid currentColor;
+  font-size: 0.875rem;
+  flex-shrink: 0;
 }
 figcaption a:hover {
   background: var(--ink);
@@ -620,16 +597,6 @@ details[open] > summary .expand-symbol::after {
 }
 .journey-tabs button:hover {
   color: #fff;
-}
-.journey-tabs .stage-direction {
-  margin-left: auto;
-  margin-right: 28px;
-  font-size: 24px;
-  opacity: 0;
-  transition: opacity 0.2s;
-}
-.journey-tabs button[aria-selected="true"] .stage-direction {
-  opacity: 1;
 }
 .journey-panel {
   display: grid;
@@ -1042,9 +1009,6 @@ details[open] > summary .expand-symbol::after {
   .journey-tabs button {
     gap: 12px;
     font-size: 32px;
-  }
-  .journey-tabs .stage-direction {
-    display: none;
   }
   .journey-panel {
     grid-template-columns: 0.55fr 1fr;
