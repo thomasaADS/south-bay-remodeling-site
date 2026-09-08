@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { Navigation, ProjectJourney } from "./site-interactions";
+import { ConsultationForm } from "./consultation-form";
 
 const instagram = "https://www.instagram.com/formadpb/";
 const services = [
@@ -73,7 +74,7 @@ const faqs = [
   {
     question: "How do we get started?",
     answer:
-      "Visit @formadpb on Instagram and send us a message with your city, project type and what you would like to change. A few details are enough to start the conversation.",
+      "Tell us about your project using the consultation form below, or message @formadpb on Instagram. Your city, project type and a few priorities are enough to start the conversation.",
   },
 ];
 
@@ -128,9 +129,7 @@ export default function Home() {
           <p>
             Good design. Clear direction. <span>A place to call your own.</span>
           </p>
-          <a href="#about">
-            Meet FORMA
-          </a>
+          <a href="#about">Meet FORMA</a>
         </div>
 
         <section
@@ -385,7 +384,7 @@ export default function Home() {
             <span>Your next chapter</span>
             <span>Let’s make room for it</span>
           </div>
-          <div className="contact-grid">
+          <div className="contact-grid contact-with-form">
             <div>
               <h2 id="contact-title">
                 What could
@@ -398,25 +397,9 @@ export default function Home() {
                 Just an idea of what you’d like to change.
               </p>
             </div>
-            <div className="contact-action">
-              <span className="eyebrow">Start the conversation</span>
-              <a
-                className="button button-dark"
-                href={instagram}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Contact FORMA on Instagram (opens in a new tab)"
-              >
-                Contact us on Instagram
-              </a>
-              <p>
-                Send <strong>@formadpb</strong> your city, project type and a
-                little about your vision.
-              </p>
-              <span className="contact-note">
-                Opens our Instagram profile, where you can message us.
-              </span>
-            </div>
+            <ConsultationForm
+              available={Boolean(process.env.FORMA_LEADS_WEBHOOK_URL)}
+            />
           </div>
         </section>
       </main>
