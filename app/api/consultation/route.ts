@@ -60,8 +60,7 @@ export async function POST(request: Request) {
   if (!endpoint)
     return reply(
       {
-        error:
-          "Online requests are not available yet. Please contact @formadpb on Instagram.",
+        error: "Online requests are not available yet.",
       },
       503,
     );

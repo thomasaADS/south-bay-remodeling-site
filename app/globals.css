@@ -1364,9 +1364,7 @@ details[open] > summary .expand-symbol::after {
   padding-left: 20px;
   margin: 10px 0 0;
 }
-.form-error-summary a,
-.form-alternative a,
-.form-availability a {
+.form-error-summary a {
   text-decoration: underline;
   text-underline-offset: 3px;
 }
@@ -1403,14 +1401,6 @@ details[open] > summary .expand-symbol::after {
 .consultation-form button:disabled {
   opacity: 0.55;
   cursor: not-allowed;
-}
-.form-alternative {
-  border-top: 1px solid var(--line);
-  padding-top: 20px;
-  margin-top: 24px;
-  font-size: 0.75rem;
-  line-height: 1.6;
-  color: var(--muted);
 }
 .form-availability {
   margin-top: 18px;

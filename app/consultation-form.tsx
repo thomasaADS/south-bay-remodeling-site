@@ -13,8 +13,6 @@ import {
 } from "@/lib/consultation";
 
 const steps = ["Your project", "Your plans", "Stay in touch"];
-const instagram = "https://www.instagram.com/formadpb/";
-
 export function ConsultationForm({ available }: { available: boolean }) {
   const [data, setData] = useState<Consultation>({ ...emptyConsultation });
   const [step, setStep] = useState(0);
@@ -110,7 +108,12 @@ export function ConsultationForm({ available }: { available: boolean }) {
       goTo(step + 1);
       return;
     }
-    if (!available) return;
+    if (!available) {
+      moved.current = true;
+      setSent(true);
+      setData({ ...emptyConsultation });
+      return;
+    }
     setPending(true);
     setMessage("");
     try {
@@ -138,7 +141,7 @@ export function ConsultationForm({ available }: { available: boolean }) {
       setData({ ...emptyConsultation });
     } catch {
       setMessage(
-        "We couldn’t confirm your request. Your answers are still here. Please try again or contact us on Instagram.",
+        "We couldn’t confirm your request. Your answers are still here. Please try again.",
       );
     } finally {
       setPending(false);
@@ -148,22 +151,32 @@ export function ConsultationForm({ available }: { available: boolean }) {
   if (sent)
     return (
       <div className="consultation-form form-success" role="status">
-        <p className="eyebrow">A new beginning</p>
+        <p className="eyebrow">
+          {available ? "A new beginning" : "Form preview"}
+        </p>
         <h3 ref={titleRef} tabIndex={-1}>
-          Your request is received.
+          {available
+            ? "Your request is received."
+            : "The consultation flow is ready."}
         </h3>
         <p>
-          Thank you for sharing your plans. FORMA has received your project
-          details and your preferred way to get in touch.
+          {available
+            ? "Thank you for sharing your plans. FORMA has received your project details and your preferred way to get in touch."
+            : "This demonstration is complete. Delivery will be enabled after the final website review, and the details entered here have not been submitted or saved."}
         </p>
-        <a
-          className="text-link"
-          href={instagram}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Visit FORMA on Instagram
-        </a>
+        {!available && (
+          <button
+            className="form-back"
+            type="button"
+            onClick={() => {
+              moved.current = true;
+              setSent(false);
+              setStep(0);
+            }}
+          >
+            Start preview again
+          </button>
+        )}
       </div>
     );
 
@@ -208,11 +221,8 @@ export function ConsultationForm({ available }: { available: boolean }) {
       </p>
       {!available && (
         <p className="form-availability">
-          Online requests are not available yet. You can{" "}
-          <a href={instagram} target="_blank" rel="noopener noreferrer">
-            message FORMA on Instagram
-          </a>
-          .
+          Preview mode. You can complete every step; delivery will be enabled
+          after the final website review.
         </p>
       )}
       {(Object.values(errors).some(Boolean) || message) && (
@@ -471,23 +481,18 @@ export function ConsultationForm({ available }: { available: boolean }) {
           <button
             className="button button-dark"
             type="submit"
-            disabled={pending || (step === 2 && !available)}
+            disabled={pending}
           >
             {pending
               ? "Sending your request…"
               : step < 2
                 ? "Continue"
-                : "Request a consultation"}
+                : available
+                  ? "Request a consultation"
+                  : "Complete form preview"}
           </button>
         </div>
       </fieldset>
-      <p className="form-alternative">
-        Prefer a direct message?{" "}
-        <a href={instagram} target="_blank" rel="noopener noreferrer">
-          Find us on Instagram
-        </a>
-        .
-      </p>
     </form>
   );
 }
