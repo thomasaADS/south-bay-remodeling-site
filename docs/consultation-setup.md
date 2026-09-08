@@ -1,6 +1,6 @@
 # Consultation request delivery
 
-The three-step questionnaire is implemented on the `forma-consultation-form` branch. Keep this change out of production until an owner-approved delivery destination is configured and verified. Production continues to offer Instagram contact.
+The three-step questionnaire is published in preview mode so it can be reviewed on the live site. Visitors can complete the flow, but the preview completion screen clearly states that their answers were not submitted or saved. Connect an owner-approved delivery destination before switching the form to live delivery.
 
 ## Configure delivery in Vercel
 
@@ -23,7 +23,7 @@ Only request-related contact is authorized by the form. It does not request mark
 4. Verify receiver failure returns an error to the visitor without clearing their answers or showing a success message.
 5. Configure the production variables, merge the reviewed branch, and verify delivery on the deployed site with an authorized test.
 
-The form disables final submission if no destination is configured. The server returns 503 when unconfigured, rejects invalid data before forwarding, enforces a 12 KB body limit and a 10-second upstream timeout, and only confirms requests accepted by the receiver. Submitted details stay in component memory during navigation; they are not written to browser storage or application logs. A page reload clears them. No requests are saved by this Next.js application itself.
+Without a destination, the final button completes the presentation flow and displays an explicit preview message. The server still returns 503 when unconfigured. Once configured, the form sends through the validated endpoint and only confirms requests accepted by the receiver. The endpoint rejects invalid data before forwarding and enforces a 12 KB body limit and a 10-second upstream timeout. Submitted details stay in component memory during navigation; they are not written to browser storage or application logs. A page reload clears them. No requests are saved by this Next.js application itself.
 
 ## Checks
 
