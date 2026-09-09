@@ -56,54 +56,46 @@ export async function POST(request: Request) {
   )
     return reply({ error: "Please refresh and try again." }, 400);
 
-  const endpoint = process.env.FORMA_LEADS_WEBHOOK_URL;
-  if (!endpoint)
-    return reply(
-      {
-        error: "Online requests are not available yet.",
-      },
-      503,
-    );
-  try {
-    if (new URL(endpoint).protocol !== "https:")
-      return reply(
-        { error: "Online requests are temporarily unavailable." },
-        503,
-      );
-  } catch {
-    return reply(
-      { error: "Online requests are temporarily unavailable." },
-      503,
-    );
-  }
-
   const { website: _website, ...lead } = data;
   void _website;
   try {
-    const response = await fetch(endpoint, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Idempotency-Key": requestId,
-        ...(process.env.FORMA_LEADS_WEBHOOK_TOKEN
-          ? { Authorization: `Bearer ${process.env.FORMA_LEADS_WEBHOOK_TOKEN}` }
-          : {}),
+    const response = await fetch(
+      "https://formsubmit.co/ajax/Office@formadpb.com",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          "Idempotency-Key": requestId,
+        },
+        body: JSON.stringify({
+          _subject: `New FORMA project inquiry — ${lead.city}`,
+          _template: "table",
+          _url: "https://formadpb.com/#consultation",
+          name: lead.name,
+          email: lead.email,
+          phone: lead.phone || "Not provided",
+          preferredContact: lead.contactMethod,
+          projectTypes: lead.projectTypes.join(", "),
+          propertyCity: lead.city,
+          zipCode: lead.zip || "Not provided",
+          planningStage: lead.planningStage,
+          desiredStart: lead.timeline,
+          investmentRange: lead.budget,
+          projectNotes: lead.description || "Not provided",
+          contactPermission: lead.consent ? "Confirmed" : "Not confirmed",
+          requestId,
+        }),
+        redirect: "error",
+        signal: AbortSignal.timeout(10_000),
+        cache: "no-store",
       },
-      body: JSON.stringify({
-        id: requestId,
-        source: "forma-website",
-        submittedAt: new Date().toISOString(),
-        ...lead,
-      }),
-      redirect: "error",
-      signal: AbortSignal.timeout(10_000),
-      cache: "no-store",
-    });
+    );
     if (!response.ok)
       return reply(
         {
           error:
-            "We couldn’t confirm your request. Your answers are still here; please try again or contact us on Instagram.",
+            "We couldn’t confirm your request. Your answers are still here; please try again.",
         },
         502,
       );
@@ -112,7 +104,7 @@ export async function POST(request: Request) {
     return reply(
       {
         error:
-          "We couldn’t confirm your request. Your answers are still here; please try again or contact us on Instagram.",
+          "We couldn’t confirm your request. Your answers are still here; please try again.",
       },
       502,
     );

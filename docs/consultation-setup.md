@@ -1,29 +1,23 @@
 # Consultation request delivery
 
-The three-step questionnaire is published in preview mode so it can be reviewed on the live site. Visitors can complete the flow, but the preview completion screen clearly states that their answers were not submitted or saved. Connect an owner-approved delivery destination before switching the form to live delivery.
+The three-step questionnaire sends project inquiries to `Office@formadpb.com` through FormSubmit's HTTPS AJAX endpoint.
 
-## Configure delivery in Vercel
+## Activate delivery
 
-Set the following server-only environment variables for the correct project and environment:
+FormSubmit requires a one-time confirmation for a new destination. Open the activation message sent to `Office@formadpb.com`, verify that it references `formadpb.com`, and approve it. Until that confirmation is completed, FormSubmit sends another activation email instead of delivering the inquiry normally.
 
-- `FORMA_LEADS_WEBHOOK_URL`: HTTPS endpoint belonging to the business’s lead system or email delivery workflow. Never put this in a `NEXT_PUBLIC_` variable.
-- `FORMA_LEADS_WEBHOOK_TOKEN`: optional bearer token if required by the endpoint. Store the real value in Vercel, never in source control.
+The server validates and reformats each inquiry before forwarding it. The email includes the visitor's name, email, phone, preferred contact method, project types, city, ZIP, planning stage, desired start, investment range, project notes, contact permission and a request ID.
 
-The receiving service must durably save or enqueue a lead **before** returning a 2xx response, handle the `Idempotency-Key` header to prevent duplicate delivery on retry, and apply durable abuse controls/rate limits. The local honeypot and same-origin check are basic filters, not sufficient abuse protection on their own. No database or email service is provisioned by this change.
+Only request-related contact is authorized by the form. It does not request marketing consent.
 
-The endpoint receives JSON containing `id`, `source`, `submittedAt`, `projectTypes`, `city`, `zip`, `planningStage`, `timeline`, `budget`, `description`, `name`, `email`, `phone`, `contactMethod`, and `consent`. Text fields must be treated as untrusted text by the receiver; escape them when rendering emails or CRM pages. Do not use submitted text as email headers. The source marker is `forma-website`.
+## Verify delivery
 
-Only request-related contact is authorized by the form. It does not request marketing consent. Configure access, retention, and the appropriate business privacy notice for the selected receiving system before launch.
+1. Complete FormSubmit's one-time email confirmation.
+2. Submit an authorized test request from the live site.
+3. Verify that every answer arrives at `Office@formadpb.com` and that Reply targets the visitor's email.
+4. Check the spam folder if the first delivered inquiry is not visible.
 
-## Verify before enabling production
-
-1. Obtain the business owner’s intended destination and configure a receiver as above.
-2. Set the variables for the Vercel preview environment and redeploy. Availability is determined when the page builds, so environment changes require a new deployment.
-3. Submit an explicitly authorized test request. Verify that its complete contents actually arrive at the intended destination, and that retrying the same request ID does not duplicate it.
-4. Verify receiver failure returns an error to the visitor without clearing their answers or showing a success message.
-5. Configure the production variables, merge the reviewed branch, and verify delivery on the deployed site with an authorized test.
-
-Without a destination, the final button completes the presentation flow and displays an explicit preview message. The server still returns 503 when unconfigured. Once configured, the form sends through the validated endpoint and only confirms requests accepted by the receiver. The endpoint rejects invalid data before forwarding and enforces a 12 KB body limit and a 10-second upstream timeout. Submitted details stay in component memory during navigation; they are not written to browser storage or application logs. A page reload clears them. No requests are saved by this Next.js application itself.
+The form only confirms requests accepted by FormSubmit. The endpoint rejects invalid data before forwarding and enforces a 12 KB body limit and a 10-second upstream timeout. Submitted details stay in component memory during navigation; they are not written to browser storage or application logs. A page reload clears them. No requests are saved by this Next.js application itself.
 
 ## Checks
 

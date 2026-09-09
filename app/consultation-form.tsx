@@ -13,7 +13,7 @@ import {
 } from "@/lib/consultation";
 
 const steps = ["Your project", "Your plans", "Stay in touch"];
-export function ConsultationForm({ available }: { available: boolean }) {
+export function ConsultationForm() {
   const [data, setData] = useState<Consultation>({ ...emptyConsultation });
   const [step, setStep] = useState(0);
   const [errors, setErrors] = useState<Errors>({});
@@ -108,12 +108,6 @@ export function ConsultationForm({ available }: { available: boolean }) {
       goTo(step + 1);
       return;
     }
-    if (!available) {
-      moved.current = true;
-      setSent(true);
-      setData({ ...emptyConsultation });
-      return;
-    }
     setPending(true);
     setMessage("");
     try {
@@ -151,32 +145,14 @@ export function ConsultationForm({ available }: { available: boolean }) {
   if (sent)
     return (
       <div className="consultation-form form-success" role="status">
-        <p className="eyebrow">
-          {available ? "A new beginning" : "Form preview"}
-        </p>
+        <p className="eyebrow">A new beginning</p>
         <h3 ref={titleRef} tabIndex={-1}>
-          {available
-            ? "Your request is received."
-            : "The consultation flow is ready."}
+          Your request is received.
         </h3>
         <p>
-          {available
-            ? "Thank you for sharing your plans. FORMA has received your project details and your preferred way to get in touch."
-            : "This demonstration is complete. Delivery will be enabled after the final website review, and the details entered here have not been submitted or saved."}
+          Thank you for sharing your plans. FORMA has received your project
+          details and your preferred way to get in touch.
         </p>
-        {!available && (
-          <button
-            className="form-back"
-            type="button"
-            onClick={() => {
-              moved.current = true;
-              setSent(false);
-              setStep(0);
-            }}
-          >
-            Start preview again
-          </button>
-        )}
       </div>
     );
 
@@ -219,12 +195,6 @@ export function ConsultationForm({ available }: { available: boolean }) {
         }{" "}
         Fields are required unless marked optional.
       </p>
-      {!available && (
-        <p className="form-availability">
-          Preview mode. You can complete every step; delivery will be enabled
-          after the final website review.
-        </p>
-      )}
       {(Object.values(errors).some(Boolean) || message) && (
         <div
           className="form-error-summary"
@@ -487,9 +457,7 @@ export function ConsultationForm({ available }: { available: boolean }) {
               ? "Sending your request…"
               : step < 2
                 ? "Continue"
-                : available
-                  ? "Request a consultation"
-                  : "Complete form preview"}
+                : "Request a consultation"}
           </button>
         </div>
       </fieldset>

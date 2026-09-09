@@ -429,9 +429,7 @@ export default function Home() {
               <span>Exterior + landscape</span>
             </div>
           </div>
-          <ConsultationForm
-            available={Boolean(process.env.FORMA_LEADS_WEBHOOK_URL)}
-          />
+          <ConsultationForm />
         </section>
       </main>
       <footer>
