@@ -5,8 +5,8 @@ import { useRef, useState, type KeyboardEvent } from "react";
 
 const instagram = "https://www.instagram.com/formadpb/";
 const menu = [
-  ["The vision", "#projects"],
-  ["Our expertise", "#services"],
+  ["Services", "#services"],
+  ["Design inspiration", "#projects"],
   ["Our approach", "#approach"],
 ];
 
@@ -40,7 +40,7 @@ export function Navigation() {
         ))}
       </nav>
       <a className="header-contact" href="#consultation" onClick={closeMenu}>
-        Let’s talk
+        Start a project
       </a>
       <details
         className="mobile-menu"

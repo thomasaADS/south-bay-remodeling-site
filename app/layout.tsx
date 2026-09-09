@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description:
     "Full-service home remodeling, ADUs, additions, roofing, landscaping and painting across San Jose, Fremont, Santa Clara, Palo Alto, Milpitas, Sunnyvale, Saratoga and Los Gatos.",
   other: {
-    "theme-color": "#20211f",
+    "theme-color": "#123d30",
   },
   icons: {
     icon: { url: "/favicon.svg?v=forma-1", type: "image/svg+xml" },

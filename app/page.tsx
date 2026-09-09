@@ -2,79 +2,82 @@ import Image from "next/image";
 import { Navigation, ProjectJourney } from "./site-interactions";
 import { ConsultationForm } from "./consultation-form";
 
-const instagram = "https://www.instagram.com/formadpb/";
 const services = [
   {
-    title: "Kitchen remodeling",
-    text: "A better place to cook, gather and spend time together. We connect the layout, cabinetry, lighting and surfaces around the way your household lives.",
-    details: "Layout planning · Cabinetry · Surfaces · Lighting",
+    number: "01",
+    title: "Kitchen Remodeling",
+    text: "Thoughtful layouts, custom cabinetry, lighting, surfaces and finish details designed around how your household actually lives.",
+    image: "/images/kitchen-remodel.png",
   },
   {
-    title: "Bathroom remodeling",
-    text: "A calm start and a comfortable finish to every day. From guest bathrooms to primary suites, we balance practical layouts with considered materials and finish details.",
-    details: "Space planning · Tile · Fixtures · Millwork",
+    number: "02",
+    title: "Bathroom Remodeling",
+    text: "Calm, highly functional bathrooms—from efficient guest baths to complete primary-suite transformations.",
+    image: "/images/bathroom-remodel.png",
   },
   {
-    title: "ADU construction",
-    text: "More possibilities within the property you already love. Explore a detached ADU, attached unit or garage conversion with site conditions and local requirements in view from the beginning.",
-    details: "Feasibility · Design · Permit coordination · Construction",
+    number: "03",
+    title: "ADU Construction",
+    text: "Detached ADUs, attached units and garage conversions planned to make the most of your property and long-term goals.",
   },
   {
-    title: "Home additions",
-    text: "Room for what comes next. We approach new living areas as a natural extension of the existing home, with attention to structure, proportions and the connection between spaces.",
-    details: "Space planning · Structural coordination · Integrated finishes",
+    number: "04",
+    title: "Home Additions",
+    text: "Seamless room additions and expanded living areas that feel intentional, balanced and connected to the original home.",
   },
   {
+    number: "05",
     title: "Roofing",
-    text: "Protect the home from the outside in. Roof replacement, repairs and weatherproofing are coordinated with the wider needs of the property.",
-    details: "Replacement · Repairs · Weatherproofing",
+    text: "Roof replacement, repairs, weatherproofing and related exterior work coordinated as part of one clear project plan.",
   },
   {
+    number: "06",
     title: "Landscaping",
-    text: "Give life a little more room outdoors. Planting, hardscape, decks and gathering spaces bring the South Bay’s indoor-outdoor lifestyle closer to home.",
-    details: "Outdoor living · Hardscape · Planting · Decks",
+    text: "Outdoor rooms, hardscape, planting, decks and gathering spaces designed for the South Bay’s indoor-outdoor lifestyle.",
   },
   {
-    title: "Interior + exterior painting",
-    text: "The finish that brings everything together. Careful preparation and a considered color direction help every surface feel connected to the architecture.",
-    details: "Surface preparation · Interior finishes · Exterior finishes",
+    number: "07",
+    title: "Interior + Exterior Painting",
+    text: "Meticulous preparation and a refined finish that brings the architecture, materials and color story together.",
   },
 ];
+
 const cities = [
-  "San Jose",
-  "Fremont",
-  "Santa Clara",
-  "Palo Alto",
-  "Milpitas",
-  "Sunnyvale",
-  "Saratoga",
-  "Los Gatos",
+  ["San Jose", "Whole-home remodels, ADUs and additions"],
+  ["Fremont", "Renovations and indoor-outdoor upgrades"],
+  ["Santa Clara", "Kitchens, baths and home expansions"],
+  ["Palo Alto", "Design-led remodels and additions"],
+  ["Milpitas", "ADUs, interiors and exterior improvements"],
+  ["Sunnyvale", "Mid-century and modern home remodels"],
+  ["Saratoga", "High-touch renovations and outdoor living"],
+  ["Los Gatos", "Custom remodeling and property upgrades"],
 ];
+
 const faqs = [
   {
-    question: "What types of projects do you take on?",
+    question: "What types of projects does FORMA take on?",
     answer:
-      "Kitchen and bathroom remodeling, ADUs, additions, roofing, landscaping, painting and coordinated whole-home improvements throughout the South Bay.",
+      "FORMA supports kitchen and bathroom remodels, ADUs, additions, roofing, landscaping, painting and coordinated whole-home improvements throughout the South Bay.",
   },
   {
     question: "Can you help with design and permits?",
     answer:
-      "Our design-build approach connects planning, design decisions, documentation and construction. Permit and engineering requirements are reviewed for your city and the scope of your project.",
+      "Yes. The design-build approach is intended to connect early planning, design decisions, documentation, city requirements and construction into a more coordinated path. Exact requirements vary by city and project scope.",
   },
   {
-    question: "When should we start the conversation?",
+    question: "How early should we contact you?",
     answer:
-      "As early as you can, especially for an ADU, structural remodel or addition. Discussing feasibility, priorities and budget direction early helps you make better-informed decisions.",
+      "The earlier the better—especially for an ADU, structural remodel or addition. Early feasibility work helps reveal site, budget and permit considerations before decisions become expensive to change.",
   },
   {
-    question: "Where do you work?",
+    question: "Do you work throughout the South Bay?",
     answer:
-      "Our core service area includes San Jose, Fremont, Santa Clara, Palo Alto, Milpitas, Sunnyvale, Saratoga and Los Gatos.",
+      "The core service area includes San Jose, Fremont, Santa Clara, Palo Alto, Milpitas, Sunnyvale, Saratoga and Los Gatos.",
   },
   {
-    question: "How do we get started?",
+    question: "How do we begin?",
     answer:
-      "Tell us about your project using the consultation form below. Your city, project type and a few priorities are enough to start the conversation.",
+      "Start with a focused consultation. Share the project type, property details, priorities and finish direction so the first conversation can begin with useful context.",
   },
 ];
 
@@ -87,287 +90,323 @@ export default function Home() {
       <Navigation />
       <main id="main-content">
         <section className="hero" id="top" aria-labelledby="hero-title">
-          <Image
-            className="hero-image"
-            src="/images/hero-indoor-outdoor.png"
-            alt="Design inspiration: an oak kitchen opening onto a California courtyard"
-            fill
-            priority
-            sizes="100vw"
-          />
-          <div className="hero-shade" />
-          <div className="hero-topline">
-            <span>South Bay, California</span>
-            <span>Design + Build</span>
-          </div>
-          <div className="hero-content">
-            <p className="eyebrow">Homes, thoughtfully reimagined.</p>
+          <div className="hero-copy">
+            <p className="eyebrow">South Bay General Contractor</p>
             <h1 id="hero-title">
-              From plan
+              Build your home
               <br />
-              to <em>place.</em>
+              around the way
+              <br />
+              <span>you live.</span>
             </h1>
-            <div className="hero-bottom">
-              <div>
-                <p>
-                  Remodeling, additions and outdoor living.
-                  <br className="desktop-break" /> One team, from first idea to
-                  final detail.
-                </p>
-                <a className="button button-light" href="#consultation">
-                  Let’s talk about your home
-                </a>
-              </div>
-              <a className="hero-explore" href="#projects">
-                <span>Explore the vision</span>
+            <p className="hero-intro">
+              Thoughtful remodeling, ADUs and additions. One connected team from
+              first idea to final detail, here in the South Bay.
+            </p>
+            <div className="hero-actions">
+              <a className="button button-primary" href="#consultation">
+                Start your project
+              </a>
+              <a className="button button-secondary" href="#projects">
+                Explore the possibilities
               </a>
             </div>
+            <div className="trust-line" aria-label="FORMA benefits">
+              <span>Design-led</span>
+              <i />
+              <span>One accountable team</span>
+              <i />
+              <span>Local South Bay focus</span>
+            </div>
           </div>
-          <span className="hero-caption">Design inspiration</span>
-        </section>
-        <div className="intro-strip">
-          <p>
-            Good design. Clear direction. <span>A place to call your own.</span>
-          </p>
-          <a href="#about">Meet FORMA</a>
-        </div>
 
-        <section
-          className="vision section-pad"
-          id="projects"
-          aria-labelledby="vision-title"
-        >
-          <div className="section-meta">
-            <span>01 / The vision</span>
-            <span>Made for everyday life</span>
-          </div>
-          <div className="section-heading">
-            <h2 id="vision-title">
-              Beautiful is a feeling.
-              <br />
-              <em>Make it yours.</em>
-            </h2>
-            <p>
-              Morning light. Room to gather. Materials that feel right. We start
-              with how you want to live, then bring the details into focus.
-            </p>
-          </div>
-          <div className="vision-grid">
-            <figure className="vision-kitchen">
-              <div className="vision-image">
-                <Image
-                  src="/images/kitchen-remodel.png"
-                  alt="Kitchen design inspiration with natural oak cabinetry and stone surfaces"
-                  fill
-                  sizes="(max-width: 520px) 100vw, 58vw"
-                />
-                <span className="image-index">01</span>
-              </div>
-              <figcaption>
-                <div>
-                  <span className="eyebrow">Kitchen / Design inspiration</span>
-                  <h3>The heart of the home.</h3>
-                </div>
-                <a href="#services" aria-label="Explore kitchen remodeling">
-                  Explore
-                </a>
-              </figcaption>
-              <p className="material-note">
-                Natural oak. Quiet stone. Space to come together.
-              </p>
-            </figure>
-            <figure className="vision-bath">
-              <div className="vision-image">
-                <Image
-                  src="/images/bathroom-remodel.png"
-                  alt="Bathroom design inspiration with oak millwork, green tile and soft lighting"
-                  fill
-                  sizes="(max-width: 520px) 100vw, 40vw"
-                />
-                <span className="image-index">02</span>
-              </div>
-              <figcaption>
-                <div>
-                  <span className="eyebrow">Bathroom / Design inspiration</span>
-                  <h3>A little more calm.</h3>
-                </div>
-                <a href="#services" aria-label="Explore bathroom remodeling">
-                  Explore
-                </a>
-              </figcaption>
-              <p className="material-note">
-                Considered storage. Tactile finishes. Everyday ease.
-              </p>
-            </figure>
-          </div>
-          <div className="vision-footnote">
-            <p>
-              These images illustrate design possibilities, rather than
-              completed FORMA projects.
-            </p>
-            <a
-              className="text-link"
-              href={instagram}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Visit FORMA on Instagram (opens in a new tab)"
-            >
-              More from FORMA on Instagram
-            </a>
-          </div>
-        </section>
-
-        <section
-          className="about section-pad"
-          id="about"
-          aria-labelledby="about-title"
-        >
-          <div className="about-label">
-            <span className="eyebrow">02 / The studio</span>
+          <div className="hero-visual">
             <Image
-              src="/images/forma-logo-transparent.png"
-              alt="FORMA Design + Build"
-              width={300}
-              height={75}
-              className="about-logo"
+              src="/images/hero-indoor-outdoor.png"
+              alt="Design inspiration: a white oak kitchen opening to a California courtyard"
+              fill
+              sizes="(max-width: 620px) 100vw, (max-width: 900px) 90vw, 55vw"
+              priority
             />
-          </div>
-          <div className="about-copy">
-            <h2 id="about-title">
-              One vision.
-              <br />
-              One connected <em>team.</em>
-            </h2>
-            <p>
-              Your home should feel considered from every angle. FORMA brings
-              planning, design and construction into one conversation, so each
-              decision connects to the next.
-            </p>
-            <div className="about-principles">
-              <div>
-                <h3>Designed around you</h3>
-                <p>Your routines, priorities and property guide the plan.</p>
-              </div>
-              <div>
-                <h3>Built with continuity</h3>
-                <p>
-                  One direction through materials, coordination and finish work.
-                </p>
-              </div>
+            <div className="hero-trust-card">
+              <Image
+                src="/images/forma-logo-transparent.png"
+                alt=""
+                aria-hidden="true"
+                width={240}
+                height={60}
+              />
+              <span />
+              <p>A more connected path from first idea to finished home.</p>
             </div>
           </div>
         </section>
 
-        <section
-          className="expertise section-pad"
-          id="services"
-          aria-labelledby="services-title"
-        >
-          <div className="expertise-intro">
-            <p className="eyebrow">03 / Our expertise</p>
-            <h2 id="services-title">
-              Room for
-              <br />
-              <em>possibility.</em>
-            </h2>
-            <p>
-              A single room. More space. A new way to live at home. Explore what
-              we can bring together.
-            </p>
-            <a className="text-link" href="#consultation">
-              Start with your idea
-            </a>
+        <div className="service-ribbon" aria-label="Core services">
+          {[
+            "Kitchens",
+            "Bathrooms",
+            "ADUs",
+            "Additions",
+            "Roofing",
+            "Landscaping",
+            "Painting",
+          ].map((service) => (
+            <span key={service}>{service}</span>
+          ))}
+        </div>
+
+        <section className="intro-section" id="about">
+          <div className="section-kicker">
+            <span>Built as one idea</span>
+            <strong>01</strong>
           </div>
-          <div className="service-list">
-            {services.map((service, index) => (
-              <details
-                className="service-item"
-                name="services"
+          <div className="intro-grid">
+            <h2>One team. Every detail. A home that feels completely yours.</h2>
+            <div>
+              <p>
+                A successful remodel is more than a collection of trades. It is
+                one clear vision carried through planning, material choices,
+                permitting, construction and finish work.
+              </p>
+              <p>
+                FORMA brings the moving pieces together so homeowners have a
+                simpler path, clearer decisions and a finished result that feels
+                considered from every angle.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section className="services-section" id="services">
+          <div className="section-heading">
+            <div>
+              <p className="eyebrow">Full-service capabilities</p>
+              <h2>One partner for the projects that shape your home.</h2>
+            </div>
+            <p>
+              From a single room to a property-wide transformation, every scope
+              is approached with the same attention to function, flow and
+              finish.
+            </p>
+          </div>
+
+          <div className="services-grid">
+            {services.map((service) => (
+              <article
+                className={`service-card ${service.image ? "service-card-image" : ""}`}
                 key={service.title}
-                open={index === 0}
               >
-                <summary>
-                  <span className="row-number">
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
+                {service.image && (
+                  <Image
+                    src={service.image}
+                    alt=""
+                    aria-hidden="true"
+                    fill
+                    sizes="(max-width: 620px) 100vw, (max-width: 900px) 90vw, 55vw"
+                  />
+                )}
+                <div className="service-card-content">
+                  <span>{service.number}</span>
                   <h3>{service.title}</h3>
-                  <span className="expand-symbol" aria-hidden="true" />
-                </summary>
-                <div className="service-body">
                   <p>{service.text}</p>
-                  <p className="service-scope">{service.details}</p>
-                  <a className="text-link" href="#consultation">
-                    Discuss this project
+                  <a
+                    href="#consultation"
+                    aria-label={`Discuss ${service.title}`}
+                  >
+                    Discuss your project
                   </a>
                 </div>
-              </details>
+              </article>
             ))}
           </div>
         </section>
 
-        <section
-          className="journey section-pad"
-          id="approach"
-          aria-labelledby="journey-title"
-        >
-          <div className="section-meta">
-            <span>04 / Our approach</span>
-            <span>A connected process</span>
-          </div>
-          <div className="journey-heading">
-            <h2 id="journey-title">
-              An idea becomes
-              <br />
-              <em>a place to live.</em>
+        <section className="projects-section" id="projects">
+          <div className="project-copy">
+            <p className="eyebrow">Bright California living</p>
+            <h2>
+              Spaces that connect everyday life with the best of the Bay Area.
             </h2>
             <p>
-              See how your project comes together.
-              <br />
-              Explore each part of the journey.
+              Natural materials, effortless circulation and a strong
+              relationship between indoors and out create homes that feel calm,
+              useful and enduring.
+            </p>
+            <a className="text-link" href="#consultation">
+              Explore a project with us
+            </a>
+          </div>
+
+          <div className="project-gallery">
+            <figure className="project-main">
+              <Image
+                src="/images/hero-indoor-outdoor.png"
+                alt="Indoor-outdoor kitchen and courtyard design inspiration"
+                fill
+                sizes="(max-width: 620px) 100vw, (max-width: 900px) 90vw, 55vw"
+              />
+              <figcaption>
+                <span>Indoor + outdoor living</span>
+                <small>Kitchen · Landscape · Entertaining</small>
+              </figcaption>
+            </figure>
+            <figure>
+              <Image
+                src="/images/kitchen-remodel.png"
+                alt="White oak and stone kitchen design inspiration"
+                fill
+                sizes="(max-width: 620px) 100vw, (max-width: 900px) 90vw, 55vw"
+              />
+              <figcaption>
+                <span>Warm modern kitchen</span>
+                <small>Cabinetry · Stone · Lighting</small>
+              </figcaption>
+            </figure>
+            <figure>
+              <Image
+                src="/images/bathroom-remodel.png"
+                alt="White oak and green tile bathroom design inspiration"
+                fill
+                sizes="(max-width: 620px) 100vw, (max-width: 900px) 90vw, 55vw"
+              />
+              <figcaption>
+                <span>Restorative bathroom</span>
+                <small>Tile · Millwork · Fixtures</small>
+              </figcaption>
+            </figure>
+          </div>
+          <p className="imagery-note">
+            Design inspiration shown throughout this page illustrates
+            possibilities, not completed FORMA projects.
+          </p>
+        </section>
+
+        <section
+          className="process-section"
+          id="approach"
+          aria-labelledby="process-title"
+        >
+          <div className="process-intro">
+            <p className="eyebrow">A clearer way to build</p>
+            <h2 id="process-title">From first conversation to final detail.</h2>
+            <p>
+              Every phase informs the next. That continuity helps protect the
+              design intent, make decisions earlier and keep everyone moving in
+              the same direction.
             </p>
           </div>
           <ProjectJourney />
         </section>
 
-        <section
-          className="areas section-pad"
-          id="areas"
-          aria-labelledby="areas-title"
-        >
-          <div>
-            <p className="eyebrow">05 / Close to home</p>
-            <h2 id="areas-title">
-              Rooted in
-              <br />
-              the <em>South Bay.</em>
-            </h2>
+        <section className="difference-section">
+          <div className="difference-visual">
+            <Image
+              src="/images/kitchen-remodel.png"
+              alt="Design inspiration: natural oak kitchen cabinetry"
+              fill
+              sizes="(max-width: 620px) 100vw, (max-width: 900px) 90vw, 55vw"
+            />
+            <div className="difference-badge">
+              <strong>FORMA</strong>
+              <span>Design + Build</span>
+            </div>
           </div>
-          <div className="areas-content">
-            <p>
-              Local homes. Different possibilities. We plan around your city,
-              your neighborhood and the property you already know.
-            </p>
-            <ul className="city-list">
-              {cities.map((city) => (
-                <li key={city}>{city}</li>
-              ))}
+          <div className="difference-copy">
+            <p className="eyebrow">Why design + build</p>
+            <h2>Fewer handoffs. Better alignment. More confidence.</h2>
+            <ul>
+              <li>
+                <span>01</span>
+                <div>
+                  <h3>One coordinated direction</h3>
+                  <p>
+                    Design decisions are considered alongside construction,
+                    budget and site realities from the beginning.
+                  </p>
+                </div>
+              </li>
+              <li>
+                <span>02</span>
+                <div>
+                  <h3>Clearer ownership</h3>
+                  <p>
+                    You have one central team helping connect the consultants,
+                    trades, selections and milestones.
+                  </p>
+                </div>
+              </li>
+              <li>
+                <span>03</span>
+                <div>
+                  <h3>Details that stay connected</h3>
+                  <p>
+                    The original intent remains visible through documentation,
+                    construction and final finish work.
+                  </p>
+                </div>
+              </li>
             </ul>
+            <div className="metric-row">
+              <div>
+                <strong>8</strong>
+                <span>South Bay cities</span>
+              </div>
+              <div>
+                <strong>7</strong>
+                <span>Core service categories</span>
+              </div>
+              <div>
+                <strong>1</strong>
+                <span>Connected project team</span>
+              </div>
+            </div>
           </div>
         </section>
 
-        <section className="faq section-pad" aria-labelledby="faq-title">
+        <section className="areas-section" id="areas">
+          <div className="areas-heading">
+            <p className="eyebrow">Local by design</p>
+            <h2>Serving homeowners across the South Bay.</h2>
+            <p>
+              Every city has its own housing stock, review path and neighborhood
+              character. The project plan should reflect those local conditions
+              from day one.
+            </p>
+          </div>
+          <div className="city-grid">
+            {cities.map(([city, description], index) => (
+              <article key={city}>
+                <span>{String(index + 1).padStart(2, "0")}</span>
+                <h3>{city}</h3>
+                <p>{description}</p>
+                <a
+                  href="#consultation"
+                  aria-label={`Plan a project in ${city}`}
+                >
+                  Plan a project
+                </a>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="faq-section">
           <div>
-            <p className="eyebrow">A little clarity</p>
-            <h2 id="faq-title">
-              Before we <em>begin.</em>
-            </h2>
+            <p className="eyebrow">Good questions, clear answers</p>
+            <h2>Before the first sketch.</h2>
+            <p>
+              The right starting questions make every decision that follows more
+              useful.
+            </p>
           </div>
           <div className="faq-list">
-            {faqs.map((faq) => (
-              <details key={faq.question} name="questions">
+            {faqs.map((faq, index) => (
+              <details key={faq.question}>
                 <summary>
+                  <span>{String(index + 1).padStart(2, "0")}</span>
                   {faq.question}
-                  <span className="expand-symbol" aria-hidden="true" />
+                  <b aria-hidden="true">+</b>
                 </summary>
                 <p>{faq.answer}</p>
               </details>
@@ -375,68 +414,74 @@ export default function Home() {
           </div>
         </section>
 
-        <section
-          className="contact section-pad"
-          id="consultation"
-          aria-labelledby="contact-title"
-        >
-          <div className="section-meta">
-            <span>Your next chapter</span>
-            <span>Let’s make room for it</span>
-          </div>
-          <div className="contact-grid contact-with-form">
-            <div>
-              <h2 id="contact-title">
-                What could
-                <br />
-                your home <em>be?</em>
-              </h2>
-              <p>
-                You don’t need all the answers to get started.
-                <br />
-                Just an idea of what you’d like to change.
-              </p>
+        <section className="consultation-section" id="consultation">
+          <div className="consultation-copy">
+            <p className="eyebrow">Start with what you know</p>
+            <h2>Tell us what you want your home to become.</h2>
+            <p>
+              Share the project type, property details and finish direction. It
+              gives the first conversation a more useful starting point.
+            </p>
+            <div className="project-types">
+              <span>Kitchen or bath</span>
+              <span>ADU or addition</span>
+              <span>Whole-home remodel</span>
+              <span>Exterior + landscape</span>
             </div>
-            <ConsultationForm
-              available={Boolean(process.env.FORMA_LEADS_WEBHOOK_URL)}
-            />
           </div>
+          <ConsultationForm
+            available={Boolean(process.env.FORMA_LEADS_WEBHOOK_URL)}
+          />
         </section>
       </main>
-      <footer className="site-footer">
+      <footer>
         <div className="footer-top">
-          <a className="footer-brand" href="#top" aria-label="FORMA home">
-            <Image
-              src="/images/forma-logo-transparent.png"
-              alt="FORMA Design + Build"
-              width={300}
-              height={75}
-            />
-          </a>
+          <Image
+            src="/images/forma-logo-transparent.png"
+            alt="FORMA Design + Build"
+            width={240}
+            height={60}
+          />
           <p>
-            Thoughtful homes.
-            <br />
-            South Bay, California.
+            Thoughtful design. Coordinated construction. Homes made for South
+            Bay living.
           </p>
-          <nav aria-label="Footer menu">
-            <a href="#projects">The vision</a>
-            <a href="#services">Our expertise</a>
+          <a href="#top">Back to top</a>
+        </div>
+        <div className="footer-links">
+          <div>
+            <strong>Services</strong>
+            <a href="#services">Kitchen + Bathroom</a>
+            <a href="#services">ADUs + Additions</a>
+            <a href="#services">Roofing + Painting</a>
+            <a href="#services">Landscaping</a>
+          </div>
+          <div>
+            <strong>Explore</strong>
+            <a href="#projects">Project Vision</a>
             <a href="#about">About FORMA</a>
-            <a href="#areas">Service areas</a>
+            <a href="#areas">Service Areas</a>
+            <a href="#consultation">Start a Project</a>
             <a
-              href={instagram}
+              href="https://www.instagram.com/formadpb/"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="FORMA on Instagram (opens in a new tab)"
             >
               Instagram
             </a>
-          </nav>
+          </div>
+          <div>
+            <strong>South Bay</strong>
+            <span>San Jose · Fremont</span>
+            <span>Santa Clara · Palo Alto</span>
+            <span>Milpitas · Sunnyvale</span>
+            <span>Saratoga · Los Gatos</span>
+          </div>
         </div>
         <div className="footer-bottom">
           <span>© 2026 FORMA Design + Build</span>
-          <span>From plan to place.</span>
-          <a href="#top">Back to top</a>
+          <span>South Bay, California</span>
         </div>
       </footer>
     </>
