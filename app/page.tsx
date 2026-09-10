@@ -75,6 +75,16 @@ const faqs = [
       "The core service area includes San Jose, Fremont, Santa Clara, Palo Alto, Milpitas, Sunnyvale, Saratoga and Los Gatos.",
   },
   {
+    question: "Where is FORMA Design + Build located?",
+    answer:
+      "FORMA Design + Build is based at 360 S Market St, Unit 1707, San Jose, CA 95113 and serves homeowners throughout the South Bay.",
+  },
+  {
+    question: "How can I contact FORMA?",
+    answer:
+      "Call (323) 975-5574, email Office@formadpb.com or complete the project consultation form on this page.",
+  },
+  {
     question: "How do we begin?",
     answer:
       "Start with a focused consultation. Share the project type, property details, priorities and finish direction so the first conversation can begin with useful context.",
@@ -82,8 +92,75 @@ const faqs = [
 ];
 
 export default function Home() {
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "GeneralContractor",
+        "@id": "https://formadpb.com/#business",
+        name: "FORMA Design + Build",
+        url: "https://formadpb.com/",
+        logo: "https://formadpb.com/images/forma-logo-transparent.png",
+        image: "https://formadpb.com/images/hero-indoor-outdoor.png",
+        email: "Office@formadpb.com",
+        telephone: "+1-323-975-5574",
+        address: {
+          "@type": "PostalAddress",
+          streetAddress: "360 S Market St, Unit 1707",
+          addressLocality: "San Jose",
+          addressRegion: "CA",
+          postalCode: "95113",
+          addressCountry: "US",
+        },
+        areaServed: cities.map(([city]) => ({
+          "@type": "City",
+          name: `${city}, California`,
+        })),
+        sameAs: ["https://www.instagram.com/formadpb/"],
+        hasOfferCatalog: {
+          "@type": "OfferCatalog",
+          name: "Residential remodeling and construction services",
+          itemListElement: services.map((service) => ({
+            "@type": "Offer",
+            itemOffered: {
+              "@type": "Service",
+              name: service.title,
+              areaServed: "South Bay, California",
+            },
+          })),
+        },
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://formadpb.com/#website",
+        url: "https://formadpb.com/",
+        name: "FORMA Design + Build",
+        publisher: { "@id": "https://formadpb.com/#business" },
+        inLanguage: "en-US",
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://formadpb.com/#faq",
+        mainEntity: faqs.map((faq) => ({
+          "@type": "Question",
+          name: faq.question,
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: faq.answer,
+          },
+        })),
+      },
+    ],
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(structuredData).replace(/</g, "\\u003c"),
+        }}
+      />
       <a className="skip-link" href="#main-content">
         Skip to content
       </a>
@@ -369,9 +446,10 @@ export default function Home() {
             <p className="eyebrow">Local by design</p>
             <h2>Serving homeowners across the South Bay.</h2>
             <p>
-              Every city has its own housing stock, review path and neighborhood
-              character. The project plan should reflect those local conditions
-              from day one.
+              Based at 360 S Market St in San Jose, FORMA serves homeowners
+              across the South Bay. Every city has its own housing stock, review
+              path and neighborhood character, and the project plan should
+              reflect those local conditions from day one.
             </p>
           </div>
           <div className="city-grid">
@@ -428,6 +506,10 @@ export default function Home() {
               <span>Whole-home remodel</span>
               <span>Exterior + landscape</span>
             </div>
+            <div className="direct-contact" aria-label="Direct contact options">
+              <a href="tel:+13239755574">Call (323) 975-5574</a>
+              <a href="mailto:Office@formadpb.com">Office@formadpb.com</a>
+            </div>
           </div>
           <ConsultationForm />
         </section>
@@ -476,10 +558,19 @@ export default function Home() {
             <span>Milpitas · Sunnyvale</span>
             <span>Saratoga · Los Gatos</span>
           </div>
+          <div>
+            <strong>Contact</strong>
+            <address>
+              <span>360 S Market St, Unit 1707</span>
+              <span>San Jose, CA 95113</span>
+            </address>
+            <a href="tel:+13239755574">(323) 975-5574</a>
+            <a href="mailto:Office@formadpb.com">Office@formadpb.com</a>
+          </div>
         </div>
         <div className="footer-bottom">
           <span>© 2026 FORMA Design + Build</span>
-          <span>South Bay, California</span>
+          <span>San Jose · South Bay, California</span>
         </div>
       </footer>
     </>

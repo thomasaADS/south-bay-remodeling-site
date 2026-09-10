@@ -1032,6 +1032,25 @@ main {
   padding: 10px 13px;
 }
 
+.direct-contact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 22px;
+  margin-top: 28px;
+}
+
+.direct-contact a {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.42);
+  color: var(--white);
+  font-size: 0.9375rem;
+  padding-bottom: 4px;
+}
+
+.direct-contact a:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
 .consultation-card {
   align-self: center;
   background: var(--warm-white);
@@ -1137,13 +1156,20 @@ footer {
 .footer-links {
   display: grid;
   gap: 50px;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   padding: 52px 0;
 }
 
 .footer-links > div {
   display: flex;
   flex-direction: column;
+  gap: 10px;
+}
+
+.footer-links address {
+  display: flex;
+  flex-direction: column;
+  font-style: normal;
   gap: 10px;
 }
 
