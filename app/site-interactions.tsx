@@ -5,9 +5,9 @@ import { useRef, useState, type KeyboardEvent } from "react";
 
 const instagram = "https://www.instagram.com/formadpb/";
 const menu = [
-  ["Services", "#services"],
-  ["Design inspiration", "#projects"],
-  ["Our approach", "#approach"],
+  ["Services", "/services"],
+  ["Service areas", "/service-areas"],
+  ["Our approach", "/#approach"],
 ];
 
 export function Navigation() {
@@ -20,7 +20,7 @@ export function Navigation() {
     <header className="site-header">
       <a
         className="brand"
-        href="#top"
+        href="/"
         aria-label="FORMA Design + Build home"
         onClick={closeMenu}
       >
@@ -39,7 +39,7 @@ export function Navigation() {
           </a>
         ))}
       </nav>
-      <a className="header-contact" href="#consultation" onClick={closeMenu}>
+      <a className="header-contact" href="/#consultation" onClick={closeMenu}>
         Start a project
       </a>
       <details
@@ -61,11 +61,8 @@ export function Navigation() {
               {label}
             </a>
           ))}
-          <a href="#about" onClick={closeMenu}>
+          <a href="/#about" onClick={closeMenu}>
             About FORMA
-          </a>
-          <a href="#areas" onClick={closeMenu}>
-            Service areas
           </a>
           <a
             href={instagram}
@@ -76,7 +73,7 @@ export function Navigation() {
           >
             Instagram
           </a>
-          <a href="#consultation" onClick={closeMenu}>
+          <a href="/#consultation" onClick={closeMenu}>
             Start a project
           </a>
         </nav>

@@ -1,95 +1,7 @@
 import Image from "next/image";
 import { Navigation, ProjectJourney } from "./site-interactions";
 import { ConsultationForm } from "./consultation-form";
-
-const services = [
-  {
-    number: "01",
-    title: "Kitchen Remodeling",
-    text: "Thoughtful layouts, custom cabinetry, lighting, surfaces and finish details designed around how your household actually lives.",
-    image: "/images/kitchen-remodel.png",
-  },
-  {
-    number: "02",
-    title: "Bathroom Remodeling",
-    text: "Calm, highly functional bathrooms—from efficient guest baths to complete primary-suite transformations.",
-    image: "/images/bathroom-remodel.png",
-  },
-  {
-    number: "03",
-    title: "ADU Construction",
-    text: "Detached ADUs, attached units and garage conversions planned to make the most of your property and long-term goals.",
-  },
-  {
-    number: "04",
-    title: "Home Additions",
-    text: "Seamless room additions and expanded living areas that feel intentional, balanced and connected to the original home.",
-  },
-  {
-    number: "05",
-    title: "Roofing",
-    text: "Roof replacement, repairs, weatherproofing and related exterior work coordinated as part of one clear project plan.",
-  },
-  {
-    number: "06",
-    title: "Landscaping",
-    text: "Outdoor rooms, hardscape, planting, decks and gathering spaces designed for the South Bay’s indoor-outdoor lifestyle.",
-  },
-  {
-    number: "07",
-    title: "Interior + Exterior Painting",
-    text: "Meticulous preparation and a refined finish that brings the architecture, materials and color story together.",
-  },
-];
-
-const cities = [
-  ["San Jose", "Whole-home remodels, ADUs and additions"],
-  ["Fremont", "Renovations and indoor-outdoor upgrades"],
-  ["Santa Clara", "Kitchens, baths and home expansions"],
-  ["Palo Alto", "Design-led remodels and additions"],
-  ["Milpitas", "ADUs, interiors and exterior improvements"],
-  ["Sunnyvale", "Mid-century and modern home remodels"],
-  ["Saratoga", "High-touch renovations and outdoor living"],
-  ["Los Gatos", "Custom remodeling and property upgrades"],
-];
-
-const faqs = [
-  {
-    question: "What types of projects does FORMA take on?",
-    answer:
-      "FORMA supports kitchen and bathroom remodels, ADUs, additions, roofing, landscaping, painting and coordinated whole-home improvements throughout the South Bay.",
-  },
-  {
-    question: "Can you help with design and permits?",
-    answer:
-      "Yes. The design-build approach is intended to connect early planning, design decisions, documentation, city requirements and construction into a more coordinated path. Exact requirements vary by city and project scope.",
-  },
-  {
-    question: "How early should we contact you?",
-    answer:
-      "The earlier the better—especially for an ADU, structural remodel or addition. Early feasibility work helps reveal site, budget and permit considerations before decisions become expensive to change.",
-  },
-  {
-    question: "Do you work throughout the South Bay?",
-    answer:
-      "The core service area includes San Jose, Fremont, Santa Clara, Palo Alto, Milpitas, Sunnyvale, Saratoga and Los Gatos.",
-  },
-  {
-    question: "Where is FORMA Design + Build located?",
-    answer:
-      "FORMA Design + Build is based at 360 S Market St, Unit 1707, San Jose, CA 95113 and serves homeowners throughout the South Bay.",
-  },
-  {
-    question: "How can I contact FORMA?",
-    answer:
-      "Call (323) 975-5574, email Office@formadpb.com or complete the project consultation form on this page.",
-  },
-  {
-    question: "How do we begin?",
-    answer:
-      "Start with a focused consultation. Share the project type, property details, priorities and finish direction so the first conversation can begin with useful context.",
-  },
-];
+import { cities, faqs, services } from "./site-data";
 
 export default function Home() {
   const structuredData = {
@@ -112,9 +24,9 @@ export default function Home() {
           postalCode: "95113",
           addressCountry: "US",
         },
-        areaServed: cities.map(([city]) => ({
+        areaServed: cities.map((city) => ({
           "@type": "City",
-          name: `${city}, California`,
+          name: `${city.name}, California`,
         })),
         sameAs: ["https://www.instagram.com/formadpb/"],
         hasOfferCatalog: {
@@ -204,6 +116,7 @@ export default function Home() {
               fill
               sizes="(max-width: 620px) 100vw, (max-width: 900px) 90vw, 55vw"
               priority
+              fetchPriority="high"
             />
             <div className="hero-trust-card">
               <Image
@@ -287,11 +200,8 @@ export default function Home() {
                   <span>{service.number}</span>
                   <h3>{service.title}</h3>
                   <p>{service.text}</p>
-                  <a
-                    href="#consultation"
-                    aria-label={`Discuss ${service.title}`}
-                  >
-                    Discuss your project
+                  <a href={`/services/${service.slug}`}>
+                    Explore {service.shortTitle.toLowerCase()}
                   </a>
                 </div>
               </article>
@@ -453,17 +363,12 @@ export default function Home() {
             </p>
           </div>
           <div className="city-grid">
-            {cities.map(([city, description], index) => (
-              <article key={city}>
+            {cities.map((city, index) => (
+              <article key={city.name}>
                 <span>{String(index + 1).padStart(2, "0")}</span>
-                <h3>{city}</h3>
-                <p>{description}</p>
-                <a
-                  href="#consultation"
-                  aria-label={`Plan a project in ${city}`}
-                >
-                  Plan a project
-                </a>
+                <h3>{city.name}</h3>
+                <p>{city.description}</p>
+                <a href="/service-areas">Explore service areas</a>
               </article>
             ))}
           </div>
@@ -531,16 +436,16 @@ export default function Home() {
         <div className="footer-links">
           <div>
             <strong>Services</strong>
-            <a href="#services">Kitchen + Bathroom</a>
-            <a href="#services">ADUs + Additions</a>
-            <a href="#services">Roofing + Painting</a>
-            <a href="#services">Landscaping</a>
+            <a href="/services/kitchen-remodeling">Kitchen Remodeling</a>
+            <a href="/services/bathroom-remodeling">Bathroom Remodeling</a>
+            <a href="/services/adu-construction">ADUs</a>
+            <a href="/services">All Services</a>
           </div>
           <div>
             <strong>Explore</strong>
             <a href="#projects">Project Vision</a>
             <a href="#about">About FORMA</a>
-            <a href="#areas">Service Areas</a>
+            <a href="/service-areas">Service Areas</a>
             <a href="#consultation">Start a Project</a>
             <a
               href="https://www.instagram.com/formadpb/"
