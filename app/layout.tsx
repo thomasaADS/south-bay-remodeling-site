@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Script from "next/script";
 import "./globals.css";
+import { MarketingEvents } from "./marketing-events";
 
 const siteUrl = "https://formadpb.com";
 const googleTagManagerId = "GTM-T3WRGP6K";
@@ -87,6 +88,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           />
         </noscript>
         {children}
+        <MarketingEvents />
       </body>
     </html>
   );
