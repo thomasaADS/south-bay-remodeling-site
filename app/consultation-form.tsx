@@ -12,6 +12,12 @@ import {
   type Errors,
 } from "@/lib/consultation";
 
+declare global {
+  interface Window {
+    dataLayer?: Array<Record<string, unknown>>;
+  }
+}
+
 const steps = ["Your project", "Your plans", "Stay in touch"];
 export function ConsultationForm() {
   const [data, setData] = useState<Consultation>({ ...emptyConsultation });
@@ -130,6 +136,13 @@ export function ConsultationForm() {
         );
         return;
       }
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        event: "generate_lead",
+        form_name: "project_consultation",
+        project_city: data.city,
+        project_types: data.projectTypes.join(", "),
+      });
       moved.current = true;
       setSent(true);
       setData({ ...emptyConsultation });
