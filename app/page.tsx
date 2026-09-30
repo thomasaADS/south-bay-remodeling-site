@@ -15,7 +15,7 @@ export default function Home() {
         logo: "https://formadpb.com/images/forma-logo-transparent.png",
         image: "https://formadpb.com/images/hero-indoor-outdoor.png",
         email: "Office@formadpb.com",
-        telephone: "+1-323-975-5574",
+        telephone: "+1-408-234-7914",
         address: {
           "@type": "PostalAddress",
           streetAddress: "360 S Market St, Unit 1707",
@@ -418,7 +418,7 @@ export default function Home() {
               <span>Exterior + landscape</span>
             </div>
             <div className="direct-contact" aria-label="Direct contact options">
-              <a href="tel:+13239755574">Call (323) 975-5574</a>
+              <a href="tel:+14082347914">Call (408) 234-7914</a>
               <a href="mailto:Office@formadpb.com">Office@formadpb.com</a>
             </div>
           </div>
@@ -475,7 +475,7 @@ export default function Home() {
               <span>360 S Market St, Unit 1707</span>
               <span>San Jose, CA 95113</span>
             </address>
-            <a href="tel:+13239755574">(323) 975-5574</a>
+            <a href="tel:+14082347914">(408) 234-7914</a>
             <a href="mailto:Office@formadpb.com">Office@formadpb.com</a>
           </div>
         </div>

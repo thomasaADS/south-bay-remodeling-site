@@ -131,6 +131,6 @@ export const faqs = [
   { question: "How early should we contact you?", answer: "The earlier the better—especially for an ADU, structural remodel or addition. Early feasibility work helps reveal site, budget and permit considerations before decisions become expensive to change." },
   { question: "Do you work throughout the South Bay?", answer: "The core service area includes San Jose, Fremont, Santa Clara, Palo Alto, Milpitas, Sunnyvale, Saratoga and Los Gatos." },
   { question: "Where is FORMA Design + Build located?", answer: "FORMA Design + Build is based at 360 S Market St, Unit 1707, San Jose, CA 95113 and serves homeowners throughout the South Bay." },
-  { question: "How can I contact FORMA?", answer: "Call (323) 975-5574, email Office@formadpb.com or complete the project consultation form on this site." },
+  { question: "How can I contact FORMA?", answer: "Call (408) 234-7914, email Office@formadpb.com or complete the project consultation form on this site." },
   { question: "How do we begin?", answer: "Start with a focused consultation. Share the project type, property details, priorities and finish direction so the first conversation can begin with useful context." },
 ] as const;

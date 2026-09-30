@@ -47,7 +47,7 @@ export function SeoFooter() {
             <span>360 S Market St, Unit 1707</span>
             <span>San Jose, CA 95113</span>
           </address>
-          <a href="tel:+13239755574">(323) 975-5574</a>
+          <a href="tel:+14082347914">(408) 234-7914</a>
           <a href="mailto:Office@formadpb.com">Office@formadpb.com</a>
         </div>
       </div>
