@@ -53,7 +53,11 @@ export function SeoFooter() {
       </div>
       <div className="footer-bottom">
         <span>© 2026 FORMA Design + Build</span>
-        <span>San Jose · South Bay, California</span>
+        <span>CA Contractor License #1162108</span>
+        <nav aria-label="Legal">
+          <a href="/privacy-policy">Privacy Policy</a>
+          <a href="/terms-of-use">Terms of Use</a>
+        </nav>
       </div>
     </footer>
   );

@@ -434,7 +434,15 @@ export function ConsultationForm() {
               />
               <span>
                 FORMA may contact me about this project using the details I
-                provide.
+                provide. By submitting, I agree to the{" "}
+                <a href="/privacy-policy" target="_blank" rel="noopener noreferrer">
+                  Privacy Policy
+                </a>{" "}
+                and{" "}
+                <a href="/terms-of-use" target="_blank" rel="noopener noreferrer">
+                  Terms of Use
+                </a>
+                .
               </span>
             </label>
             {errorFor("consent")}
