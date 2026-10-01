@@ -27,6 +27,8 @@ export function MarketingEvents() {
       const href = link.getAttribute("href") || "";
       if (href.startsWith("tel:")) {
         track("phone_click", { contact_method: "phone" });
+      } else if (href.startsWith("sms:")) {
+        track("text_click", { contact_method: "sms" });
       } else if (href.startsWith("mailto:")) {
         track("email_click", { contact_method: "email" });
       } else if (href.includes("instagram.com/formadpb")) {

@@ -160,7 +160,7 @@ export function ConsultationForm() {
       <div className="consultation-form form-success" role="status">
         <p className="eyebrow">A new beginning</p>
         <h3 ref={titleRef} tabIndex={-1}>
-          Your request is received.
+          We’ve received your request.
         </h3>
         <p>
           Thank you for sharing your plans. FORMA has received your project
