@@ -6,7 +6,7 @@ import { services } from "../site-data";
 
 export const metadata: Metadata = {
   title: "Home Remodeling Services in San Jose",
-  description: "Explore FORMA Design + Build services for kitchens, bathrooms, ADUs, additions, roofing, landscaping and painting in San Jose and the South Bay.",
+  description: "Explore FORMA Design + Build services for kitchens, bathrooms, whole-home improvements, landscaping and painting in San Jose and the South Bay.",
   alternates: { canonical: "/services" },
 };
 

@@ -95,8 +95,8 @@ export default function Home() {
               <span>you live.</span>
             </h1>
             <p className="hero-intro">
-              Thoughtful remodeling, ADUs and additions. One connected team from
-              first idea to final detail, here in the South Bay.
+              Thoughtful kitchens, bathrooms and whole-home remodeling. One connected
+              team from first idea to final detail, here in the South Bay.
             </p>
             <div className="hero-actions">
               <a className="button button-primary" href="#consultation">
@@ -142,9 +142,7 @@ export default function Home() {
           {[
             "Kitchens",
             "Bathrooms",
-            "ADUs",
-            "Additions",
-            "Roofing",
+            "Whole-home remodeling",
             "Landscaping",
             "Painting",
           ].map((service) => (
@@ -346,7 +344,7 @@ export default function Home() {
                 <span>South Bay cities</span>
               </div>
               <div>
-                <strong>7</strong>
+                <strong>4</strong>
                 <span>Core service categories</span>
               </div>
               <div>
@@ -413,9 +411,9 @@ export default function Home() {
             </p>
             <div className="project-types">
               <span>Kitchen or bath</span>
-              <span>ADU or addition</span>
               <span>Whole-home remodel</span>
               <span>Exterior + landscape</span>
+              <span>Interior + exterior painting</span>
             </div>
             <div className="direct-contact" aria-label="Direct contact options">
               <a href="tel:+14082347914">Call (408) 234-7914</a>
@@ -444,7 +442,8 @@ export default function Home() {
             <strong>Services</strong>
             <a href="/services/kitchen-remodeling">Kitchen Remodeling</a>
             <a href="/services/bathroom-remodeling">Bathroom Remodeling</a>
-            <a href="/services/adu-construction">ADUs</a>
+            <a href="/services/landscaping">Landscaping</a>
+            <a href="/services/interior-exterior-painting">Painting</a>
             <a href="/services">All Services</a>
           </div>
           <div>
