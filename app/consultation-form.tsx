@@ -11,6 +11,11 @@ import {
   type Consultation,
   type Errors,
 } from "@/lib/consultation";
+import {
+  deliveryMessages,
+  sendConsultation,
+  type SubmissionResult,
+} from "@/lib/consultation-delivery";
 
 declare global {
   interface Window {
@@ -26,17 +31,27 @@ export function ConsultationForm() {
   const [pending, setPending] = useState(false);
   const [sent, setSent] = useState(false);
   const [message, setMessage] = useState("");
+  const [deliveryHold, setDeliveryHold] = useState<
+    (Extract<SubmissionResult, { status: "activation_required" | "unconfirmed" }> & {
+      requestId?: string;
+    }) | null
+  >(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const errorRef = useRef<HTMLDivElement>(null);
   const requestId = useRef<string | null>(null);
+  const sending = useRef(false);
   const moved = useRef(false);
 
   useEffect(() => {
     if (moved.current) titleRef.current?.focus();
   }, [step, sent]);
   useEffect(() => {
-    if (Object.keys(errors).length || message) errorRef.current?.focus();
+    if (Object.values(errors).some(Boolean) || message)
+      errorRef.current?.focus();
   }, [errors, message]);
+  useEffect(() => {
+    if (deliveryHold) errorRef.current?.focus();
+  }, [deliveryHold]);
 
   function update<K extends keyof Consultation>(
     key: K,
@@ -45,7 +60,7 @@ export function ConsultationForm() {
     setData((current) => ({ ...current, [key]: value }));
     setErrors((current) => ({ ...current, [key]: undefined }));
     setMessage("");
-    requestId.current = null;
+    if (!deliveryHold) requestId.current = null;
   }
   function goTo(next: number) {
     moved.current = true;
@@ -97,7 +112,7 @@ export function ConsultationForm() {
   }
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (pending) return;
+    if (sending.current || (step === 2 && deliveryHold)) return;
     const nextErrors = validateConsultation(data, step < 2 ? step : undefined);
     if (Object.keys(nextErrors).length) {
       if (step === 2) {
@@ -114,43 +129,44 @@ export function ConsultationForm() {
       goTo(step + 1);
       return;
     }
+    sending.current = true;
     setPending(true);
     setMessage("");
     try {
       requestId.current ??= crypto.randomUUID();
-      const response = await fetch("/api/consultation", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Idempotency-Key": requestId.current,
-        },
-        body: JSON.stringify(data),
-        signal: AbortSignal.timeout(20_000),
-      });
-      const result = await response.json();
-      if (!response.ok || result.accepted !== true) {
-        setMessage(
-          typeof result.error === "string"
-            ? result.error
-            : "We couldn’t confirm your request. Please try again.",
-        );
+      const result = await sendConsultation(data, requestId.current);
+      if (result.status === "invalid") {
+        setMessage(result.message);
         return;
       }
-      window.dataLayer = window.dataLayer || [];
-      window.dataLayer.push({
-        event: "generate_lead",
-        form_name: "project_consultation",
-        project_city: data.city,
-        project_types: data.projectTypes.join(", "),
-      });
+      if (result.status !== "accepted") {
+        setDeliveryHold({ ...result, requestId: requestId.current });
+        return;
+      }
+      // Analytics failure must never turn an accepted request into an error
+      // inviting another submission.
+      try {
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+          event: "generate_lead",
+          form_name: "project_consultation",
+          project_city: data.city,
+          project_types: data.projectTypes.join(", "),
+        });
+      } catch {
+        // Analytics is optional.
+      }
       moved.current = true;
       setSent(true);
       setData({ ...emptyConsultation });
     } catch {
-      setMessage(
-        "We couldn’t confirm your request. Your answers are still here. Please try again.",
-      );
+      setDeliveryHold({
+        status: "unconfirmed",
+        message: deliveryMessages.unconfirmed,
+        requestId: requestId.current ?? undefined,
+      });
     } finally {
+      sending.current = false;
       setPending(false);
     }
   }
@@ -160,11 +176,12 @@ export function ConsultationForm() {
       <div className="consultation-form form-success" role="status">
         <p className="eyebrow">A new beginning</p>
         <h3 ref={titleRef} tabIndex={-1}>
-          We’ve received your request.
+          Your request has been submitted.
         </h3>
         <p>
-          Thank you for sharing your plans. FORMA has received your project
-          details and your preferred way to get in touch.
+          Thank you for sharing your plans. Our email service has accepted your
+          request for delivery to FORMA. If you need to confirm receipt, please{" "}
+          <a href="tel:+14082347914">call (408) 234-7914</a>.
         </p>
       </div>
     );
@@ -208,14 +225,34 @@ export function ConsultationForm() {
         }{" "}
         Fields are required unless marked optional.
       </p>
-      {(Object.values(errors).some(Boolean) || message) && (
+      {(Object.values(errors).some(Boolean) || message || deliveryHold) && (
         <div
           className="form-error-summary"
           ref={errorRef}
           tabIndex={-1}
           role="alert"
         >
-          <p>{message || "Please check the following:"}</p>
+          <p>{deliveryHold?.message || message || "Please check the following:"}</p>
+          {deliveryHold && (
+            <>
+              <p>
+                <a href="tel:+14082347914">Call (408) 234-7914</a> or{" "}
+                <a href="mailto:Office@formadpb.com">email Office@formadpb.com</a>.
+                {deliveryHold.requestId && <> Reference: {deliveryHold.requestId}.</>}
+              </p>
+              <button
+                type="button"
+                className="form-back"
+                onClick={() => {
+                  setDeliveryHold(null);
+                  setMessage("");
+                  requestId.current = null;
+                }}
+              >
+                I’ve checked with FORMA; allow another attempt
+              </button>
+            </>
+          )}
           {Object.values(errors).some(Boolean) && (
             <ul>
               {Object.entries(errors)
@@ -472,13 +509,15 @@ export function ConsultationForm() {
           <button
             className="button button-dark"
             type="submit"
-            disabled={pending}
+            disabled={pending || (step === 2 && Boolean(deliveryHold))}
           >
             {pending
               ? "Sending your request…"
               : step < 2
                 ? "Continue"
-                : "Request a consultation"}
+                : deliveryHold
+                  ? "Check with FORMA before resending"
+                  : "Request a consultation"}
           </button>
         </div>
       </fieldset>

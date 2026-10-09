@@ -6,6 +6,11 @@ import {
   parseConsultation,
   validateConsultation,
 } from "../lib/consultation";
+import {
+  classifyFormSubmit,
+  deliveryMessages,
+  sendConsultation,
+} from "../lib/consultation-delivery";
 
 const valid = {
   ...emptyConsultation,
@@ -59,6 +64,10 @@ test("form validation accepts uncertainty and requires a phone only when request
 
 test("submission rejects unsafe requests and confirms only accepted delivery", async (t) => {
   const originalFetch = globalThis.fetch;
+  const originalWarn = console.warn;
+  const originalInfo = console.info;
+  const logs: Array<Record<string, unknown>> = [];
+  console.warn = console.info = (entry) => logs.push(entry);
   let called = 0;
   globalThis.fetch = async () => {
     called++;
@@ -108,11 +117,19 @@ test("submission rejects unsafe requests and confirms only accepted delivery", a
       ),
     );
     assert.equal(called, 0);
+    assert.equal(logs.length, 0);
     await t.test("receiver failure produces no success", async () => {
       globalThis.fetch = async () => new Response(null, { status: 500 });
       const response = await POST(request());
       assert.equal(response.status, 502);
-      assert.equal((await response.json()).accepted, undefined);
+      assert.deepEqual(await response.json(), {
+        status: "unconfirmed",
+        accepted: false,
+        requestId: id,
+        error: deliveryMessages.unconfirmed,
+      });
+      assert.equal(logs.at(-1)?.errorType, "upstream_http");
+      assert.equal(logs.at(-1)?.upstreamStatus, 500);
     });
     await t.test(
       "timeout or transport failure produces no success",
@@ -121,6 +138,7 @@ test("submission rejects unsafe requests and confirms only accepted delivery", a
           throw new DOMException("Timeout", "TimeoutError");
         };
         assert.equal((await POST(request())).status, 502);
+        assert.equal(logs.at(-1)?.errorType, "timeout");
       },
     );
     await t.test(
@@ -140,16 +158,152 @@ test("submission rejects unsafe requests and confirms only accepted delivery", a
           assert.equal(payload.projectTypes, valid.projectTypes.join(", "));
           assert.equal(payload.contactPermission, "Confirmed");
           assert.equal(payload._template, "table");
-          return new Response(null, { status: 202 });
+          return Response.json({ success: "true", message: "The form was submitted successfully." });
         };
         const response = await POST(
           request({ ...valid, city: " San Jose ", unexpected: "discard me" }),
         );
         assert.equal(response.status, 200);
-        assert.deepEqual(await response.json(), { accepted: true });
+        assert.deepEqual(await response.json(), { status: "accepted", accepted: true, requestId: id });
         assert.equal(response.headers.get("cache-control"), "no-store");
+        assert.equal(logs.at(-1)?.status, "accepted");
       },
     );
+    await t.test("boolean success is accepted", async () => {
+      globalThis.fetch = async () => Response.json({ success: true });
+      assert.equal((await POST(request())).status, 200);
+    });
+    await t.test("activation takes priority over a success flag", async () => {
+      for (const success of [true, "true", false, "false"]) {
+        globalThis.fetch = async () => Response.json({ success, message: "This form needs Activation." });
+        const response = await POST(request());
+        assert.equal(response.status, 503);
+        assert.equal((await response.json()).status, "activation_required");
+      }
+    });
+    await t.test("false, missing and malformed success never confirm acceptance", async () => {
+      for (const payload of [{ success: false }, { success: "false" }, {}, null, [], "true", { success: 1 }, { success: "TRUE" }]) {
+        globalThis.fetch = async () => Response.json(payload);
+        const response = await POST(request());
+        assert.equal(response.status, 502);
+        assert.equal((await response.json()).accepted, false);
+      }
+    });
+    await t.test("empty, malformed and HTML responses remain unconfirmed", async () => {
+      for (const body of [null, "", "{", "<html>upstream error</html>"]) {
+        globalThis.fetch = async () => new Response(body, { status: 202 });
+        assert.equal((await POST(request())).status, 502);
+        assert.equal(logs.at(-1)?.errorType, "invalid_json");
+      }
+    });
+    await t.test("non-2xx cannot override status with success true", async () => {
+      globalThis.fetch = async () => Response.json({ success: true }, { status: 429 });
+      assert.equal((await POST(request())).status, 502);
+      assert.equal(logs.at(-1)?.upstreamStatus, 429);
+    });
+    await t.test("response-body timeout is unconfirmed", async () => {
+      globalThis.fetch = async () => {
+        const response = Response.json({ success: true });
+        response.json = async () => { throw new DOMException("Private details", "TimeoutError"); };
+        return response;
+      };
+      assert.equal((await POST(request())).status, 502);
+      assert.equal(logs.at(-1)?.errorType, "timeout");
+      assert.equal(logs.at(-1)?.upstreamStatus, 200);
+    });
+    await t.test("AbortError during body reading is classified by the timeout signal", async () => {
+      const originalTimeout = AbortSignal.timeout;
+      const controller = new AbortController();
+      AbortSignal.timeout = (milliseconds) => {
+        assert.equal(milliseconds, 10_000);
+        return controller.signal;
+      };
+      try {
+        globalThis.fetch = async () => {
+          const response = Response.json({ success: true });
+          response.json = async () => {
+            controller.abort(new DOMException("Private timeout detail", "TimeoutError"));
+            throw new DOMException("The operation was aborted", "AbortError");
+          };
+          return response;
+        };
+        assert.equal((await POST(request())).status, 502);
+        assert.equal(logs.at(-1)?.errorType, "timeout");
+        assert.equal(logs.at(-1)?.upstreamStatus, 200);
+      } finally {
+        AbortSignal.timeout = originalTimeout;
+      }
+    });
+    await t.test("raw exception and provider message never enter logs", async () => {
+      globalThis.fetch = async () => { throw new Error("Private details visitor@example.com"); };
+      await POST(request());
+      assert.equal(logs.at(-1)?.errorType, "transport");
+      for (const log of logs) {
+        assert.deepEqual(Object.keys(log).sort(), ["event", "requestId", "status", "upstreamStatus", "elapsedMs", ...(log.errorType ? ["errorType"] : [])].sort());
+        assert.equal(log.requestId, id);
+        assert.equal(typeof log.elapsedMs, "number");
+        assert.ok(Number(log.elapsedMs) >= 0);
+      }
+      const serialized = JSON.stringify(logs);
+      for (const privateValue of [valid.email, valid.name, valid.city, "Private details", "This form needs", "submitted successfully"])
+        assert.equal(serialized.includes(privateValue), false);
+    });
+  } finally {
+    globalThis.fetch = originalFetch;
+    console.warn = originalWarn;
+    console.info = originalInfo;
+  }
+});
+
+test("provider classifier distinguishes activation, acceptance and unknown", () => {
+  assert.equal(classifyFormSubmit({ success: true }), "accepted");
+  assert.equal(classifyFormSubmit({ success: "true" }), "accepted");
+  assert.equal(classifyFormSubmit({ success: "true", message: "Please confirm your email." }), "activation_required");
+  assert.equal(classifyFormSubmit({ success: true, message: "Email verification required." }), "activation_required");
+  assert.equal(classifyFormSubmit({ success: true, message: "Please verify your email address." }), "activation_required");
+  assert.equal(classifyFormSubmit({ success: "true", message: "Your email is not verified." }), "activation_required");
+  assert.equal(classifyFormSubmit({ success: true, message: "Your email address has not been verified." }), "activation_required");
+  assert.equal(classifyFormSubmit({ success: true, message: "Your email is verified. The form was submitted successfully." }), "accepted");
+  for (const payload of [null, [], true, "true", {}, { success: false }, { success: "false" }])
+    assert.equal(classifyFormSubmit(payload), "unconfirmed");
+});
+
+test("client response handling never equates transport or provider ambiguity with delivery", async (t) => {
+  const originalFetch = globalThis.fetch;
+  try {
+    await t.test("only explicit server acceptance succeeds", async () => {
+      globalThis.fetch = async (url, init) => {
+        assert.equal(url, "/api/consultation");
+        assert.equal(new Headers(init?.headers).get("Idempotency-Key"), id);
+        assert.deepEqual(JSON.parse(String(init?.body)), valid);
+        return Response.json({ status: "accepted", accepted: true });
+      };
+      assert.deepEqual(await sendConsultation(valid, id), { status: "accepted" });
+    });
+    await t.test("activation remains pending", async () => {
+      globalThis.fetch = async () => Response.json({ status: "activation_required", accepted: false }, { status: 503 });
+      assert.deepEqual(await sendConsultation(valid, id), { status: "activation_required", message: deliveryMessages.activation_required });
+    });
+    await t.test("only pre-forward validation permits an ordinary retry", async () => {
+      globalThis.fetch = async () => Response.json({ status: "invalid", error: "Please check your request." }, { status: 422 });
+      assert.deepEqual(await sendConsultation(valid, id), { status: "invalid", message: "Please check your request." });
+    });
+    await t.test("unknown, old-server and non-2xx acceptance are conservative", async () => {
+      for (const [payload, status] of [[{}, 200], [null, 200], [{ accepted: true }, 200], [{ status: "accepted", accepted: true }, 502], [{ status: "invalid", error: "retry" }, 500]] as const) {
+        globalThis.fetch = async () => Response.json(payload, { status });
+        assert.deepEqual(await sendConsultation(valid, id), { status: "unconfirmed", message: deliveryMessages.unconfirmed });
+      }
+    });
+    await t.test("transport, HTML and response-body errors preserve unknown outcome", async () => {
+      for (const mock of [
+        async () => { throw new DOMException("Timeout", "TimeoutError"); },
+        async () => new Response("<html>error</html>", { status: 502 }),
+        async () => { const response = Response.json({ accepted: true }); response.json = async () => { throw new Error("body failed"); }; return response; },
+      ]) {
+        globalThis.fetch = mock;
+        assert.deepEqual(await sendConsultation(valid, id), { status: "unconfirmed", message: deliveryMessages.unconfirmed });
+      }
+    });
   } finally {
     globalThis.fetch = originalFetch;
   }
