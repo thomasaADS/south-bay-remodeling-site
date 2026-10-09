@@ -17,11 +17,27 @@ Only request-related contact is authorized by the form. It does not request mark
 3. Verify that every answer arrives at `Office@formadpb.com` and that Reply targets the visitor's email.
 4. Check the spam folder if the first delivered inquiry is not visible.
 
-The form only confirms requests accepted by FormSubmit. The endpoint rejects invalid data before forwarding and enforces a 12 KB body limit and a 10-second upstream timeout. Submitted details stay in component memory during navigation; they are not written to browser storage or application logs. A page reload clears them. No requests are saved by this Next.js application itself.
+The form confirms **provider acceptance**, not receipt in the destination inbox. It requires a successful HTTP response and a JSON `success` value of boolean `true` or string `"true"`. An activation/verification message takes precedence and is shown as awaiting verification. Empty, malformed, false, or unknown responses remain unconfirmed. FormSubmit's public AJAX documentation demonstrates JSON handling but does not publish a versioned response schema; these compatibility cases must be checked against an authorized live submission before calling end-to-end delivery verified.
+
+The endpoint rejects invalid data before forwarding and enforces a 12 KB body limit and a 10-second upstream timeout; the browser timeout remains 20 seconds. A timeout is an **unknown delivery outcome**, because FormSubmit may already have accepted the inquiry. Do not infer that a request was lost or immediately submit it again.
+
+After an unconfirmed or activation-pending result, the form retains answers and shows direct contact links and a request reference. Editing answers or navigating between steps does not clear that notice. Sending is paused until the visitor explicitly chooses to allow another attempt after checking with FORMA. This is only a same-page duplicate-submission guard, not durable deduplication. A reload clears it. FormSubmit's public documentation does not promise support for the forwarded `Idempotency-Key` header.
+
+Submitted details stay in component memory during navigation; they are not written to browser storage or application logs. A page reload clears them. No requests are saved by this Next.js application itself. Logs contain only a `consultation_delivery` event, validated request ID, outcome, upstream HTTP status, elapsed milliseconds, and a fixed error category. They never contain submitted details, raw provider messages, or raw exception text.
+
+For a reported problem, match the request reference to the server log. A `timeout` category establishes a timed-out acknowledgement, not failed delivery. `upstream_http` records a non-2xx response; `invalid_json` or `upstream_response` indicates an unreadable or unrecognized acknowledgement. Check the destination inbox and FormSubmit activation status before retrying. Do not increase timeouts without measured evidence.
 
 ## Checks
 
-Run `npx --yes tsx@4.20.5 --test tests/consultation.test.ts` and the Sites build helper. Tests use a mocked receiver and never send external requests.
+Run `npx --yes tsx@4.20.5 --test tests/consultation.test.ts`. Tests use a mocked receiver and never send external requests.
+
+For this Vercel/Next.js checkout, run `npm run build`, `npx tsc --noEmit`, and `npm run lint` as well. The README's original Sites helper commands are not present in the current package scripts. If the `tsx` CLI cannot create its IPC socket in a restricted executor, use Node's `--import` with the installed `tsx` loader and `--test` instead.
+
+The delivery tests cover explicit boolean/string success, activation pending, false/missing/unknown payloads, empty/HTML/malformed bodies, upstream HTTP errors, request and response-body timeouts, transport errors, privacy-safe diagnostics and client response handling. They do not prove mailbox delivery.
+
+Optional UI regression checks:
+- `tests/consultation-dom.mjs` runs against React with jsdom and mocked fetch. Use a TypeScript loader; install jsdom in the test environment or set `FORMA_JSDOM_PATH` to an isolated installation. It checks same-tick duplicate submits, retained answers and editing focus, Back/Continue, explicit retry, activation, malformed responses and analytics failure.
+- `tests/consultation-ui.mjs` checks the same core flows in Playwright against a running local app (default `http://127.0.0.1:3100`). It requires Playwright and Chromium; set `PLAYWRIGHT_CHROMIUM_EXECUTABLE` as needed. It refuses non-local URLs, mocks every consultation request and blocks other origins. Browser execution depends on the executor allowing Chromium's local sockets.
 
 ## Research informing the fields
 
