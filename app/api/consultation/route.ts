@@ -1,4 +1,5 @@
 import { parseConsultation, validateConsultation } from "@/lib/consultation";
+import { inspectUpstreamFailure, type UpstreamDiagnostic } from "@/lib/consultation-diagnostics";
 import {
   classifyFormSubmit,
   deliveryMessages,
@@ -65,6 +66,7 @@ export async function POST(request: Request) {
   const started = performance.now();
   const upstreamTimeout = AbortSignal.timeout(10_000);
   let upstreamStatus: number | null = null;
+  let upstreamDiagnostic: UpstreamDiagnostic | undefined;
   const finish = (status: DeliveryStatus, errorType?: string) => {
     // Never log lead fields, provider bodies/messages, or raw exceptions.
     const diagnostic = {
@@ -74,6 +76,7 @@ export async function POST(request: Request) {
       upstreamStatus,
       elapsedMs: Math.round(performance.now() - started),
       ...(errorType ? { errorType } : {}),
+      ...(upstreamDiagnostic ? { upstreamDiagnostic } : {}),
     };
     if (status === "accepted") console.info(diagnostic);
     else console.warn(diagnostic);
@@ -118,7 +121,15 @@ export async function POST(request: Request) {
       },
     );
     upstreamStatus = response.status;
-    if (!response.ok) return finish("unconfirmed", "upstream_http");
+    if (!response.ok) {
+      try {
+        upstreamDiagnostic = await inspectUpstreamFailure(response, upstreamTimeout);
+      } catch {
+        // Diagnostics must not hide the original upstream refusal.
+        upstreamDiagnostic = { responseFormat: "other", bodyRead: "read_error", inspectedBytes: 0, hints: [] };
+      }
+      return finish("unconfirmed", "upstream_http");
+    }
     const payload: unknown = await response.json();
     const status = classifyFormSubmit(payload);
     return finish(status, status === "unconfirmed" ? "upstream_response" : undefined);
