@@ -12,8 +12,10 @@ import {
   type Errors,
 } from "@/lib/consultation";
 import {
+  consultationAttempt,
   deliveryMessages,
   sendConsultation,
+  type ConsultationAttempt,
   type SubmissionResult,
 } from "@/lib/consultation-delivery";
 
@@ -32,13 +34,14 @@ export function ConsultationForm() {
   const [sent, setSent] = useState(false);
   const [message, setMessage] = useState("");
   const [deliveryHold, setDeliveryHold] = useState<
-    (Extract<SubmissionResult, { status: "activation_required" | "unconfirmed" }> & {
+    (Extract<SubmissionResult, { status: "unavailable" | "unconfirmed" }> & {
       requestId?: string;
     }) | null
   >(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const errorRef = useRef<HTMLDivElement>(null);
   const requestId = useRef<string | null>(null);
+  const attempt = useRef<ConsultationAttempt | null>(null);
   const sending = useRef(false);
   const moved = useRef(false);
 
@@ -60,7 +63,6 @@ export function ConsultationForm() {
     setData((current) => ({ ...current, [key]: value }));
     setErrors((current) => ({ ...current, [key]: undefined }));
     setMessage("");
-    if (!deliveryHold) requestId.current = null;
   }
   function goTo(next: number) {
     moved.current = true;
@@ -133,7 +135,8 @@ export function ConsultationForm() {
     setPending(true);
     setMessage("");
     try {
-      requestId.current ??= crypto.randomUUID();
+      attempt.current = consultationAttempt(attempt.current, data);
+      requestId.current = attempt.current.requestId;
       const result = await sendConsultation(data, requestId.current);
       if (result.status === "invalid") {
         setMessage(result.message);
@@ -246,7 +249,6 @@ export function ConsultationForm() {
                 onClick={() => {
                   setDeliveryHold(null);
                   setMessage("");
-                  requestId.current = null;
                 }}
               >
                 I’ve checked with FORMA; allow another attempt

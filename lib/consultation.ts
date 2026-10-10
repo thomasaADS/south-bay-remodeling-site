@@ -61,6 +61,11 @@ export const emptyConsultation: Consultation = {
   website: "",
 };
 
+export function isEmailAddress(value: string): boolean {
+  return value.length <= 254 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) &&
+    !/[<>\",;:\x00-\x1f\x7f]/.test(value);
+}
+
 export function validateConsultation(
   data: Consultation,
   step?: number,
@@ -99,8 +104,7 @@ export function validateConsultation(
     if (!data.name.trim() || data.name.length > 100)
       errors.name = "Enter your name.";
     if (
-      data.email.length > 254 ||
-      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)
+      !isEmailAddress(data.email)
     )
       errors.email = "Enter a valid email address.";
     if (

@@ -1,35 +1,27 @@
-export type DeliveryStatus = "accepted" | "activation_required" | "unconfirmed";
-
 export const deliveryMessages = {
-  activation_required:
-    "Email delivery is awaiting FORMA’s verification. Your answers are still here. Please contact FORMA to check this request before submitting again.",
+  unavailable:
+    "Email sending is temporarily unavailable. Your answers are still here. Please contact FORMA.",
   unconfirmed:
     "We couldn’t confirm email delivery. Your request may already have reached FORMA. Your answers are still here; please contact FORMA before submitting again to avoid a duplicate.",
 } as const;
 
-// FormSubmit's AJAX examples return JSON, but its public docs do not specify
-// a versioned response schema. Accept only explicit success flags, and fail
-// closed for empty, malformed or unfamiliar responses. Acceptance is not an
-// assertion that the message reached the destination inbox.
-export function classifyFormSubmit(payload: unknown): DeliveryStatus {
-  if (!payload || typeof payload !== "object" || Array.isArray(payload))
-    return "unconfirmed";
-  const result = payload as Record<string, unknown>;
-  if (
-    typeof result.message === "string" &&
-    /\b(?:activat(?:e|ion)|verification|(?:confirm|verify) (?:your|the) (?:email|form)|(?:email|form)(?: address)? (?:is |has )?(?:not (?:been )?verified|unverified))\b/i.test(
-      result.message,
-    )
-  )
-    return "activation_required";
-  return result.success === true || result.success === "true"
-    ? "accepted"
-    : "unconfirmed";
+export type ConsultationAttempt = { requestId: string; body: string };
+
+// In-memory only. A deliberate retry of identical answers retains its key;
+// changed answers form a new attempt. Resend deduplicates for 24 hours, not
+// forever. No automatic retry, browser storage, or cross-reload guarantee.
+export function consultationAttempt(
+  previous: ConsultationAttempt | null,
+  data: unknown,
+  createId: () => string = () => crypto.randomUUID(),
+): ConsultationAttempt {
+  const body = JSON.stringify(data);
+  return previous?.body === body ? previous : { requestId: createId(), body };
 }
 
 export type SubmissionResult =
   | { status: "accepted" }
-  | { status: "activation_required" | "unconfirmed"; message: string }
+  | { status: "unavailable" | "unconfirmed"; message: string }
   | { status: "invalid"; message: string };
 
 // Kept separate from the component so transport and malformed-response paths
@@ -58,10 +50,10 @@ export async function sendConsultation(
       result.accepted === true
     )
       return { status: "accepted" };
-    if (result.status === "activation_required")
+    if (response.status === 503 && result.status === "unavailable")
       return {
-        status: "activation_required",
-        message: deliveryMessages.activation_required,
+        status: "unavailable",
+        message: deliveryMessages.unavailable,
       };
     // Only our own pre-forward validation responses are safe to edit/retry.
     if (

@@ -31,11 +31,11 @@ await page.route("**/*", async (route) => {
     return route.fulfill({ status: 502, contentType: "text/html", body: "<h1>Unavailable</h1>" });
   const bodies = {
     unknown: { status: "unconfirmed", accepted: false },
-    activation: { status: "activation_required", accepted: false },
+    unavailable: { status: "unavailable", accepted: false },
     success: { status: "accepted", accepted: true },
   };
   return route.fulfill({
-    status: mode === "success" ? 200 : mode === "activation" ? 503 : 502,
+    status: mode === "success" ? 200 : mode === "unavailable" ? 503 : 502,
     contentType: "application/json",
     body: JSON.stringify(bodies[mode]),
   });
@@ -89,13 +89,13 @@ try {
   assert.match(await page.locator(".form-success").innerText(), /accepted your request for delivery/);
   console.log("PASS: duplicate click guard, unknown outcome, retained fields, navigation, explicit retry and accepted analytics");
 
-  mode = "activation";
+  mode = "unavailable";
   await completeForm();
   await form.getByRole("button", { name: "Request a consultation", exact: true }).click();
   await form.getByRole("button", { name: "Check with FORMA before resending" }).waitFor();
-  assert.match(await form.getByRole("alert").innerText(), /awaiting FORMA’s verification/);
+  assert.match(await form.getByRole("alert").innerText(), /temporarily unavailable/);
   assert.equal(await leadEvents(), 0);
-  console.log("PASS: activation stays pending and generates no lead event");
+  console.log("PASS: unavailable stays pending and generates no lead event");
 
   mode = "html";
   await completeForm();
