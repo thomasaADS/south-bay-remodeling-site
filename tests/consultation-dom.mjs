@@ -25,7 +25,7 @@ globalThis.fetch = async (url, init) => {
   if (mode === "deferred") await new Promise((resolve) => { release = resolve; });
   if (mode === "html") return new Response("<html>error</html>", { status: 502 });
   if (mode === "success") return Response.json({ status: "accepted", accepted: true });
-  return Response.json({ status: mode === "activation" ? "activation_required" : "unconfirmed", accepted: false }, { status: 502 });
+  return Response.json({ status: mode === "unavailable" ? "unavailable" : "unconfirmed", accepted: false }, { status: mode === "unavailable" ? 503 : 502 });
 };
 const button = (text) => [...document.querySelectorAll("button")].find((element) => element.textContent === text);
 const alertText = () => document.querySelector('[role="alert"]')?.textContent;
@@ -95,12 +95,23 @@ try {
   assert.equal(events(), 1);
   console.log("PASS: repeat-click guard, retained answers, navigation, explicit retry, accepted analytics");
 
-  mode = "activation";
+  mode = "unknown";
   await completeForm();
   await click("Request a consultation");
-  assert.match(alertText(), /awaiting FORMA’s verification/);
+  const unchangedKey = keys.at(-1);
+  await click("I’ve checked with FORMA; allow another attempt");
+  mode = "success";
+  await click("Request a consultation");
+  assert.equal(keys.at(-1), unchangedKey, "unchanged explicit retry must retain the provider idempotency key");
+  assert.equal(events(), 1);
+  console.log("PASS: unchanged retry preserves the idempotency key");
+
+  mode = "unavailable";
+  await completeForm();
+  await click("Request a consultation");
+  assert.match(alertText(), /temporarily unavailable/);
   assert.equal(events(), 0);
-  console.log("PASS: activation stays pending and produces no lead event");
+  console.log("PASS: unavailable stays pending and produces no lead event");
 
   mode = "html";
   await completeForm();

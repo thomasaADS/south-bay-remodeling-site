@@ -1,10 +1,6 @@
 import { parseConsultation, validateConsultation } from "@/lib/consultation";
-import { inspectUpstreamFailure, type UpstreamDiagnostic } from "@/lib/consultation-diagnostics";
-import {
-  classifyFormSubmit,
-  deliveryMessages,
-  type DeliveryStatus,
-} from "@/lib/consultation-delivery";
+import { sendConsultationEmail } from "@/lib/consultation-email";
+import { deliveryMessages } from "@/lib/consultation-delivery";
 
 export const runtime = "nodejs";
 const MAX_BYTES = 12_000;
@@ -61,86 +57,25 @@ export async function POST(request: Request) {
   )
     return invalid("Please refresh and try again.", 400);
 
-  const { website: _website, ...lead } = data;
-  void _website;
   const started = performance.now();
-  const upstreamTimeout = AbortSignal.timeout(10_000);
-  let upstreamStatus: number | null = null;
-  let upstreamDiagnostic: UpstreamDiagnostic | undefined;
-  const finish = (status: DeliveryStatus, errorType?: string) => {
-    // Never log lead fields, provider bodies/messages, or raw exceptions.
-    const diagnostic = {
-      event: "consultation_delivery",
-      requestId,
-      status,
-      upstreamStatus,
-      elapsedMs: Math.round(performance.now() - started),
-      ...(errorType ? { errorType } : {}),
-      ...(upstreamDiagnostic ? { upstreamDiagnostic } : {}),
-    };
-    if (status === "accepted") console.info(diagnostic);
-    else console.warn(diagnostic);
-    return status === "accepted"
-      ? reply({ status, accepted: true, requestId }, 200)
-      : reply(
-          { status, accepted: false, error: deliveryMessages[status], requestId },
-          status === "activation_required" ? 503 : 502,
-        );
+  const result = await sendConsultationEmail(data, requestId);
+  // Fixed categories and opaque request/provider IDs only; never log lead
+  // fields, credentials, provider messages, or raw exceptions.
+  const diagnostic = {
+    event: "consultation_delivery",
+    provider: "resend",
+    requestId,
+    ...result,
+    elapsedMs: Math.round(performance.now() - started),
   };
-  try {
-    const response = await fetch(
-      "https://formsubmit.co/ajax/Office@formadpb.com",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          "Idempotency-Key": requestId,
-        },
-        body: JSON.stringify({
-          _subject: `New FORMA project inquiry — ${lead.city}`,
-          _template: "table",
-          _url: "https://formadpb.com/#consultation",
-          name: lead.name,
-          email: lead.email,
-          phone: lead.phone || "Not provided",
-          preferredContact: lead.contactMethod,
-          projectTypes: lead.projectTypes.join(", "),
-          propertyCity: lead.city,
-          zipCode: lead.zip || "Not provided",
-          planningStage: lead.planningStage,
-          desiredStart: lead.timeline,
-          investmentRange: lead.budget,
-          projectNotes: lead.description || "Not provided",
-          contactPermission: lead.consent ? "Confirmed" : "Not confirmed",
-          requestId,
-        }),
-        redirect: "error",
-        signal: upstreamTimeout,
-        cache: "no-store",
-      },
-    );
-    upstreamStatus = response.status;
-    if (!response.ok) {
-      try {
-        upstreamDiagnostic = await inspectUpstreamFailure(response, upstreamTimeout);
-      } catch {
-        // Diagnostics must not hide the original upstream refusal.
-        upstreamDiagnostic = { responseFormat: "other", bodyRead: "read_error", inspectedBytes: 0, hints: [] };
-      }
-      return finish("unconfirmed", "upstream_http");
-    }
-    const payload: unknown = await response.json();
-    const status = classifyFormSubmit(payload);
-    return finish(status, status === "unconfirmed" ? "upstream_response" : undefined);
-  } catch (error) {
-    const errorType =
-      (upstreamTimeout.aborted && upstreamTimeout.reason?.name === "TimeoutError") ||
-      (error instanceof Error && error.name === "TimeoutError")
-        ? "timeout"
-        : error instanceof SyntaxError
-          ? "invalid_json"
-          : "transport";
-    return finish("unconfirmed", errorType);
-  }
+  if (result.status === "accepted") console.info(diagnostic);
+  else console.warn(diagnostic);
+  if (result.status === "accepted")
+    return reply({ status: "accepted", accepted: true, requestId }, 200);
+  return reply({
+    status: result.status,
+    accepted: false,
+    error: deliveryMessages[result.status],
+    requestId,
+  }, result.status === "unavailable" ? 503 : 502);
 }

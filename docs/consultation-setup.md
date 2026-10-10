@@ -1,51 +1,59 @@
-# Consultation request delivery
+# Consultation email delivery
 
-The three-step questionnaire sends project inquiries to `Office@formadpb.com` through FormSubmit's HTTPS AJAX endpoint.
+## Local replacement, pending configuration and publication
 
-## Activate delivery
+The consultation route uses the official Resend HTTPS email API directly. It does not require a provider SDK or Marketplace installation. There is no FormSubmit fallback and no automatic retry. The destination is fixed in server code as `Office@formadpb.com`; visitor input cannot change the sender, recipients, CC/BCC, endpoint, or credentials.
 
-FormSubmit requires a one-time confirmation for a new destination. Open the activation message sent to `Office@formadpb.com`, verify that it references `formadpb.com`, and approve it. Until that confirmation is completed, FormSubmit sends another activation email instead of delivering the inquiry normally.
+The visitor's validated email is `reply_to`. All approved inquiry fields are included in a deterministic plain-text email, with a fixed subject and request reference. The existing three-step form, consent, field validation, honeypot, origin check, and 12 KB request limit remain. No website redesign is included.
 
-The server validates and reformats each inquiry before forwarding it. The email includes the visitor's name, email, phone, preferred contact method, project types, city, ZIP, planning stage, desired start, investment range, project notes, contact permission and a request ID.
+## Operator setup required before publication
 
-Only request-related contact is authorized by the form. It does not request marketing consent.
+One setup outcome is required: connect an authenticated, verified sending identity to this Vercel project. This local code does not create an account, verify DNS, generate credentials, or establish that the sender is ready.
 
-## Verify delivery
+1. In an authorized Resend account, verify a sending domain owned by FORMA. Suggested dedicated subdomain: `notify.formadpb.com`. Keep Receiving disabled. Add only the exact sending records Resend generates at the domain's DNS host; preserve the existing Office mailbox MX/SPF/DKIM/DMARC. New Resend domains may use CNAME records rather than the older TXT/MX pattern.
+2. With explicit authorization, create a Sending-access API key restricted to that verified domain. The owner must transfer/configure it directly through a secure provider/Vercel flow. Do not put it in chat, source control, screenshots, logs, or `NEXT_PUBLIC_*` variables.
+3. Set these server-only environment variables on the intended Vercel project/environment:
+   - `CONSULTATION_EMAIL_PROVIDER=resend`
+   - `CONSULTATION_FROM_EMAIL=inquiries@notify.formadpb.com` (or another address on the verified FORMA domain)
+   - `RESEND_API_KEY`: the domain-restricted secret, entered securely by the owner
+4. After approval, publish and redeploy so the runtime uses that configuration. Production credentials should not automatically be shared with preview deployments. Local mocked tests do not need credentials.
 
-1. Complete FormSubmit's one-time email confirmation.
-2. Submit an authorized test request from the live site.
-3. Verify that every answer arrives at `Office@formadpb.com` and that Reply targets the visitor's email.
-4. Check the spam folder if the first delivered inquiry is not visible.
+The address restriction is checked locally, but actual domain verification is enforced by Resend. Without the three configured values, the route returns HTTP 503 with an unavailable status and makes no external call. `onboarding@resend.dev` is intentionally disallowed; Resend's test identity cannot be assumed to send to Office.
 
-The form confirms **provider acceptance**, not receipt in the destination inbox. It requires a successful HTTP response and a JSON `success` value of boolean `true` or string `"true"`. An activation/verification message takes precedence and is shown as awaiting verification. Empty, malformed, false, or unknown responses remain unconfirmed. FormSubmit's public AJAX documentation demonstrates JSON handling but does not publish a versioned response schema; these compatibility cases must be checked against an authorized live submission before calling end-to-end delivery verified.
+The destination is not an environment variable. Replies go to the visitor, while the authenticated From identity remains FORMA's verified sender.
 
-The endpoint rejects invalid data before forwarding and enforces a 12 KB body limit and a 10-second upstream timeout; the browser timeout remains 20 seconds. A timeout is an **unknown delivery outcome**, because FormSubmit may already have accepted the inquiry. Do not infer that a request was lost or immediately submit it again.
+## Acceptance and retries
 
-After an unconfirmed or activation-pending result, the form retains answers and shows direct contact links and a request reference. Editing answers or navigating between steps does not clear that notice. Sending is paused until the visitor explicitly chooses to allow another attempt after checking with FORMA. This is only a same-page duplicate-submission guard, not durable deduplication. A reload clears it. FormSubmit's public documentation does not promise support for the forwarded `Idempotency-Key` header.
+The route makes one `POST https://api.resend.com/emails` call per valid submission. Its ten-second deadline covers the request and successful-response body. Success requires a 2xx response with a valid UUID-shaped email ID. This proves API acceptance, not destination inbox delivery. Unknown, malformed, oversized, stalled, or unfamiliar acknowledgements remain unconfirmed.
 
-Submitted details stay in component memory during navigation; they are not written to browser storage or application logs. A page reload clears them. No requests are saved by this Next.js application itself. Logs contain only a `consultation_delivery` event, validated request ID, outcome, upstream HTTP status, elapsed milliseconds, and a fixed error category. They never contain submitted details, raw provider messages, or raw exception text.
+Successful response parsing is capped at 16 KiB and 1,024 reads. Error response bodies are discarded without logging or awaiting cancellation; only fixed HTTP error categories are recorded. Logs contain request ID, fixed provider/status/error categories, upstream HTTP status, elapsed time, and the provider's opaque email ID on acceptance. They never contain lead fields, API keys, request/response bodies, provider messages, or raw exceptions.
 
-For a reported problem, match the request reference to the server log. A `timeout` category establishes a timed-out acknowledgement, not failed delivery. `upstream_http` records a non-2xx response; `invalid_json` or `upstream_response` indicates an unreadable or unrecognized acknowledgement. Check the destination inbox and FormSubmit activation status before retrying. Do not increase timeouts without measured evidence.
+An explicit retry with identical answers on the same page retains its request ID and byte-identical request payload. The Resend idempotency key is `forma-consultation/<request-ID>`. Resend deduplicates identical keys and payloads for **24 hours only**. Edited answers form a new attempt after the existing explicit retry confirmation. The app does not silently change keys on provider conflicts or retry against another provider.
 
-For non-2xx upstream responses only, `upstreamDiagnostic` adds a fixed response-format enum, body-read outcome, inspected byte count (at most 16,384), and allowlisted marker tags. Examples include `challenge_marker`, `activation_marker`, `origin_marker`, and `access_denied_marker`. A Cloudflare infrastructure marker is separate from a challenge marker. Tags are hints found in the response, not proof of the reason for rejection. No recognized marker does not establish that the response was safe or accepted.
+This is not durable lead storage or permanent deduplication. Reloading clears the form and its in-memory attempt; retries after 24 hours can duplicate an earlier email. Check with FORMA before resending an unconfirmed request. Provider conflict responses remain unconfirmed because an earlier attempt may already have been accepted. No submission is automatically sent to the visitor.
 
-Diagnostic inspection shares the existing upstream deadline, stops at the byte cap or after 1,024 reads, and does not await a stalled cancellation. `cap_reached` does not assert that more bytes exist; `read_limit` bounds pathological empty/tiny chunks. JSON inspection requires a complete bounded document and considers only top-level `error` and `message` strings. Provider text, header values, identifiers, cookies, URLs, and exception messages are never logged. A failed or timed-out diagnostic read preserves the original HTTP refusal and `upstream_http` classification. Nothing in this diagnostic change retries or resends an inquiry.
+## Before activating production
 
-## Checks
+- Verify domain status and exact project/environment configuration without exposing the key.
+- Verify hosting-level abuse protection and available sending quota. The existing origin check and honeypot are not a distributed rate limiter; the repository has no such limiter or queue. Provider rate/quota refusals are handled without automatic resends.
+- Obtain approval for publication and a clearly labelled live test to Office. Do not reuse real lead data for tests.
+- Match the live request reference to its server log/provider email ID and check provider delivery status. Finally confirm actual receipt with Avihu, including field completeness and Reply-To. API acceptance alone is insufficient.
+- If a test result is uncertain, do not send another without checking the first attempt.
 
-Run `npx --yes tsx@4.20.5 --test tests/consultation.test.ts`. Tests use a mocked receiver and never send external requests.
+## Local checks
 
-Also run `npx --yes tsx@4.20.5 --test tests/consultation-diagnostics.test.ts` for marker classification, privacy, chunk/byte limits, partial JSON, stalled/erroring bodies, and cancellation. Both test files may be passed to the same command.
+- `node --import ./node_modules/tsx/dist/loader.mjs --test tests/consultation.test.ts tests/consultation-email.test.ts`
+- `FORMA_JSDOM_PATH=/path/to/jsdom node --import ./node_modules/tsx/dist/loader.mjs tests/consultation-dom.mjs`
+- `npm run build`
+- `npx tsc --noEmit`
+- `npm run lint`
 
-For this Vercel/Next.js checkout, run `npm run build`, `npx tsc --noEmit`, and `npm run lint` as well. The README's original Sites helper commands are not present in the current package scripts. If the `tsx` CLI cannot create its IPC socket in a restricted executor, use Node's `--import` with the installed `tsx` loader and `--test` instead.
+Tests mock every sending request and do not transmit leads externally. DOM checks cover duplicate clicks, retained answers and focus, Back/Continue, changed/unchanged explicit retries, unavailable/malformed results, and analytics failure. The optional Playwright script remains local-only and mocked; running DOM tests is not a visual-browser pass.
 
-The delivery tests cover explicit boolean/string success, activation pending, false/missing/unknown payloads, empty/HTML/malformed bodies, upstream HTTP errors, request and response-body timeouts, transport errors, privacy-safe diagnostics and client response handling. They do not prove mailbox delivery.
+## Official references
 
-Optional UI regression checks:
-- `tests/consultation-dom.mjs` runs against React with jsdom and mocked fetch. Use a TypeScript loader; install jsdom in the test environment or set `FORMA_JSDOM_PATH` to an isolated installation. It checks same-tick duplicate submits, retained answers and editing focus, Back/Continue, explicit retry, activation, malformed responses and analytics failure.
-- `tests/consultation-ui.mjs` checks the same core flows in Playwright against a running local app (default `http://127.0.0.1:3100`). It requires Playwright and Chromium; set `PLAYWRIGHT_CHROMIUM_EXECUTABLE` as needed. It refuses non-local URLs, mocks every consultation request and blocks other origins. Browser execution depends on the executor allowing Chromium's local sockets.
-
-## Research informing the fields
-
-- https://mdtinc.net/free-project-alignment-call — project scope, location, investment, timing and goals.
-- https://www.w3.org/WAI/tutorials/forms/multi-page/ — logical steps, progress indication and preserving entered values when navigating between steps.
+- https://resend.com/docs/api-reference/emails/send-email
+- https://resend.com/docs/dashboard/emails/idempotency-keys
+- https://resend.com/docs/api-reference/errors
+- https://resend.com/docs/create-an-api-key
+- https://resend.com/docs/knowledge-base/how-do-i-avoid-conflicting-with-my-mx-records
