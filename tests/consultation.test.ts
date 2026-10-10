@@ -201,6 +201,34 @@ test("submission rejects unsafe requests and confirms only accepted delivery", a
       assert.equal((await POST(request())).status, 502);
       assert.equal(logs.at(-1)?.upstreamStatus, 429);
     });
+    await t.test("403 diagnostics remain private and never change the delivery outcome", async () => {
+      globalThis.fetch = async () => new Response("<title>Access denied</title>visitor@example.com Private Name token=secret", { status: 403, headers: { "content-type": "text/html", server: "cloudflare", "cf-ray": "private-ray" } });
+      const response = await POST(request());
+      assert.equal(response.status, 502);
+      assert.equal((await response.json()).status, "unconfirmed");
+      assert.equal(logs.at(-1)?.upstreamStatus, 403);
+      assert.equal(logs.at(-1)?.errorType, "upstream_http");
+      const diagnostic = logs.at(-1)?.upstreamDiagnostic as { hints: string[] };
+      assert.deepEqual(diagnostic.hints, ["cloudflare_marker", "access_denied_marker"]);
+      for (const value of ["visitor@example.com", "Private Name", "secret", "private-ray"]) assert.equal(JSON.stringify(logs.at(-1)).includes(value), false);
+    });
+    await t.test("a stalled rejection body preserves HTTP403 and the upstream_http category", async () => {
+      const originalTimeout = AbortSignal.timeout;
+      const controller = new AbortController();
+      AbortSignal.timeout = () => controller.signal;
+      let cancelled = false;
+      globalThis.fetch = async () => {
+        const stream = new ReadableStream({ pull() { controller.abort(); }, cancel() { cancelled = true; } });
+        return new Response(stream, { status: 403 });
+      };
+      try {
+        assert.equal((await POST(request())).status, 502);
+        assert.equal(logs.at(-1)?.upstreamStatus, 403);
+        assert.equal(logs.at(-1)?.errorType, "upstream_http");
+        assert.equal((logs.at(-1)?.upstreamDiagnostic as { bodyRead: string }).bodyRead, "timeout");
+        assert.equal(cancelled, true);
+      } finally { AbortSignal.timeout = originalTimeout; }
+    });
     await t.test("response-body timeout is unconfirmed", async () => {
       globalThis.fetch = async () => {
         const response = Response.json({ success: true });
@@ -239,7 +267,7 @@ test("submission rejects unsafe requests and confirms only accepted delivery", a
       await POST(request());
       assert.equal(logs.at(-1)?.errorType, "transport");
       for (const log of logs) {
-        assert.deepEqual(Object.keys(log).sort(), ["event", "requestId", "status", "upstreamStatus", "elapsedMs", ...(log.errorType ? ["errorType"] : [])].sort());
+        assert.deepEqual(Object.keys(log).sort(), ["event", "requestId", "status", "upstreamStatus", "elapsedMs", ...(log.errorType ? ["errorType"] : []), ...(log.upstreamDiagnostic ? ["upstreamDiagnostic"] : [])].sort());
         assert.equal(log.requestId, id);
         assert.equal(typeof log.elapsedMs, "number");
         assert.ok(Number(log.elapsedMs) >= 0);

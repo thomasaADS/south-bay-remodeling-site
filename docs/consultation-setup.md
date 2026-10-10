@@ -27,9 +27,15 @@ Submitted details stay in component memory during navigation; they are not writt
 
 For a reported problem, match the request reference to the server log. A `timeout` category establishes a timed-out acknowledgement, not failed delivery. `upstream_http` records a non-2xx response; `invalid_json` or `upstream_response` indicates an unreadable or unrecognized acknowledgement. Check the destination inbox and FormSubmit activation status before retrying. Do not increase timeouts without measured evidence.
 
+For non-2xx upstream responses only, `upstreamDiagnostic` adds a fixed response-format enum, body-read outcome, inspected byte count (at most 16,384), and allowlisted marker tags. Examples include `challenge_marker`, `activation_marker`, `origin_marker`, and `access_denied_marker`. A Cloudflare infrastructure marker is separate from a challenge marker. Tags are hints found in the response, not proof of the reason for rejection. No recognized marker does not establish that the response was safe or accepted.
+
+Diagnostic inspection shares the existing upstream deadline, stops at the byte cap or after 1,024 reads, and does not await a stalled cancellation. `cap_reached` does not assert that more bytes exist; `read_limit` bounds pathological empty/tiny chunks. JSON inspection requires a complete bounded document and considers only top-level `error` and `message` strings. Provider text, header values, identifiers, cookies, URLs, and exception messages are never logged. A failed or timed-out diagnostic read preserves the original HTTP refusal and `upstream_http` classification. Nothing in this diagnostic change retries or resends an inquiry.
+
 ## Checks
 
 Run `npx --yes tsx@4.20.5 --test tests/consultation.test.ts`. Tests use a mocked receiver and never send external requests.
+
+Also run `npx --yes tsx@4.20.5 --test tests/consultation-diagnostics.test.ts` for marker classification, privacy, chunk/byte limits, partial JSON, stalled/erroring bodies, and cancellation. Both test files may be passed to the same command.
 
 For this Vercel/Next.js checkout, run `npm run build`, `npx tsc --noEmit`, and `npm run lint` as well. The README's original Sites helper commands are not present in the current package scripts. If the `tsx` CLI cannot create its IPC socket in a restricted executor, use Node's `--import` with the installed `tsx` loader and `--test` instead.
 
