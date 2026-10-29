@@ -35,6 +35,17 @@ export default function Home() {
           propertyID: "CSLB",
           value: "1162108",
         },
+        hasCredential: {
+          "@type": "EducationalOccupationalCredential",
+          name: "California General Building Contractor License",
+          credentialCategory: "Contractor license",
+          recognizedBy: {
+            "@type": "Organization",
+            name: "Contractors State License Board",
+            url: "https://www.cslb.ca.gov/",
+          },
+          identifier: "1162108",
+        },
         hasOfferCatalog: {
           "@type": "OfferCatalog",
           name: "Residential remodeling and construction services",
@@ -106,12 +117,12 @@ export default function Home() {
                 Explore the possibilities
               </a>
             </div>
-            <div className="trust-line" aria-label="FORMA benefits">
-              <span>Design-led</span>
+            <div className="trust-line" aria-label="FORMA credentials">
+              <span>CSLB #1162108</span>
               <i />
-              <span>One accountable team</span>
+              <span>B General Building</span>
               <i />
-              <span>Local South Bay focus</span>
+              <span>Bonded + insured</span>
             </div>
           </div>
 
@@ -149,6 +160,50 @@ export default function Home() {
             <span key={service}>{service}</span>
           ))}
         </div>
+
+        <section
+          className="credential-section"
+          aria-labelledby="credentials-title"
+        >
+          <div className="credential-intro">
+            <p className="eyebrow">Licensed. Bonded. Insured.</p>
+            <h2 id="credentials-title">
+              Verified credentials for work in California.
+            </h2>
+            <p>
+              FORMA Design Plus Build is a current and active California
+              general building contractor with contractor&apos;s bond, general
+              liability and workers&apos; compensation coverage.
+            </p>
+          </div>
+          <div className="credential-grid">
+            <article>
+              <span>California license</span>
+              <strong>#1162108</strong>
+              <p>Current and active · B General Building</p>
+              <a
+                href="https://www.cslb.ca.gov/OnlineServices/CheckLicenseII/LicenseDetail.aspx?LicNum=1162108"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Verify with CSLB
+              </a>
+            </article>
+            <article>
+              <span>Contractor&apos;s bond</span>
+              <strong>$25,000</strong>
+              <p>Bond on file with the California Contractors State License Board.</p>
+            </article>
+            <article>
+              <span>Insurance coverage</span>
+              <strong>$1M / $2M</strong>
+              <p>
+                General liability per occurrence / aggregate, plus
+                workers&apos; compensation coverage.
+              </p>
+            </article>
+          </div>
+        </section>
 
         <section className="intro-section" id="about">
           <div className="section-kicker">
@@ -480,7 +535,13 @@ export default function Home() {
         </div>
         <div className="footer-bottom">
           <span>© 2026 FORMA Design + Build</span>
-          <span>CA Contractor License #1162108</span>
+          <a
+            href="https://www.cslb.ca.gov/OnlineServices/CheckLicenseII/LicenseDetail.aspx?LicNum=1162108"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            CSLB License #1162108 · B General Building
+          </a>
           <nav aria-label="Legal">
             <a href="/privacy-policy">Privacy Policy</a>
             <a href="/terms-of-use">Terms of Use</a>
