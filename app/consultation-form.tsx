@@ -184,7 +184,7 @@ export function ConsultationForm() {
         <p>
           Thank you for sharing your plans. Our email service has accepted your
           request for delivery to FORMA. If you need to confirm receipt, please{" "}
-          <a href="tel:+14082347914">call (408) 234-7914</a>.
+          <a href="tel:+13239755574">call (323) 975-5574</a>.
         </p>
       </div>
     );
@@ -239,7 +239,7 @@ export function ConsultationForm() {
           {deliveryHold && (
             <>
               <p>
-                <a href="tel:+14082347914">Call (408) 234-7914</a> or{" "}
+                <a href="tel:+13239755574">Call (323) 975-5574</a> or{" "}
                 <a href="mailto:Office@formadpb.com">email Office@formadpb.com</a>.
                 {deliveryHold.requestId && <> Reference: {deliveryHold.requestId}.</>}
               </p>
