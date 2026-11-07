@@ -3,6 +3,7 @@ import { services } from "./site-data";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const corePages: MetadataRoute.Sitemap = [
+    { url: "https://formadpb.com/remodeling-planning-guide", changeFrequency: "monthly", priority: 0.7 },
     {
       url: "https://formadpb.com/",
       changeFrequency: "monthly",

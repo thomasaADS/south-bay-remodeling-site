@@ -1,14 +1,11 @@
-import type { Metadata } from "next";
+import Link from "next/link";
+import { pageMetadata } from "../seo";
 import Image from "next/image";
 import { Navigation } from "../site-interactions";
 import { SeoFooter } from "../seo-footer";
 import { cities, services } from "../site-data";
 
-export const metadata: Metadata = {
-  title: "South Bay Remodeling Service Areas",
-  description: "FORMA Design + Build serves homeowners in San Jose, Fremont, Santa Clara, Palo Alto, Milpitas, Sunnyvale, Saratoga and Los Gatos.",
-  alternates: { canonical: "/service-areas" },
-};
+export const metadata = pageMetadata("South Bay Remodeling Service Areas | FORMA Design + Build", "Find FORMA remodeling services in San Jose, Santa Clara, Sunnyvale and the South Bay. Explore service areas and discuss your home project.", "/service-areas");
 
 export default function ServiceAreasPage() {
   const structuredData = {
@@ -34,13 +31,13 @@ export default function ServiceAreasPage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
       <Navigation />
-      <main className="content-page">
+      <main id="main-content" className="content-page">
         <section className="content-hero area-hero">
           <div>
             <p className="eyebrow">Local by design</p>
             <h1>Remodeling and construction across the South Bay.</h1>
             <p>FORMA Design + Build is based in San Jose and works with homeowners throughout the South Bay. Project planning is shaped around the property, scope and requirements of the city where the work will take place.</p>
-            <a className="button button-primary" href="/#consultation">Plan a South Bay project</a>
+            <Link className="button button-primary" href="/#consultation">Plan a South Bay project</Link>
           </div>
           <figure>
             <Image src="/images/hero-indoor-outdoor.png" alt="California indoor-outdoor living design inspiration" fill sizes="(max-width: 900px) 100vw, 45vw" priority />
@@ -56,10 +53,10 @@ export default function ServiceAreasPage() {
           </div>
           <div className="area-list">
             {cities.map((city, index) => (
-              <article key={city.slug}>
+              <article key={city.slug} id={city.slug}>
                 <span>{String(index + 1).padStart(2, "0")}</span>
                 <div><h2>{city.name}</h2><p>{city.description}</p></div>
-                <a href={`/#consultation`} aria-label={`Discuss a project in ${city.name}`}>Discuss your project</a>
+                <Link href={`/#consultation`} aria-label={`Discuss a project in ${city.name}`}>Discuss your project</Link>
               </article>
             ))}
           </div>
@@ -67,7 +64,7 @@ export default function ServiceAreasPage() {
 
         <section className="area-services">
           <div><p className="eyebrow">Project types</p><h2>One team across the scope.</h2></div>
-          <div>{services.map((service) => <a href={`/services/${service.slug}`} key={service.slug}>{service.title}</a>)}</div>
+          <div>{services.map((service) => <Link href={`/services/${service.slug}`} key={service.slug}>{service.title}</Link>)}</div>
         </section>
 
         <section className="local-contact">

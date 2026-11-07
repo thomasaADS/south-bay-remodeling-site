@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Image from "next/image";
 import { services } from "./site-data";
 
@@ -12,24 +13,25 @@ export function SeoFooter() {
           height={60}
         />
         <p>Thoughtful design. Coordinated construction. Homes made for South Bay living.</p>
-        <a href="/#consultation">Start a project</a>
+        <Link href="/#consultation">Start a project</Link>
       </div>
       <div className="footer-links">
         <div>
           <strong>Services</strong>
           {services.slice(0, 4).map((service) => (
-            <a href={`/services/${service.slug}`} key={service.slug}>
+            <Link href={`/services/${service.slug}`} key={service.slug}>
               {service.title}
-            </a>
+            </Link>
           ))}
-          <a href="/services">All Services</a>
+          <Link href="/services">All Services</Link>
         </div>
         <div>
           <strong>Explore</strong>
-          <a href="/#about">About FORMA</a>
-          <a href="/service-areas">Service Areas</a>
-          <a href="/#approach">Our Approach</a>
-          <a href="/#consultation">Start a Project</a>
+          <Link href="/#about">About FORMA</Link>
+          <Link href="/service-areas">Service Areas</Link>
+          <Link href="/remodeling-planning-guide">Remodeling Planning Guide</Link>
+          <Link href="/#approach">Our Approach</Link>
+          <Link href="/#consultation">Start a Project</Link>
           <a href="https://www.instagram.com/formadpb/" target="_blank" rel="noopener noreferrer">
             Instagram
           </a>
@@ -55,8 +57,8 @@ export function SeoFooter() {
         <span>© 2026 FORMA Design + Build</span>
         <span>CA Contractor License #1162108</span>
         <nav aria-label="Legal">
-          <a href="/privacy-policy">Privacy Policy</a>
-          <a href="/terms-of-use">Terms of Use</a>
+          <Link href="/privacy-policy">Privacy Policy</Link>
+          <Link href="/terms-of-use">Terms of Use</Link>
         </nav>
       </div>
     </footer>

@@ -3401,3 +3401,17 @@ h2 {
     grid-column: 1;
   }
 }
+
+/* Readable planning content shared by service pages and the homeowner guide. */
+.planning-context { padding: 48px 0; max-width: 920px; }
+.planning-context h2, .planning-guide h2 { color: var(--forest); font-size: clamp(26px, 3vw, 38px); line-height: 1.2; }
+.planning-context p, .planning-guide p, .planning-guide li { line-height: 1.8; color: #41584a; }
+.planning-context a, .planning-guide p a, .guide-contents a { text-decoration: underline; text-underline-offset: 4px; }
+.planning-guide { max-width: 1040px; margin: 0 auto; padding: 50px 32px 80px; }
+.planning-guide h1 { color: var(--forest); font-size: clamp(36px, 5vw, 62px); line-height: 1.1; letter-spacing: -0.035em; }
+.planning-guide header > p { max-width: 850px; }
+.planning-guide section { padding: 28px 0; border-bottom: 1px solid #dce2d9; scroll-margin-top: 110px; }
+.guide-contents { display: flex; flex-wrap: wrap; gap: 14px 24px; padding: 24px; margin: 28px 0; background: #f1f3ec; }
+.guide-contents strong { width: 100%; }
+.area-list article { scroll-margin-top: 110px; }
+@media (max-width: 620px) { .planning-guide { padding: 32px 20px 60px; } .planning-context { padding: 32px 0; } }

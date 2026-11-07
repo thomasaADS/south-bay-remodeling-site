@@ -3,6 +3,9 @@ export type Service = {
   number: string;
   title: string;
   shortTitle: string;
+  seoTitle: string;
+  metaDescription: string;
+  planningNote: string;
   text: string;
   image?: string;
   intro: string;
@@ -17,12 +20,17 @@ export const services: Service[] = [
     number: "01",
     title: "Kitchen Remodeling",
     shortTitle: "Kitchens",
+    seoTitle: "Kitchen Remodeling San Jose | FORMA Design + Build",
+    metaDescription: "Plan your San Jose kitchen remodel with FORMA. Explore layouts, cabinetry, lighting and finish choices, then discuss your South Bay project.",
+    planningNote: "Before comparing kitchen proposals, decide whether the layout will stay in place or move. Cabinet dimensions, appliance specifications and utility locations affect each other. Separate essential improvements from optional finishes, and ask what demolition, electrical, plumbing and installation work each proposal includes.",
     text: "Thoughtful layouts, custom cabinetry, lighting, surfaces and finish details designed around how your household actually lives.",
     image: "/images/kitchen-remodel.png",
     intro: "A kitchen remodel should improve movement, storage, light and daily routines—not only replace finishes. FORMA connects the design decisions with the construction plan so the room works as one complete space.",
     includes: ["Layout and circulation planning", "Cabinetry and storage direction", "Countertops, tile and finish coordination", "Lighting and electrical planning", "Appliance and fixture coordination", "Construction and finish work"],
     planning: ["How the household cooks, gathers and entertains", "Existing plumbing, electrical and structural conditions", "Storage priorities and appliance requirements", "Material durability, maintenance and budget direction"],
     questions: [
+      { question: "What affects the cost of a kitchen remodel?", answer: "Layout changes, cabinet construction, appliance requirements, countertop materials and existing plumbing or electrical conditions all affect scope. A useful estimate identifies allowances, exclusions and the work needed before finishes are installed. A project-specific review is needed before quoting a price." },
+      { question: "Should I plan for a temporary kitchen?", answer: "Discuss how cooking, refrigeration, water access and dust separation will work during construction. Ask which areas remain accessible and how deliveries or utility interruptions will be coordinated before work starts." },
       { question: "Can the kitchen layout be changed?", answer: "Often, yes. The practical options depend on the existing structure, plumbing, electrical service and the relationship to adjacent rooms." },
       { question: "When should cabinets and appliances be selected?", answer: "Key dimensions and lead times should be coordinated early so the layout, utilities and construction sequence stay aligned." },
     ],
@@ -32,12 +40,17 @@ export const services: Service[] = [
     number: "02",
     title: "Bathroom Remodeling",
     shortTitle: "Bathrooms",
+    seoTitle: "Bathroom Remodeling San Jose | FORMA Design + Build",
+    metaDescription: "Explore bathroom remodeling in San Jose with FORMA. Plan showers, tile, storage, ventilation and finishes for your South Bay home.",
+    planningNote: "Start a bathroom scope with layout, moisture control and daily use. A shower conversion can affect the drain, floor build-up, waterproofing and door clearances. Confirm these details before ordering tile or fixtures so the finished design can be built within the available space.",
     text: "Calm, highly functional bathrooms—from efficient guest baths to complete primary-suite transformations.",
     image: "/images/bathroom-remodel.png",
     intro: "Bathroom remodeling brings many technical details into a small footprint. FORMA coordinates layout, waterproofing, ventilation, lighting, fixtures and finishes around a clear design direction.",
     includes: ["Layout and fixture planning", "Shower and waterproofing scope", "Tile and finish coordination", "Vanity, storage and lighting direction", "Plumbing and ventilation coordination", "Construction and finish work"],
     planning: ["Fixture locations and comfortable clearances", "Waterproofing and moisture control", "Lighting for daily use and atmosphere", "Storage, accessibility and long-term needs"],
     questions: [
+      { question: "What affects the cost of bathroom remodeling?", answer: "Moving fixtures, repairing concealed water damage, changing the shower layout and selecting tile or custom cabinetry can change the scope. Compare proposals by the preparation, waterproofing, ventilation and installation work included, rather than finishes alone." },
+      { question: "Does a bathroom remodel need a permit?", answer: "Permit requirements depend on the property jurisdiction and the proposed work. Plumbing, electrical or structural changes may require review. Confirm the scope with the local building department before construction; do not assume a cosmetic update and a full remodel follow the same process." },
       { question: "Can a tub become a walk-in shower?", answer: "In many homes it can. The final approach depends on drainage, waterproofing, available space and any applicable permit requirements." },
       { question: "What should be selected first?", answer: "The layout, plumbing fixtures and major finish direction should be established early because they influence dimensions and rough-in work." },
     ],
@@ -47,11 +60,16 @@ export const services: Service[] = [
     number: "03",
     title: "Landscaping",
     shortTitle: "Landscaping",
+    seoTitle: "Landscaping in San Jose | FORMA Design + Build",
+    metaDescription: "Plan landscaping in San Jose with FORMA. Explore patios, hardscape, planting, drainage and outdoor gathering areas for your South Bay home.",
+    planningNote: "Map how people move from the house into the yard before choosing materials. Note where water collects, which areas need shade and how much maintenance you want to take on. Existing trees, slopes and access for construction can affect what is practical on the property.",
     text: "Outdoor rooms, hardscape, planting, decks and gathering spaces designed for the South Bay’s indoor-outdoor lifestyle.",
     intro: "Outdoor space works best when it is planned as an extension of the home. FORMA considers access, shade, privacy, drainage, planting and gathering areas as one connected composition.",
     includes: ["Outdoor-space programming", "Patio, path and hardscape direction", "Deck and gathering-area planning", "Planting and privacy strategy", "Drainage and lighting coordination", "Construction and finish integration"],
     planning: ["How the space will be used throughout the day", "Indoor-outdoor circulation and sightlines", "Sun, shade, privacy and maintenance", "Drainage, irrigation and material durability"],
     questions: [
+      { question: "What should a landscaping project scope include?", answer: "Describe how the outdoor space will be used, the areas being changed, drainage concerns, planting needs and any lighting or irrigation work. Identify which existing features will stay so proposals can account for protection and integration." },
+      { question: "Do decks or other outdoor structures need approval?", answer: "Requirements vary by city and project. Decks, retaining walls and other structures can involve building or planning review. Confirm the property jurisdiction and proposed dimensions with the local department before treating an outdoor improvement as permit-exempt." },
       { question: "Can landscaping be part of a larger remodel?", answer: "Yes. Coordinating exterior work with doors, kitchens, patios and site access often creates a more cohesive result." },
       { question: "What should be planned before selecting plants?", answer: "Use, circulation, drainage, sun exposure, privacy, irrigation and the hardscape layout should guide the planting direction." },
     ],
@@ -61,11 +79,16 @@ export const services: Service[] = [
     number: "04",
     title: "Interior + Exterior Painting",
     shortTitle: "Painting",
+    seoTitle: "Interior & Exterior Painting San Jose | FORMA",
+    metaDescription: "Plan interior and exterior painting in San Jose with FORMA. Review surface preparation, repairs, colors and finishes for your South Bay home.",
+    planningNote: "A clear painting scope names the surfaces being coated and the preparation included. Note peeling paint, cracks, moisture marks and changes between materials before choosing a finish. Repairing the underlying problem matters when surface damage is caused by water or movement.",
     text: "Meticulous preparation and a refined finish that brings the architecture, materials and color story together.",
     intro: "Paint is the final visible layer, but the quality of the result depends on preparation, repair, product selection and clean transitions. FORMA coordinates color and finish with the surrounding materials and project scope.",
     includes: ["Color and sheen direction", "Surface-condition review", "Preparation and repair scope", "Interior and exterior coating coordination", "Protection of adjacent finishes", "Application and final-detail review"],
     planning: ["Surface condition and required repairs", "Light, existing materials and color relationships", "Interior use or exterior exposure", "Durability, maintenance and finish level"],
     questions: [
+      { question: "What should I compare in painting proposals?", answer: "Compare surface preparation, repair allowances, primer, coating products, the number of specified coats and protection of surrounding finishes. Clarify which doors, trim, ceilings and exterior surfaces are included so the scopes are comparable." },
+      { question: "How should painting be scheduled around a remodel?", answer: "Coordinate painting with repairs, installation work and other trades. Ask which surfaces will be finished before cabinetry or fixtures go in and which touch-ups are included afterward. Exterior scheduling also depends on conditions and the selected product requirements." },
       { question: "Why is preparation important?", answer: "Cleaning, repairs, sanding, priming and sealing affect adhesion, appearance and the durability of the finished surface." },
       { question: "Can painting be coordinated with remodeling work?", answer: "Yes. Scheduling paint after the relevant construction and finish work helps protect the result and create cleaner transitions." },
     ],

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Image from "next/image";
 import { Navigation, ProjectJourney } from "./site-interactions";
 import { ConsultationForm } from "./consultation-form";
@@ -106,7 +107,7 @@ export default function Home() {
               <span>you live.</span>
             </h1>
             <p className="hero-intro">
-              Thoughtful kitchens, bathrooms and whole-home remodeling. One connected
+              Kitchen, bathroom and whole-home remodeling in San Jose. One connected
               team from first idea to final detail, here in the South Bay.
             </p>
             <div className="hero-actions">
@@ -259,9 +260,9 @@ export default function Home() {
                   <span>{service.number}</span>
                   <h3>{service.title}</h3>
                   <p>{service.text}</p>
-                  <a href={`/services/${service.slug}`}>
+                  <Link href={`/services/${service.slug}`}>
                     Explore {service.shortTitle.toLowerCase()}
-                  </a>
+                  </Link>
                 </div>
               </article>
             ))}
@@ -427,7 +428,7 @@ export default function Home() {
                 <span>{String(index + 1).padStart(2, "0")}</span>
                 <h3>{city.name}</h3>
                 <p>{city.description}</p>
-                <a href="/service-areas">Explore service areas</a>
+                <Link href={`/service-areas#${city.slug}`}>Remodeling in {city.name}</Link>
               </article>
             ))}
           </div>
@@ -495,17 +496,18 @@ export default function Home() {
         <div className="footer-links">
           <div>
             <strong>Services</strong>
-            <a href="/services/kitchen-remodeling">Kitchen Remodeling</a>
-            <a href="/services/bathroom-remodeling">Bathroom Remodeling</a>
-            <a href="/services/landscaping">Landscaping</a>
-            <a href="/services/interior-exterior-painting">Painting</a>
-            <a href="/services">All Services</a>
+            <Link href="/services/kitchen-remodeling">Kitchen Remodeling</Link>
+            <Link href="/services/bathroom-remodeling">Bathroom Remodeling</Link>
+            <Link href="/services/landscaping">Landscaping</Link>
+            <Link href="/services/interior-exterior-painting">Painting</Link>
+            <Link href="/services">All Services</Link>
+            <Link href="/remodeling-planning-guide">Remodeling planning guide</Link>
           </div>
           <div>
             <strong>Explore</strong>
             <a href="#projects">Project Vision</a>
             <a href="#about">About FORMA</a>
-            <a href="/service-areas">Service Areas</a>
+            <Link href="/service-areas">Service Areas</Link>
             <a href="#consultation">Start a Project</a>
             <a
               href="https://www.instagram.com/formadpb/"
@@ -543,8 +545,8 @@ export default function Home() {
             CSLB License #1162108 · B General Building
           </a>
           <nav aria-label="Legal">
-            <a href="/privacy-policy">Privacy Policy</a>
-            <a href="/terms-of-use">Terms of Use</a>
+            <Link href="/privacy-policy">Privacy Policy</Link>
+            <Link href="/terms-of-use">Terms of Use</Link>
           </nav>
         </div>
       </footer>

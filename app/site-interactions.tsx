@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 import Image from "next/image";
 import { useRef, useState, type KeyboardEvent } from "react";
 
@@ -7,6 +9,7 @@ const instagram = "https://www.instagram.com/formadpb/";
 const menu = [
   ["Services", "/services"],
   ["Service areas", "/service-areas"],
+  ["Planning guide", "/remodeling-planning-guide"],
   ["Our approach", "/#approach"],
 ];
 
@@ -18,7 +21,7 @@ export function Navigation() {
   }
   return (
     <header className="site-header">
-      <a
+      <Link
         className="brand"
         href="/"
         aria-label="FORMA Design + Build home"
@@ -31,17 +34,17 @@ export function Navigation() {
           height={50}
           priority
         />
-      </a>
+      </Link>
       <nav className="desktop-nav" aria-label="Main menu">
         {menu.map(([label, href]) => (
-          <a key={href} href={href}>
+          <Link key={href} href={href}>
             {label}
-          </a>
+          </Link>
         ))}
       </nav>
-      <a className="header-contact" href="/#consultation" onClick={closeMenu}>
+      <Link className="header-contact" href="/#consultation" onClick={closeMenu}>
         Start a project
-      </a>
+      </Link>
       <details
         className="mobile-menu"
         ref={menuRef}
@@ -57,13 +60,13 @@ export function Navigation() {
         </summary>
         <nav aria-label="Mobile menu">
           {menu.map(([label, href]) => (
-            <a key={href} href={href} onClick={closeMenu}>
+            <Link key={href} href={href} onClick={closeMenu}>
               {label}
-            </a>
+            </Link>
           ))}
-          <a href="/#about" onClick={closeMenu}>
+          <Link href="/#about" onClick={closeMenu}>
             About FORMA
-          </a>
+          </Link>
           <a
             href={instagram}
             target="_blank"
@@ -73,9 +76,9 @@ export function Navigation() {
           >
             Instagram
           </a>
-          <a href="/#consultation" onClick={closeMenu}>
+          <Link href="/#consultation" onClick={closeMenu}>
             Start a project
-          </a>
+          </Link>
         </nav>
       </details>
     </header>

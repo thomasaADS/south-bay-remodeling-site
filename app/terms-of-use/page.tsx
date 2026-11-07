@@ -1,13 +1,9 @@
-import type { Metadata } from "next";
+import Link from "next/link";
+import { pageMetadata } from "../seo";
 import { Navigation } from "../site-interactions";
 import { SeoFooter } from "../seo-footer";
 
-export const metadata: Metadata = {
-  title: "Terms of Use",
-  description:
-    "Terms governing use of the FORMA Design + Build website and project consultation form.",
-  alternates: { canonical: "/terms-of-use" },
-};
+export const metadata = pageMetadata("Terms of Use | FORMA Design + Build", "Terms governing use of the FORMA Design + Build website and project consultation form.", "/terms-of-use");
 
 export default function TermsOfUsePage() {
   return (
@@ -32,7 +28,7 @@ export default function TermsOfUsePage() {
             <h2>Acceptance of these terms</h2>
             <p>
               By using this website or submitting a form, you agree to these
-              Terms of Use and our <a href="/privacy-policy">Privacy Policy</a>.
+              Terms of Use and our <Link href="/privacy-policy">Privacy Policy</Link>.
               If you do not agree, please do not use the form.
             </p>
           </section>

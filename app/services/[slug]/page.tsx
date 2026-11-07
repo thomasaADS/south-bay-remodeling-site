@@ -1,5 +1,7 @@
+import Link from "next/link";
 import type { Metadata } from "next";
 import Image from "next/image";
+import { pageMetadata } from "../../seo";
 import { notFound } from "next/navigation";
 import { Navigation } from "../../site-interactions";
 import { SeoFooter } from "../../seo-footer";
@@ -15,17 +17,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { slug } = await params;
   const service = services.find((item) => item.slug === slug);
   if (!service) return {};
-  return {
-    title: `${service.title} in San Jose, CA`,
-    description: `${service.text} Learn about FORMA Design + Build's coordinated approach to ${service.title.toLowerCase()} in San Jose and the South Bay.`,
-    alternates: { canonical: `/services/${service.slug}` },
-    openGraph: {
-      title: `${service.title} | FORMA Design + Build`,
-      description: service.text,
-      url: `https://formadpb.com/services/${service.slug}`,
-      images: [service.image || "/images/hero-indoor-outdoor.png"],
-    },
-  };
+  return pageMetadata(service.seoTitle, service.metaDescription, `/services/${service.slug}`, service.image);
 }
 
 export default async function ServicePage({ params }: PageProps) {
@@ -41,9 +33,11 @@ export default async function ServicePage({ params }: PageProps) {
         "@type": "Service",
         "@id": `${pageUrl}#service`,
         name: service.title,
-        description: service.text,
+        description: service.metaDescription,
+        serviceType: service.title,
+        mainEntityOfPage: pageUrl,
         url: pageUrl,
-        provider: { "@id": "https://formadpb.com/#business" },
+        provider: { "@type": "GeneralContractor", "@id": "https://formadpb.com/#business", name: "FORMA Design + Build", url: "https://formadpb.com/" },
         areaServed: cities.map((city) => ({ "@type": "City", name: `${city.name}, California` })),
       },
       {
@@ -67,18 +61,18 @@ export default async function ServicePage({ params }: PageProps) {
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, "\\u003c") }} />
       <Navigation />
-      <main className="content-page">
+      <main id="main-content" className="content-page">
         <section className="detail-hero">
           <div>
             <nav className="breadcrumbs" aria-label="Breadcrumb">
-              <a href="/">Home</a><span>/</span><a href="/services">Services</a><span>/</span><span>{service.title}</span>
+              <Link href="/">Home</Link><span>/</span><Link href="/services">Services</Link><span>/</span><span>{service.title}</span>
             </nav>
             <p className="eyebrow">San Jose + South Bay</p>
-            <h1>{service.title}</h1>
+            <h1>{service.title} in San Jose</h1>
             <p>{service.intro}</p>
-            <a className="button button-primary" href="/#consultation">Discuss your project</a>
+            <Link className="button button-primary" href="/#consultation">Discuss your project</Link>
           </div>
           <figure>
             <Image src={service.image || "/images/hero-indoor-outdoor.png"} alt={`${service.title} design inspiration`} fill sizes="(max-width: 900px) 100vw, 46vw" priority />
@@ -97,6 +91,13 @@ export default async function ServicePage({ params }: PageProps) {
             <h2>Decisions to address early</h2>
             <ul>{service.planning.map((item) => <li key={item}>{item}</li>)}</ul>
           </div>
+        </section>
+
+        <section className="planning-context" aria-labelledby="planning-context-title">
+          <p className="eyebrow">Before you request a proposal</p>
+          <h2 id="planning-context-title">Planning your {service.title.toLowerCase()} project</h2>
+          <p>{service.planningNote}</p>
+          <p>FORMA serves San Jose and the surrounding <Link href="/service-areas">South Bay service area</Link>. Read our <Link href="/remodeling-planning-guide">remodeling planning guide</Link> for a scope checklist, proposal questions and permit considerations.</p>
         </section>
 
         <section className="detail-process">
@@ -123,7 +124,7 @@ export default async function ServicePage({ params }: PageProps) {
         <section className="related-services">
           <p className="eyebrow">Continue exploring</p>
           <h2>Related remodeling services</h2>
-          <div>{services.filter((item) => item.slug !== service.slug).slice(0, 3).map((item) => <a href={`/services/${item.slug}`} key={item.slug}>{item.title}</a>)}</div>
+          <div>{services.filter((item) => item.slug !== service.slug).slice(0, 3).map((item) => <Link href={`/services/${item.slug}`} key={item.slug}>{item.title}</Link>)}</div>
         </section>
       </main>
       <SeoFooter />

@@ -1,13 +1,9 @@
-import type { Metadata } from "next";
+import Link from "next/link";
+import { pageMetadata } from "../seo";
 import { Navigation } from "../site-interactions";
 import { SeoFooter } from "../seo-footer";
 
-export const metadata: Metadata = {
-  title: "Privacy Policy",
-  description:
-    "Learn how FORMA Design + Build collects, uses and protects information submitted through formadpb.com.",
-  alternates: { canonical: "/privacy-policy" },
-};
+export const metadata = pageMetadata("Privacy Policy | FORMA Design + Build", "Learn how FORMA Design + Build collects, uses and protects information submitted through formadpb.com.", "/privacy-policy");
 
 export default function PrivacyPolicyPage() {
   return (
@@ -86,7 +82,7 @@ export default function PrivacyPolicyPage() {
             <p>
               When you submit the form, you authorize FORMA to contact you about
               that inquiry using the contact information and method you provide.
-              See our <a href="/terms-of-use">Terms of Use</a> for the form-use
+              See our <Link href="/terms-of-use">Terms of Use</Link> for the form-use
               rules.
             </p>
           </section>

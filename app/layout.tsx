@@ -8,7 +8,7 @@ const siteUrl = "https://formadpb.com";
 const googleTagManagerId = "GTM-T3WRGP6K";
 const title = "FORMA Design + Build | San Jose Remodeling Contractor";
 const description =
-  "FORMA Design + Build is a San Jose general contractor serving South Bay homeowners with kitchen and bathroom remodeling, whole-home improvements, landscaping and painting.";
+  "Plan your San Jose remodel with FORMA Design + Build. Kitchen and bathroom remodeling, landscaping and painting for South Bay homeowners.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
