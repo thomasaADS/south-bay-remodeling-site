@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { pageMetadata } from "../seo";
+import { pageMetadata, serializeJsonLd, webPageSchema, breadcrumbSchema } from "../seo";
 import Image from "next/image";
 import { Navigation } from "../site-interactions";
 import { SeoFooter } from "../seo-footer";
@@ -10,23 +10,31 @@ export const metadata = pageMetadata("San Jose Remodeling Services | FORMA Desig
 export default function ServicesPage() {
   const structuredData = {
     "@context": "https://schema.org",
-    "@type": "ItemList",
-    name: "FORMA Design + Build services",
-    itemListElement: services.map((service, index) => ({
-      "@type": "ListItem",
-      position: index + 1,
-      name: service.title,
-      url: `https://formadpb.com/services/${service.slug}`,
-    })),
+    "@graph": [
+      { ...webPageSchema("San Jose Remodeling Services | FORMA Design + Build", "Kitchen and bathroom remodeling, landscaping and painting in San Jose and the South Bay.", "/services", "CollectionPage"), mainEntity: { "@id": "https://formadpb.com/services#service-list" } },
+      breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Services", path: "/services" }]),
+      {
+        "@type": "ItemList",
+        "@id": "https://formadpb.com/services#service-list",
+        name: "FORMA Design + Build services",
+        itemListElement: services.map((service, index) => ({
+          "@type": "ListItem",
+          position: index + 1,
+          name: service.title,
+          url: `https://formadpb.com/services/${service.slug}`,
+        })),
+      },
+    ],
   };
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(structuredData) }} />
       <Navigation />
       <main id="main-content" className="content-page">
         <section className="content-hero">
           <div>
+            <nav className="breadcrumbs" aria-label="Breadcrumb"><Link href="/">Home</Link><span>/</span><span aria-current="page">Services</span></nav>
             <p className="eyebrow">South Bay remodeling services</p>
             <h1>Home remodeling services in San Jose</h1>
             <p>Explore the planning and construction considerations behind each FORMA service. Every project begins with the property, the people who live there and a clear understanding of the scope.</p>

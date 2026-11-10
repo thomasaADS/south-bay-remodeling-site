@@ -1,7 +1,8 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import Image from "next/image";
-import { pageMetadata } from "../../seo";
+import { pageMetadata, serializeJsonLd, webPageSchema } from "../../seo";
+import { servicePlanning } from "../../service-planning";
 import { notFound } from "next/navigation";
 import { Navigation } from "../../site-interactions";
 import { SeoFooter } from "../../seo-footer";
@@ -25,17 +26,19 @@ export default async function ServicePage({ params }: PageProps) {
   const service = services.find((item) => item.slug === slug);
   if (!service) notFound();
 
+  const planning = servicePlanning[service.slug];
   const pageUrl = `https://formadpb.com/services/${service.slug}`;
   const structuredData = {
     "@context": "https://schema.org",
     "@graph": [
+      { ...webPageSchema(service.seoTitle, service.metaDescription, `/services/${service.slug}`), mainEntity: { "@id": `${pageUrl}#service` } },
       {
         "@type": "Service",
         "@id": `${pageUrl}#service`,
         name: service.title,
         description: service.metaDescription,
         serviceType: service.title,
-        mainEntityOfPage: pageUrl,
+        mainEntityOfPage: { "@id": `${pageUrl}#webpage` },
         url: pageUrl,
         provider: { "@type": "GeneralContractor", "@id": "https://formadpb.com/#business", name: "FORMA Design + Build", url: "https://formadpb.com/" },
         areaServed: cities.map((city) => ({ "@type": "City", name: `${city.name}, California` })),
@@ -50,6 +53,8 @@ export default async function ServicePage({ params }: PageProps) {
       },
       {
         "@type": "FAQPage",
+        "@id": `${pageUrl}#questions`,
+        isPartOf: { "@id": `${pageUrl}#webpage` },
         mainEntity: service.questions.map((item) => ({
           "@type": "Question",
           name: item.question,
@@ -61,13 +66,13 @@ export default async function ServicePage({ params }: PageProps) {
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, "\\u003c") }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(structuredData) }} />
       <Navigation />
       <main id="main-content" className="content-page">
         <section className="detail-hero">
           <div>
             <nav className="breadcrumbs" aria-label="Breadcrumb">
-              <Link href="/">Home</Link><span>/</span><Link href="/services">Services</Link><span>/</span><span>{service.title}</span>
+              <Link href="/">Home</Link><span>/</span><Link href="/services">Services</Link><span>/</span><span aria-current="page">{service.title}</span>
             </nav>
             <p className="eyebrow">San Jose + South Bay</p>
             <h1>{service.title} in San Jose</h1>
@@ -80,7 +85,14 @@ export default async function ServicePage({ params }: PageProps) {
           </figure>
         </section>
 
-        <section className="detail-grid">
+        <nav className="service-contents" aria-label="On this service page">
+          <Link href="#scope">Project scope</Link>
+          {planning && <Link href="#planning-options">Planning options</Link>}
+          <Link href="#planning-context-title">Before you request a proposal</Link>
+          <Link href="#service-questions">Common questions</Link>
+        </nav>
+
+        <section className="detail-grid" id="scope">
           <div>
             <p className="eyebrow">A connected scope</p>
             <h2>What the project may include</h2>
@@ -92,6 +104,17 @@ export default async function ServicePage({ params }: PageProps) {
             <ul>{service.planning.map((item) => <li key={item}>{item}</li>)}</ul>
           </div>
         </section>
+
+        {planning && <section className="service-planning" id="planning-options" aria-labelledby="planning-options-title">
+          <p className="eyebrow">Decisions that shape the work</p>
+          <h2 id="planning-options-title">{planning.title}</h2>
+          <div className="service-planning-grid">
+            {planning.sections.map((section) => <article key={section.title}><h3>{section.title}</h3><p>{section.text}</p></article>)}
+          </div>
+          <h3>Bring these details to your consultation</h3>
+          <ul>{planning.checklist.map((item) => <li key={item}>{item}</li>)}</ul>
+          <p>For a San Jose property, check the <a href="https://www.sanjoseca.gov/your-government/departments-offices/planning-building-code-enforcement/building-division">City of San Jose Building Division</a> for current requirements. The permit path depends on the property and proposed work. For another city, confirm the responsible local building department.</p>
+        </section>}
 
         <section className="planning-context" aria-labelledby="planning-context-title">
           <p className="eyebrow">Before you request a proposal</p>
@@ -112,7 +135,7 @@ export default async function ServicePage({ params }: PageProps) {
           </ol>
         </section>
 
-        <section className="detail-faq">
+        <section className="detail-faq" id="service-questions">
           <div><p className="eyebrow">Useful starting points</p><h2>{service.title} questions</h2></div>
           <div>
             {service.questions.map((item) => (

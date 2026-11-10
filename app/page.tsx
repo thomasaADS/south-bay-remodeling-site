@@ -3,11 +3,13 @@ import Image from "next/image";
 import { Navigation, ProjectJourney } from "./site-interactions";
 import { ConsultationForm } from "./consultation-form";
 import { cities, faqs, services } from "./site-data";
+import { serializeJsonLd, webPageSchema } from "./seo";
 
 export default function Home() {
   const structuredData = {
     "@context": "https://schema.org",
     "@graph": [
+      webPageSchema("San Jose Remodeling Contractor | FORMA Design + Build", "Kitchen and bathroom remodeling, landscaping and painting for San Jose and South Bay homeowners.", "/"),
       {
         "@type": "GeneralContractor",
         "@id": "https://formadpb.com/#business",
@@ -88,23 +90,20 @@ export default function Home() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(structuredData).replace(/</g, "\\u003c"),
+          __html: serializeJsonLd(structuredData),
         }}
       />
-      <a className="skip-link" href="#main-content">
-        Skip to content
-      </a>
       <Navigation />
       <main id="main-content">
         <section className="hero" id="top" aria-labelledby="hero-title">
           <div className="hero-copy">
             <p className="eyebrow">South Bay General Contractor</p>
             <h1 id="hero-title">
-              Build your home
+              Home remodeling
               <br />
-              around the way
+              in San Jose,
               <br />
-              <span>you live.</span>
+              <span>built around you.</span>
             </h1>
             <p className="hero-intro">
               Kitchen, bathroom and whole-home remodeling in San Jose. One connected
@@ -291,7 +290,7 @@ export default function Home() {
                 src="/images/hero-indoor-outdoor.png"
                 alt="Indoor-outdoor kitchen and courtyard design inspiration"
                 fill
-                sizes="(max-width: 620px) 100vw, (max-width: 900px) 90vw, 55vw"
+                sizes="(max-width: 620px) 100vw, (max-width: 900px) 90vw, 45vw"
               />
               <figcaption>
                 <span>Indoor + outdoor living</span>
@@ -303,7 +302,7 @@ export default function Home() {
                 src="/images/kitchen-remodel.png"
                 alt="White oak and stone kitchen design inspiration"
                 fill
-                sizes="(max-width: 620px) 100vw, (max-width: 900px) 90vw, 55vw"
+                sizes="(max-width: 620px) 100vw, (max-width: 900px) 45vw, 25vw"
               />
               <figcaption>
                 <span>Warm modern kitchen</span>
@@ -315,7 +314,7 @@ export default function Home() {
                 src="/images/bathroom-remodel.png"
                 alt="White oak and green tile bathroom design inspiration"
                 fill
-                sizes="(max-width: 620px) 100vw, (max-width: 900px) 90vw, 55vw"
+                sizes="(max-width: 620px) 100vw, (max-width: 900px) 45vw, 25vw"
               />
               <figcaption>
                 <span>Restorative bathroom</span>

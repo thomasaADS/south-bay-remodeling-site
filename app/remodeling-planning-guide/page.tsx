@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Navigation } from "../site-interactions";
 import { SeoFooter } from "../seo-footer";
-import { pageMetadata, siteUrl } from "../seo";
+import { pageMetadata, siteUrl, serializeJsonLd } from "../seo";
 
 const title = "San Jose Remodeling Planning Guide | FORMA Design + Build";
 const description = "Plan a San Jose remodel: define your scope, compare proposals, prepare for permits and choose materials. A practical South Bay homeowner checklist.";
@@ -20,7 +20,7 @@ export default function PlanningGuide() {
     ],
   };
   return <>
-    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, "\\u003c") }} />
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(schema) }} />
     <Navigation />
     <main id="main-content" className="content-page planning-guide">
       <nav className="breadcrumbs" aria-label="Breadcrumb"><Link href="/">Home</Link><span>/</span><span>Remodeling planning guide</span></nav>

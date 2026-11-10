@@ -6,7 +6,7 @@ import { QuickContact } from "./quick-contact";
 
 const siteUrl = "https://formadpb.com";
 const googleTagManagerId = "GTM-T3WRGP6K";
-const title = "FORMA Design + Build | San Jose Remodeling Contractor";
+const title = "San Jose Remodeling Contractor | FORMA Design + Build";
 const description =
   "Plan your San Jose remodel with FORMA Design + Build. Kitchen and bathroom remodeling, landscaping and painting for South Bay homeowners.";
 
@@ -72,6 +72,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
+        <a className="skip-link" href="#main-content">Skip to content</a>
         <Script id="google-tag-manager" strategy="afterInteractive">
           {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],

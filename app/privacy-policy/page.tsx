@@ -9,7 +9,7 @@ export default function PrivacyPolicyPage() {
   return (
     <>
       <Navigation />
-      <main className="content-page legal-page">
+      <main id="main-content" className="content-page legal-page">
         <header className="legal-hero">
           <p className="eyebrow">FORMA Design + Build</p>
           <h1>Privacy Policy</h1>

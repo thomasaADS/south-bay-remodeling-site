@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { pageMetadata } from "../seo";
+import { pageMetadata, serializeJsonLd, webPageSchema, breadcrumbSchema } from "../seo";
 import Image from "next/image";
 import { Navigation } from "../site-interactions";
 import { SeoFooter } from "../seo-footer";
@@ -12,28 +12,21 @@ export default function ServiceAreasPage() {
     "@context": "https://schema.org",
     "@graph": [
       {
-        "@type": "CollectionPage",
-        name: "FORMA Design + Build service areas",
-        url: "https://formadpb.com/service-areas",
+        ...webPageSchema("South Bay Remodeling Service Areas | FORMA Design + Build", "FORMA serves homeowners in San Jose, Fremont, Santa Clara, Palo Alto, Milpitas, Sunnyvale, Saratoga and Los Gatos.", "/service-areas", "CollectionPage"),
         about: cities.map((city) => ({ "@type": "City", name: `${city.name}, California` })),
       },
-      {
-        "@type": "BreadcrumbList",
-        itemListElement: [
-          { "@type": "ListItem", position: 1, name: "Home", item: "https://formadpb.com/" },
-          { "@type": "ListItem", position: 2, name: "Service Areas", item: "https://formadpb.com/service-areas" },
-        ],
-      },
+      breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Service Areas", path: "/service-areas" }]),
     ],
   };
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(structuredData) }} />
       <Navigation />
       <main id="main-content" className="content-page">
         <section className="content-hero area-hero">
           <div>
+            <nav className="breadcrumbs" aria-label="Breadcrumb"><Link href="/">Home</Link><span>/</span><span aria-current="page">Service Areas</span></nav>
             <p className="eyebrow">Local by design</p>
             <h1>Remodeling and construction across the South Bay.</h1>
             <p>FORMA Design + Build is based in San Jose and works with homeowners throughout the South Bay. Project planning is shaped around the property, scope and requirements of the city where the work will take place.</p>
