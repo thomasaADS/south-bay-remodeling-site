@@ -6,54 +6,9 @@ import { QuickContact } from "./quick-contact";
 
 const siteUrl = "https://formadpb.com";
 const googleTagManagerId = "GTM-T3WRGP6K";
-const title = "San Jose Remodeling Contractor | FORMA Design + Build";
-const description =
-  "Plan your San Jose remodel with FORMA Design + Build. Kitchen and bathroom remodeling, landscaping and painting for South Bay homeowners.";
-
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: {
-    default: title,
-    template: "%s | FORMA Design + Build",
-  },
-  description,
   applicationName: "FORMA Design + Build",
-  alternates: {
-    canonical: "/",
-  },
-  openGraph: {
-    type: "website",
-    url: siteUrl,
-    title,
-    description,
-    siteName: "FORMA Design + Build",
-    locale: "en_US",
-    images: [
-      {
-        url: "/images/hero-indoor-outdoor.png",
-        width: 1536,
-        height: 1024,
-        alt: "FORMA Design + Build remodeling inspiration",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title,
-    description,
-    images: ["/images/hero-indoor-outdoor.png"],
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-      "max-video-preview": -1,
-    },
-  },
   category: "home improvement",
   other: {
     "theme-color": "#123d30",

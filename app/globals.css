@@ -1416,7 +1416,7 @@ main {
 .consultation-section {
   background:
     linear-gradient(110deg, rgba(16, 43, 36, 0.96), rgba(16, 43, 36, 0.77)),
-    url("/images/hero-indoor-outdoor.png") center / cover;
+    url("/images/consultation-background.webp") center / cover;
   color: var(--white);
   display: grid;
   gap: clamp(50px, 9vw, 150px);

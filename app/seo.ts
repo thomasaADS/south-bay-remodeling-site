@@ -36,6 +36,7 @@ export function webPageSchema(title: string, description: string, path: string, 
 export function pageMetadata(title: string, description: string, path: string, image = "/images/hero-indoor-outdoor.png"): Metadata {
   return {
     title: { absolute: title },
+    robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1, "max-video-preview": -1 } },
     description,
     alternates: { canonical: path },
     openGraph: {

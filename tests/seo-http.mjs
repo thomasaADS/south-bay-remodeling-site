@@ -22,12 +22,29 @@ for (const path of paths) {
   assert.equal(twitterDescription, description, `Twitter description: ${path}`);
   assert.equal((html.match(/<h1(?:\s[^>]*)?>/g) || []).length, 1, `single H1: ${path}`);
   const title = html.match(/<title>([^<]+)<\/title>/)[1];
+  const contractorIntent = {
+    '/': 'Home Remodeling Contractor in San Jose',
+    '/services/kitchen-remodeling': 'Kitchen Remodeling Contractor in San Jose',
+    '/services/bathroom-remodeling': 'Bathroom Remodeling Contractor in San Jose',
+  };
+  if (contractorIntent[path]) assert.ok(title.startsWith(contractorIntent[path]), `contractor intent: ${path}`);
   assert.ok(!titles.has(title), `unique title: ${path}`);
   assert.ok(!descriptions.has(description), `unique description: ${path}`);
   titles.add(title); descriptions.add(description);
   assert.ok(!/<meta name="robots"[^>]*noindex/.test(html), `indexable: ${path}`);
   assert.equal((html.match(/class="skip-link"/g) || []).length, 1, `one skip link: ${path}`);
   assert.ok(html.includes('id="main-content"'), `skip link target: ${path}`);
+  const contactLinks = [...html.matchAll(/href="(tel|sms):([^"]+)"/g)];
+  assert.ok(contactLinks.length, `contact links missing: ${path}`);
+  for (const [, channel, number] of contactLinks) {
+    assert.equal(number, '+13239755574', `unexpected ${channel} destination: ${path}`);
+  }
+  assert.doesNotMatch(html, /408\D{0,3}234\D{0,2}7914/, `stale phone: ${path}`);
+  if (['/service-areas', '/remodeling-planning-guide'].includes(path)) {
+    for (const room of ['kitchen', 'bathroom']) {
+      assert.ok(html.includes(`href="/services/${room}-remodeling#planning-options"`), `missing ${room} planning link: ${path}`);
+    }
+  }
   const graphs = [...html.matchAll(/<script type="application\/ld\+json">(.*?)<\/script>/gs)].map((match) => JSON.parse(match[1]));
   const entities = graphs.flatMap((graph) => graph["@graph"] || [graph]);
   if (!['/privacy-policy', '/terms-of-use'].includes(path)) {
@@ -58,6 +75,8 @@ for (const path of ['/sitemap.xml', '/robots.txt']) {
 for (const path of ['/services/not-a-real-service', '/not-a-real-page']) {
   const response = await fetch(base + path);
   assert.equal(response.status, 404, path);
-  assert.match(await response.text(), /<meta name="robots" content="noindex"/, `404 noindex: ${path}`);
+  const html = await response.text();
+  assert.doesNotMatch(html, /rel="canonical"|<meta name="robots" content="index, follow"|<meta property="og:url"/, `404 must not inherit homepage metadata: ${path}`);
+  assert.match(html, /<meta name="robots" content="noindex"/, `404 noindex: ${path}`);
 }
 console.log('SEO checks passed: all ten pages, canonical tags, titles, descriptions, JSON-LD, permanent www redirects preserving paths/queries, robots/sitemap and unknown-page 404.');

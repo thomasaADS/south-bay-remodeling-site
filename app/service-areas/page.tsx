@@ -56,7 +56,11 @@ export default function ServiceAreasPage() {
         </section>
 
         <section className="area-services">
-          <div><p className="eyebrow">Project types</p><h2>One team across the scope.</h2></div>
+          <div>
+            <p className="eyebrow">Project types</p>
+            <h2>What are you remodeling?</h2>
+            <p>For a kitchen, start with the <Link href="/services/kitchen-remodeling#planning-options">layout and appliance planning checklist</Link>. For a bathroom, use the <Link href="/services/bathroom-remodeling#planning-options">shower, ventilation and fixture checklist</Link>. Both can help you describe the work before you request a proposal.</p>
+          </div>
           <div>{services.map((service) => <Link href={`/services/${service.slug}`} key={service.slug}>{service.title}</Link>)}</div>
         </section>
 
@@ -64,7 +68,7 @@ export default function ServiceAreasPage() {
           <p className="eyebrow">San Jose office</p>
           <h2>Start with the property and the work you are considering.</h2>
           <address>360 S Market St, Unit 1707<br />San Jose, CA 95113</address>
-          <div><a href="tel:+14082347914">(408) 234-7914</a><a href="mailto:Office@formadpb.com">Office@formadpb.com</a></div>
+          <div><a href="tel:+13239755574">(323) 975-5574</a><a href="mailto:Office@formadpb.com">Office@formadpb.com</a></div>
         </section>
       </main>
       <SeoFooter />
