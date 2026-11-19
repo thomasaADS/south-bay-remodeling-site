@@ -1,15 +1,64 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { Navigation, ProjectJourney } from "./site-interactions";
 import { ConsultationForm } from "./consultation-form";
 import { cities, faqs, services } from "./site-data";
-import { serializeJsonLd, webPageSchema } from "./seo";
+import { siteUrl, serializeJsonLd, webPageSchema } from "./seo";
+
+const title = "Home Remodeling Contractor in San Jose | FORMA";
+const description =
+  "Looking for a home remodeling contractor in San Jose? Explore kitchen, bathroom and whole-home remodeling, then discuss the scope of your South Bay project.";
+
+export const metadata: Metadata = {
+  title: {
+    default: title,
+    template: "%s | FORMA Design + Build",
+  },
+  description,
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    url: siteUrl,
+    title,
+    description,
+    siteName: "FORMA Design + Build",
+    locale: "en_US",
+    images: [
+      {
+        url: "/images/hero-indoor-outdoor.png",
+        width: 1536,
+        height: 1024,
+        alt: "FORMA Design + Build remodeling inspiration",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title,
+    description,
+    images: ["/images/hero-indoor-outdoor.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
+};
 
 export default function Home() {
   const structuredData = {
     "@context": "https://schema.org",
     "@graph": [
-      webPageSchema("San Jose Remodeling Contractor | FORMA Design + Build", "Kitchen and bathroom remodeling, landscaping and painting for San Jose and South Bay homeowners.", "/"),
+      webPageSchema("Home Remodeling Contractor in San Jose | FORMA", "Kitchen and bathroom remodeling, landscaping and painting for San Jose and South Bay homeowners.", "/"),
       {
         "@type": "GeneralContractor",
         "@id": "https://formadpb.com/#business",

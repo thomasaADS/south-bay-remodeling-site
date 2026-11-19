@@ -57,4 +57,4 @@ External authority requires genuine business evidence: authorized profile update
 
 Local Chromium launch is blocked by runtime socket restrictions. The included optional `tests/seo-ui.mjs` has not passed locally; do not report a browser or visual QA pass without a separate completed check. Rich Results Test and Search Console recrawling are separate from JSON syntax/entity regression tests. Schema cannot guarantee a rich result, ranking or AI citation.
 
-The 323/408 phone discrepancy still needs owner verification before sitewide standardization. Obtain current Search Console and analytics data before reporting traffic gains, search positions or conversion changes. Genuine project examples, permitted client testimonials and authorized business-profile updates remain external follow-up work.
+The 323/408 phone discrepancy was resolved in the November 19 update: the confirmed public phone is (323) 975-5574. Obtain current Search Console and analytics data before reporting traffic gains, search positions or conversion changes. Genuine project examples, permitted client testimonials and authorized business-profile updates remain external follow-up work.
