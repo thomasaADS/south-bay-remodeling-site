@@ -188,17 +188,18 @@ export function GoogleReviews() {
 
 /**
  * Small floating Google rating shown on the homepage (desktop and tablet). The rating comes live
- * from Google's compact Places UI Kit element; nothing is stored. It loads once the page is idle,
+ * from Google's compact Places UI Kit element; nothing is stored. It loads only after the visitor scrolls past the hero,
  * never blocks rendering, takes no layout space, and renders nothing at all if Google is unavailable.
  */
 export function GoogleRatingBadge() {
   const mountRef = useRef<HTMLDivElement>(null);
   const [state, setState] = useState<"waiting" | "ready" | "hidden">(apiKey ? "waiting" : "hidden");
   const [nearReviews, setNearReviews] = useState(false);
+  const [pastHero, setPastHero] = useState(false);
 
   useEffect(() => {
     const mount = mountRef.current;
-    if (state !== "waiting" || !apiKey || !mount) return;
+    if (state !== "waiting" || !apiKey || !mount || !pastHero || mount.childElementCount) return;
     // Small screens keep the space for the call and text bar.
     if (!window.matchMedia("(min-width: 701px)").matches) return;
 
@@ -222,12 +223,19 @@ export function GoogleRatingBadge() {
         })
         .catch(() => !cancelled && setState("hidden"));
     };
-    const timer = window.setTimeout(start, 2500);
+    start();
     return () => {
       cancelled = true;
-      window.clearTimeout(timer);
     };
-  }, [state]);
+  }, [state, pastHero]);
+
+  // Stay out of the hero: appear (and only then load Google) once the visitor has scrolled down.
+  useEffect(() => {
+    const onScroll = () => setPastHero(window.scrollY > 500);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   // Step aside while the full reviews section is on screen.
   useEffect(() => {
@@ -240,7 +248,7 @@ export function GoogleRatingBadge() {
 
   if (state === "hidden") return null;
   return (
-    <aside className="google-rating-badge" data-visible={state === "ready" && !nearReviews} aria-label="FORMA Design + Build rating on Google">
+    <aside className="google-rating-badge" data-visible={state === "ready" && pastHero && !nearReviews} aria-label="FORMA Design + Build rating on Google">
       <div ref={mountRef} />
       <div className="google-rating-badge-actions">
         <a href="#google-reviews">Read the reviews</a>
