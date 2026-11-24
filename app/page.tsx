@@ -6,6 +6,7 @@ import { CoverImage } from "./cover-image";
 import { Navigation, ProjectJourney } from "./site-interactions";
 import { ConsultationForm } from "./consultation-form";
 import { ReviewsSection, reviewSchema, videoSchema } from "./proof-sections";
+import { GoogleReviews } from "./google-reviews";
 import { SeoFooter } from "./seo-footer";
 import { cities, faqs, services } from "./site-data";
 import { defaultShareImage, siteUrl, serializeJsonLd, webPageSchema } from "./seo";
@@ -449,6 +450,9 @@ export default function Home() {
             ))}
           </div>
         </section>
+
+        {/* Live Google reviews of the business. Separate from the project video testimonial above. */}
+        <GoogleReviews />
 
         <section className="consultation-section" id="consultation">
           <div className="consultation-copy">
