@@ -8,6 +8,5 @@ export default function robots(): MetadataRoute.Robots {
       disallow: "/api/",
     },
     sitemap: "https://formadpb.com/sitemap.xml",
-    host: "https://formadpb.com",
   };
 }

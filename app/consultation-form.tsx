@@ -1,5 +1,6 @@
 "use client";
 
+import { business } from "./business";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import {
   budgets,
@@ -184,7 +185,7 @@ export function ConsultationForm() {
         <p>
           Thank you for sharing your plans. Our email service has accepted your
           request for delivery to FORMA. If you need to confirm receipt, please{" "}
-          <a href="tel:+13239755574">call (323) 975-5574</a>.
+          <a href={`tel:${business.phoneE164}`}>call {business.phoneDisplay}</a>.
         </p>
       </div>
     );
@@ -239,8 +240,8 @@ export function ConsultationForm() {
           {deliveryHold && (
             <>
               <p>
-                <a href="tel:+13239755574">Call (323) 975-5574</a> or{" "}
-                <a href="mailto:Office@formadpb.com">email Office@formadpb.com</a>.
+                <a href={`tel:${business.phoneE164}`}>Call {business.phoneDisplay}</a> or{" "}
+                <a href={`mailto:${business.email}`}>email {business.email}</a>.
                 {deliveryHold.requestId && <> Reference: {deliveryHold.requestId}.</>}
               </p>
               <button

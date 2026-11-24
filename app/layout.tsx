@@ -3,6 +3,8 @@ import Script from "next/script";
 import "./globals.css";
 import { MarketingEvents } from "./marketing-events";
 import { QuickContact } from "./quick-contact";
+import { businessGraph } from "./business";
+import { serializeJsonLd } from "./seo";
 
 const siteUrl = "https://formadpb.com";
 const googleTagManagerId = "GTM-T3WRGP6K";
@@ -26,6 +28,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        {/* Sitewide GeneralContractor + WebSite structured data. */}
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(businessGraph()) }} />
+      </head>
       <body>
         <a className="skip-link" href="#main-content">Skip to content</a>
         <Script id="google-tag-manager" strategy="afterInteractive">

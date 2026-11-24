@@ -8,10 +8,15 @@ import { useRef, useState, type KeyboardEvent } from "react";
 const instagram = "https://www.instagram.com/formadpb/";
 const menu = [
   ["Services", "/services"],
+  ["Home additions", "/services/home-additions"],
   ["Service areas", "/service-areas"],
   ["Planning guide", "/remodeling-planning-guide"],
+  ["Guides", "/guides"],
   ["Our approach", "/#approach"],
 ];
+// Shown on wide screens only, so the header never overflows on small laptops.
+// These links stay in the mobile menu and the footer at every width.
+const wideOnly = new Set(["/guides", "/#approach"]);
 
 export function Navigation() {
   const menuRef = useRef<HTMLDetailsElement>(null);
@@ -28,7 +33,7 @@ export function Navigation() {
         onClick={closeMenu}
       >
         <Image
-          src="/images/forma-logo-transparent.png"
+          src="/images/forma-logo-transparent.webp"
           alt="FORMA Design + Build"
           width={200}
           height={50}
@@ -37,7 +42,7 @@ export function Navigation() {
       </Link>
       <nav className="desktop-nav" aria-label="Main menu">
         {menu.map(([label, href]) => (
-          <Link key={href} href={href}>
+          <Link key={href} href={href} className={wideOnly.has(href) ? "nav-wide-only" : undefined}>
             {label}
           </Link>
         ))}
