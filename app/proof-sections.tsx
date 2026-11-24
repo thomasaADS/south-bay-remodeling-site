@@ -83,16 +83,16 @@ export function ReviewsSection({ service, all, heading, withVideo = false, moreL
       <p className="eyebrow">In our clients&apos; words</p>
       <h2 id="reviews-title">{heading}</h2>
       {video && <TestimonialVideo video={video} />}
-      {/* Quotes from the same client are shown as one testimonial with a single attribution. */}
-      {groupByClient(items).map((group) => (
-        <figure className="proof-testimonial" key={`${group[0].author}-${group[0].source}`}>
-          {group[0].rating && <p aria-label={`${group[0].rating} out of 5 stars`}>{"★".repeat(group[0].rating)}</p>}
-          <div className="proof-grid">
+      {/* One card per client. Several quotes from the same client share one card and one name. */}
+      <div className="proof-grid">
+        {groupByClient(items).map((group) => (
+          <figure className="proof-card" key={`${group[0].author}-${group[0].source}`}>
+            {group[0].rating && <p className="proof-stars" role="img" aria-label={`${group[0].rating} out of 5 stars`}>{"★".repeat(group[0].rating)}</p>}
             {group.map((review) => <blockquote key={review.text}>&ldquo;{review.text}&rdquo;</blockquote>)}
-          </div>
-          <figcaption><strong>{group[0].author}</strong> · Homeowners in {group[0].city}, CA · {group[0].source}</figcaption>
-        </figure>
-      ))}
+            <figcaption><strong>{group[0].author}</strong>{group[0].city && <> · {group[0].city}, CA</>} · {group[0].source}</figcaption>
+          </figure>
+        ))}
+      </div>
       {moreLink && <p className="proof-more"><Link href="/projects">See our work and client reviews</Link></p>}
     </section>
   );
