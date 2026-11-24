@@ -71,7 +71,7 @@ for (const path of paths) {
   assert.ok(html.includes('id="main-content"'), `skip link target: ${path}`);
   const contactLinks = [...html.matchAll(/href="(tel|sms):([^"]+)"/g)];
   assert.ok(contactLinks.length, `contact links missing: ${path}`);
-  for (const [, channel, number] of contactLinks) assert.equal(number, '+13239755574', `unexpected ${channel} destination: ${path}`);
+  for (const [, channel, number] of contactLinks) assert.equal(number, '+14082347914', `unexpected ${channel} destination: ${path}`);
 
   // Images: descriptive alt (or explicitly decorative), explicit size, modern format, lazy below the fold.
   for (const [tag] of html.matchAll(/<img\b[^>]*>/g)) {
