@@ -27,7 +27,7 @@ test("business name is always FORMA Design + Build", () => {
 });
 
 test("sitewide business schema carries the full NAP, geo, license and eight cities", () => {
-  const node = businessGraph()["@graph"][0] as Record<string, any>;
+  const node = businessGraph()["@graph"][0] as unknown as { [key: string]: string & string[] & { [key: string]: string } & { name: string }[] };
   assert.equal(node["@type"], "GeneralContractor");
   assert.equal(node.name, "FORMA Design + Build");
   assert.equal(node.email, "Office@formadpb.com");
