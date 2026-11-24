@@ -5,11 +5,10 @@ export const siteUrl = "https://formadpb.com";
 
 export const business = {
   name: "FORMA Design + Build",
-  // TODO(owner): replace with the new local 408/669 number once it is live. Until then the
-  // confirmed public number (323) 975-5574 is used everywhere (pages, schema, tel:/sms: links).
-  phoneDisplay: "(323) 975-5574",
-  phoneE164: "+13239755574",
-  phoneSchema: "+1-323-975-5574",
+  // Owner-confirmed public number for display, structured data, calls and text messages.
+  phoneDisplay: "(408) 234-7914",
+  phoneE164: "+14082347914",
+  phoneSchema: "+1-408-234-7914",
   email: "Office@formadpb.com",
   street: "360 S Market St, Unit 1707",
   city: "San Jose",
@@ -32,7 +31,7 @@ export const business = {
   hours: [] as { days: string[]; opens: string; closes: string }[],
   // Official Google Place ID of the verified listing "FORMA Design+Build", 360 S Market St
   // Unit 1707. Matched by the Maps feature ID 0x60f81f6d5280bd25:0x98da3bb12c71762b, the pin
-  // and the address. Not matched by phone: Maps still shows the old number.
+  // and the address.
   googlePlaceId: "ChIJJb2AUm0f-GARK3ZxLLE72pg",
   // Keep null. Google reviews are shown live by Google's own widget (app/google-reviews.tsx),
   // so the site stores no rating or count and publishes no AggregateRating for FORMA.
