@@ -31,7 +31,8 @@ Production is enabled only after the owner confirms billing and the daily cap.
 
 ## Behaviour
 
-- Google's script loads only when the section is within 400px of the viewport.
+- The section is a small strip with a "Show Google reviews" button. Google's script loads only
+  when a visitor presses it, so most page views make no request to Google.
 - Without the env var, or when the script is blocked, the key is rejected, Google reports an
   error, or nothing loads within 12 seconds: the widget area is removed and only
   "Read reviews on Google" remains. No star count is shown.
@@ -48,4 +49,4 @@ Production is enabled only after the owner confirms billing and the daily cap.
 - [ ] `gmp-load` and `gmp-error` fire as expected (check against the current Places UI Kit reference)
 - [ ] Consultation form: all three steps and submit work; `#consultation` links land correctly
 - [ ] No client street address appears in the section
-- [ ] Lighthouse: no layout-shift regression; the Maps script is absent from the initial load
+- [ ] Lighthouse: no layout-shift regression; the Maps script is absent until the button is pressed

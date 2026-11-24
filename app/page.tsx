@@ -6,7 +6,7 @@ import { CoverImage } from "./cover-image";
 import { Navigation, ProjectJourney } from "./site-interactions";
 import { ConsultationForm } from "./consultation-form";
 import { ReviewsSection, reviewSchema, videoSchema } from "./proof-sections";
-import { GoogleRatingBadge, GoogleReviews } from "./google-reviews";
+import { GoogleReviews } from "./google-reviews";
 import { SeoFooter } from "./seo-footer";
 import { cities, faqs, services } from "./site-data";
 import { defaultShareImage, siteUrl, serializeJsonLd, webPageSchema } from "./seo";
@@ -476,7 +476,6 @@ export default function Home() {
           <ConsultationForm />
         </section>
       </main>
-      <GoogleRatingBadge />
       <SeoFooter home />
     </>
   );
