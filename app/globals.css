@@ -3465,10 +3465,11 @@ h2 {
 .proof-photos img { display: block; height: auto; width: 100%; }
 .proof-photos figcaption { color: var(--muted); font-size: 0.875rem; padding-top: 8px; }
 .proof-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; margin: 30px 0 0; }
-.proof-grid figure { border-top: 1px solid var(--gold); margin: 0; padding-top: 22px; }
-.proof-grid blockquote { color: var(--ink); font-size: 1.0625rem; line-height: 1.75; margin: 0 0 18px; }
-.proof-grid figcaption { color: var(--muted); font-size: 0.875rem; }
-.proof-grid figcaption strong { color: var(--forest); }
+.proof-testimonial { margin: 0; }
+.proof-testimonial + .proof-testimonial { margin-top: 48px; }
+.proof-grid blockquote { border-top: 1px solid var(--gold); color: var(--ink); font-size: 1.0625rem; line-height: 1.75; margin: 0; padding-top: 22px; }
+.proof-testimonial figcaption { color: var(--muted); font-size: 0.9375rem; margin-top: 28px; }
+.proof-testimonial figcaption strong { color: var(--forest); }
 @media (max-width: 1100px) { .proof-photos { column-count: 2; } }
 @media (max-width: 900px) { .proof-grid { grid-template-columns: 1fr; gap: 24px; } .proof-section { padding: 48px var(--page-x); } }
 @media (max-width: 700px) { .proof-photos { column-count: 1; } }
@@ -3484,7 +3485,7 @@ h2 {
 .proof-video { margin: 30px 0 0; max-width: 960px; }
 .proof-video video { aspect-ratio: 16 / 9; background: var(--dark-green); display: block; height: auto; width: 100%; }
 .proof-video figcaption { color: var(--muted); font-size: 0.875rem; padding-top: 8px; }
-.proof-video + .proof-grid { margin-top: 44px; }
+.proof-video + .proof-testimonial { margin-top: 44px; }
 .proof-more { margin-top: 30px; }
 .proof-more a { border-bottom: 1px solid var(--gold); color: var(--forest); font-weight: 700; padding-bottom: 5px; }
 

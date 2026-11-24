@@ -74,12 +74,6 @@ export const reviews: Review[] = [
     source: testimonialSource,
     text: "We have gotten some excellent reviews from our friends on the end result... they see complete transformation. To see their eyes light up is just magical.",
   },
-  {
-    author: testimonialAuthor,
-    city: "San Jose",
-    source: testimonialSource,
-    text: "I'm so happy and so grateful that we went with Eddie for this big project of ours.",
-  },
 ];
 
 export type ProjectPhoto = {
