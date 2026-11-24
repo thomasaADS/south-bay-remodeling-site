@@ -3455,14 +3455,23 @@ h2 {
 .detail-process, .detail-faq { scroll-margin-top: 90px; }
 .local-contact > div { align-items: center; }
 
-/* Real project gallery and client reviews. Only rendered once real data exists (app/proof.ts). */
-.proof-section { padding: 48px var(--page-x); }
+/* Real project gallery and client reviews (data in app/proof.ts). */
+.proof-section { padding: 72px var(--page-x); scroll-margin-top: 90px; }
 .proof-section h2 { color: var(--forest); font-size: clamp(28px, 3vw, 42px); line-height: 1.2; max-width: 900px; }
-.proof-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; margin: 30px 0; }
-.proof-grid img { height: auto; width: 100%; }
-.proof-grid h3 { color: var(--forest); font-size: 22px; line-height: 1.35; }
-.proof-grid p, .proof-grid blockquote { color: var(--muted); line-height: 1.8; margin: 0; }
-@media (max-width: 900px) { .proof-grid { grid-template-columns: 1fr; gap: 20px; } }
+.proof-section h3 { color: var(--forest); font-size: 22px; line-height: 1.35; margin-top: 26px; }
+.proof-section article > p { color: var(--muted); line-height: 1.8; max-width: 760px; }
+.proof-photos { column-count: 3; column-gap: 20px; margin-top: 28px; }
+.proof-photos figure { break-inside: avoid; margin: 0 0 20px; }
+.proof-photos img { display: block; height: auto; width: 100%; }
+.proof-photos figcaption { color: var(--muted); font-size: 0.875rem; padding-top: 8px; }
+.proof-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; margin: 30px 0 0; }
+.proof-grid figure { border-top: 1px solid var(--gold); margin: 0; padding-top: 22px; }
+.proof-grid blockquote { color: var(--ink); font-size: 1.0625rem; line-height: 1.75; margin: 0 0 18px; }
+.proof-grid figcaption { color: var(--muted); font-size: 0.875rem; }
+.proof-grid figcaption strong { color: var(--forest); }
+@media (max-width: 1100px) { .proof-photos { column-count: 2; } }
+@media (max-width: 900px) { .proof-grid { grid-template-columns: 1fr; gap: 24px; } .proof-section { padding: 48px var(--page-x); } }
+@media (max-width: 700px) { .proof-photos { column-count: 1; } }
 
 /* Keep the header on one row on small laptops: secondary links appear on wide screens only. */
 @media (max-width: 1240px) {

@@ -331,15 +331,14 @@ export default function Home() {
             </figure>
           </div>
           <p className="imagery-note">
-            Design inspiration shown throughout this page illustrates
-            possibilities, not completed FORMA projects.
+            Design inspiration shown in this section illustrates possibilities,
+            not completed FORMA projects.
           </p>
         </section>
 
-        {/* Real FORMA projects and client reviews. Both render nothing until real data is
-            added to app/proof.ts. TODO(owner): supply projects (photos, city, scope) and reviews. */}
+        {/* Real FORMA projects and client testimonials (data in app/proof.ts). */}
         <ProjectGallerySection heading="Recent FORMA projects in the South Bay" />
-        <ReviewsSection heading="What South Bay homeowners say about FORMA" />
+        <ReviewsSection heading="What San Jose homeowners say about working with us" />
 
         <section
           className="process-section"

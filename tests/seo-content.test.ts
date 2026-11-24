@@ -2,6 +2,7 @@
 // Run: node --test tests/seo-content.test.ts
 import assert from "node:assert/strict";
 import test from "node:test";
+import { existsSync } from "node:fs";
 import { business, businessGraph, businessRatingNode, serviceAreaNames } from "../app/business";
 import { cityContent } from "../app/city-content";
 import { guides } from "../app/guide-content";
@@ -41,10 +42,25 @@ test("sitewide business schema carries the full NAP, geo, license and eight citi
   assert.equal("aggregateRating" in node, false);
 });
 
-test("no rating or review markup is published without real reviews", () => {
-  if (reviews.length === 0) assert.equal(businessRatingNode([]), null);
+test("reviews and projects: no ratings invented, no client street address, real files", () => {
   if (!business.aggregateRating) assert.equal(businessRatingNode([{ "@type": "Review" }]), null);
-  for (const project of projects) assert.ok(project.photos.length > 0 && project.city && project.scope);
+  assert.equal(businessRatingNode([]), null);
+  for (const review of reviews) {
+    assert.ok(review.author && review.city && review.source && review.text.length > 20);
+    if (review.rating !== undefined) assert.ok(review.rating >= 1 && review.rating <= 5);
+    for (const slug of review.services ?? []) assert.ok(services.some((service) => service.slug === slug), slug);
+  }
+  for (const project of projects) {
+    assert.ok(project.photos.length > 0 && project.city && project.scope);
+    assert.doesNotMatch(JSON.stringify(project), /\d{3,5} [A-Z][a-z]+ (Hill )?(Rd|St|Ave|Dr|Blvd|Way|Ct|Ln)\b/, "no street address of a client home");
+    for (const photo of project.photos) {
+      assert.match(photo.src, /^\/images\/projects\/[a-z0-9-]+\.webp$/);
+      assert.ok(existsSync(new URL(`../public${photo.src}`, import.meta.url)), `missing file: ${photo.src}`);
+      assert.ok(photo.alt.length >= 40 && photo.alt.includes(project.city), `descriptive alt with city: ${photo.src}`);
+      assert.ok(photo.width > 0 && photo.height > 0);
+      if (photo.service) assert.ok(services.some((service) => service.slug === photo.service));
+    }
+  }
 });
 
 test("service pages: title, description, H1, FAQs and 1,200+ words of unique copy", () => {
