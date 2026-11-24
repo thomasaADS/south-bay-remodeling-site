@@ -120,18 +120,19 @@ export function GoogleReviews() {
         const request = document.createElement("gmp-place-details-place-request");
         request.setAttribute("place", business.googlePlaceId);
 
-        // Rating, reviews and Google attribution only. No address element.
-        const config = document.createElement("gmp-place-content-config");
+        // Rating, reviews and Google attribution only. No address element. Content elements go
+        // directly inside gmp-place-details (the gmp-place-content-config wrapper is deprecated).
         const attribution = document.createElement("gmp-place-attribution");
         attribution.setAttribute("light-scheme-color", "gray");
         attribution.setAttribute("dark-scheme-color", "white");
-        config.append(
+        // The site is light only, so keep Google's element light for visitors in dark mode.
+        details.style.colorScheme = "light";
+        details.append(
+          request,
           document.createElement("gmp-place-rating"),
           document.createElement("gmp-place-reviews"),
           attribution,
         );
-
-        details.append(request, config);
         details.addEventListener("gmp-load", succeed);
         details.addEventListener("gmp-error", fail);
         mount.replaceChildren(details);
