@@ -3,11 +3,12 @@
 import Link from "next/link";
 
 import Image from "next/image";
-import { useRef, useState, type KeyboardEvent } from "react";
+import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 
 const instagram = "https://www.instagram.com/formadpb/";
 const menu = [
   ["Services", "/services"],
+  ["Projects", "/projects"],
   ["Home additions", "/services/home-additions"],
   ["Service areas", "/service-areas"],
   ["Planning guide", "/remodeling-planning-guide"],
@@ -16,7 +17,7 @@ const menu = [
 ];
 // Shown on wide screens only, so the header never overflows on small laptops.
 // These links stay in the mobile menu and the footer at every width.
-const wideOnly = new Set(["/guides", "/#approach"]);
+const wideOnly = new Set(["/remodeling-planning-guide", "/guides", "/#approach"]);
 
 export function Navigation() {
   const menuRef = useRef<HTMLDetailsElement>(null);
@@ -24,6 +25,15 @@ export function Navigation() {
   function closeMenu() {
     if (menuRef.current) menuRef.current.open = false;
   }
+  // Close the mobile menu when the visitor taps or clicks anywhere outside it.
+  useEffect(() => {
+    function closeOnOutsidePress(event: PointerEvent) {
+      const details = menuRef.current;
+      if (details?.open && event.target instanceof Node && !details.contains(event.target)) details.open = false;
+    }
+    document.addEventListener("pointerdown", closeOnOutsidePress);
+    return () => document.removeEventListener("pointerdown", closeOnOutsidePress);
+  }, []);
   return (
     <header className="site-header">
       <Link

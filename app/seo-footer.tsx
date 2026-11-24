@@ -32,6 +32,7 @@ export function SeoFooter({ home = false }: { home?: boolean }) {
         <div>
           <strong>Explore</strong>
           <Link href="/#about">About FORMA</Link>
+          <Link href="/projects">Projects + Reviews</Link>
           <Link href="/service-areas">Service Areas</Link>
           <Link href="/remodeling-planning-guide">Remodeling Planning Guide</Link>
           <Link href="/guides">Remodeling Guides</Link>

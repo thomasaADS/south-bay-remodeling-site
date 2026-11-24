@@ -5,7 +5,7 @@ import { business, businessId, businessRatingNode } from "./business";
 import { CoverImage } from "./cover-image";
 import { Navigation, ProjectJourney } from "./site-interactions";
 import { ConsultationForm } from "./consultation-form";
-import { ProjectGallerySection, ReviewsSection, reviewSchema } from "./proof-sections";
+import { ProjectGallerySection, ReviewsSection, reviewSchema, videoSchema } from "./proof-sections";
 import { SeoFooter } from "./seo-footer";
 import { cities, faqs, services } from "./site-data";
 import { defaultShareImage, siteUrl, serializeJsonLd, webPageSchema } from "./seo";
@@ -94,6 +94,7 @@ export default function Home() {
           },
         })),
       },
+      ...videoSchema("https://formadpb.com/"),
       ...(ratingNode ? [ratingNode] : []),
     ],
   };
@@ -337,8 +338,8 @@ export default function Home() {
         </section>
 
         {/* Real FORMA projects and client testimonials (data in app/proof.ts). */}
-        <ProjectGallerySection heading="Recent FORMA projects in the South Bay" />
-        <ReviewsSection heading="What San Jose homeowners say about working with us" />
+        <ProjectGallerySection heading="Recent FORMA projects in the South Bay" moreLink />
+        <ReviewsSection heading="What San Jose homeowners say about working with us" withVideo moreLink />
 
         <section
           className="process-section"
