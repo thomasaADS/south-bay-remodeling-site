@@ -138,7 +138,10 @@ for (const path of paths) {
     for (const target of ['/service-areas', '/remodeling-planning-guide']) assert.ok(main.includes(`href="${target}"`), `${target} link: ${path}`);
     assert.match(main, /href="\/guides\/[a-z-]+"/, `guide link: ${path}`);
     for (const id of ['scope', 'process', 'timeline', 'permits', 'cost', 'materials', 'why-forma', 'service-questions']) assert.ok(main.includes(`id="${id}"`), `#${id}: ${path}`);
-    assert.doesNotMatch(main, /id="projects-gallery"|id="reviews"/, `empty gallery/reviews stay hidden: ${path}`);
+    // Real projects and testimonials show only where they exist; never an empty section.
+    const hasProof = ['kitchen-remodeling', 'bathroom-remodeling'].includes(slug);
+    assert.equal(main.includes('id="projects-gallery"'), hasProof, `project gallery: ${path}`);
+    assert.equal(main.includes('id="reviews"'), hasProof, `reviews: ${path}`);
   }
   if (/^\/service-areas\/./.test(path)) {
     assert.match(title, /^Home Remodeling Contractor in [A-Za-z ]+, CA \| FORMA$/, `city title: ${path}`);
@@ -150,6 +153,8 @@ for (const path of paths) {
   }
   if (path === '/service-areas') assert.doesNotMatch(main.slice(main.indexOf('class="area-list"'), main.indexOf('class="area-services"')), /#consultation/, 'city cards link to city pages');
   if (path === '/') {
+    assert.ok(main.includes('id="projects-gallery"') && main.includes('id="reviews"'), 'home shows real projects and testimonials');
+    assert.doesNotMatch(html, /Blossom Hill/i, 'client street address is never published');
     assert.equal(title, 'Home Remodeling Contractor in San Jose | FORMA');
     assert.ok(description.length <= 150, `home description ${description.length}`);
     for (const slug of services) assert.ok(main.slice(main.indexOf('id="services"')).includes(`href="/services/${slug}"`), `home services section links ${slug}`);

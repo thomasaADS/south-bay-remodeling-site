@@ -207,9 +207,9 @@ export default async function ServicePage({ params }: PageProps) {
           </div>
         </section>
 
-        {/* Hidden until real FORMA projects and reviews are added to app/proof.ts. */}
+        {/* Real projects and testimonials for this service; hidden when there are none (app/proof.ts). */}
         <ProjectGallerySection service={service.slug} heading={`${service.title} projects by FORMA`} />
-        <ReviewsSection service={service.slug} heading="What clients say about FORMA" />
+        <ReviewsSection service={service.slug} heading="What our clients say" />
 
         <section className="detail-faq" id="service-questions">
           <div><p className="eyebrow">Useful starting points</p><h2>{service.title} questions</h2></div>
