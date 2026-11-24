@@ -1,8 +1,10 @@
 # Live Google reviews: setup and QA
 
 The homepage section "What our clients say" (`app/google-reviews.tsx`) shows the live rating and
-reviews from Google through the official Places UI Kit. The site stores no rating, no review text
-and publishes no `AggregateRating` / `Review` schema for FORMA.
+reviews from Google through the official Places UI Kit. The widget stores nothing. Separately,
+`app/proof.ts` holds a few short, verbatim excerpts of public Google reviews with the reviewers'
+names, added by hand at the owner's request and shown in the testimonial cards. The site publishes
+no `AggregateRating` / `Review` schema for FORMA.
 
 Verified listing: Place ID `ChIJJb2AUm0f-GARK3ZxLLE72pg` (`business.googlePlaceId`), matched by
 the Maps feature ID `0x60f81f6d5280bd25:0x98da3bb12c71762b`, the pin and the address. It was not

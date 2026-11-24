@@ -6,8 +6,8 @@
 export type Review = {
   /** Reviewer name as it appears on the source (with their permission). */
   author: string;
-  /** City of the project, e.g. "San Jose". */
-  city: string;
+  /** City of the project, when the client has said it publicly. */
+  city?: string;
   /** The review text, quoted exactly. An ellipsis marks words left out. */
   text: string;
   /** Where it comes from, e.g. "Google" or "Video testimonial". */
@@ -32,47 +32,55 @@ export type Review = {
 const testimonialAuthor = "Ashwani & Chitvan";
 const testimonialSource = "Video testimonial";
 
+// Google reviews: short excerpts, quoted exactly, from the public reviews on FORMA's Google
+// Business Profile (read on 2026-11-24). An ellipsis marks words left out. Every reviewer below
+// gave 5 stars. The live widget in app/google-reviews.tsx shows the full, current reviews.
+// TODO(owner): refresh these when new reviews arrive; remove one here if it is removed on Google.
+const google = "Google review";
+
 export const reviews: Review[] = [
+  {
+    author: "Durwin Sampollo",
+    source: google,
+    rating: 5,
+    text: "We recently had our kitchen remodeled by Forma Design + Build and couldn't be happier with how everything turned out... The kitchen feels completely different now, and it turned out even better than we envisioned.",
+    featured: true,
+    services: ["kitchen-remodeling"],
+  },
+  {
+    author: "Patrick Dong",
+    source: google,
+    rating: 5,
+    text: "The original space was very dated, and he completely transformed it into a bright, modern bathroom... I especially appreciated being able to trust him to handle the details, which took a lot of the stress out of the renovation.",
+    featured: true,
+    services: ["bathroom-remodeling"],
+  },
+  {
+    author: "Tran Pham",
+    source: google,
+    rating: 5,
+    text: "I wanted a beautiful backyard without going over my budget, and Eddie from Forma Design + Build and his team helped bring that vision to life... They were professional, hardworking, and genuinely nice to have around.",
+    featured: true,
+    services: ["landscaping"],
+  },
+  {
+    author: "Chau Dang",
+    source: google,
+    rating: 5,
+    text: "Eddie was professional, responsive, and easy to communicate with throughout the project. I appreciated his attention to detail and the care he put into the work.",
+  },
+  {
+    author: "Raja Sekhar Pedada",
+    source: google,
+    rating: 5,
+    text: "The whole job was finished in 3 days, exactly as planned, and everything works perfectly... They left the place clean and tidy when they finished. Fair price for the quality of the work.",
+  },
+  // From the client video testimonial (no star rating was given, so none is shown).
   {
     author: testimonialAuthor,
     city: "San Jose",
     source: testimonialSource,
     text: "The human aspect, the connection part that developed with Eddie was the most important deciding factor for us. He came across during our initial meetings as not pushing sales, listening to us, understanding what we want to do.",
-    featured: true,
-  },
-  {
-    author: testimonialAuthor,
-    city: "San Jose",
-    source: testimonialSource,
-    text: "He takes accountability. He was always available... He was here every single day, taking care of what happened throughout the day, any issues we were facing.",
-    featured: true,
-  },
-  {
-    author: testimonialAuthor,
-    city: "San Jose",
-    source: testimonialSource,
-    text: "Eddie made sure that the best people who work on bathrooms work on our bathrooms, the people who do kitchens really well work on our kitchen... They would come on time. When they knew that the work was behind schedule, they would go extra hours. They would clean up.",
-    featured: true,
-    services: ["kitchen-remodeling", "bathroom-remodeling"],
-  },
-  {
-    author: testimonialAuthor,
-    city: "San Jose",
-    source: testimonialSource,
-    text: "My dream kitchen is done the way I wanted. Thank you, Eddie.",
-    services: ["kitchen-remodeling"],
-  },
-  {
-    author: testimonialAuthor,
-    city: "San Jose",
-    source: testimonialSource,
-    text: "It was holistic experience all the way from the design side of things, the ideation to execution.",
-  },
-  {
-    author: testimonialAuthor,
-    city: "San Jose",
-    source: testimonialSource,
-    text: "We have gotten some excellent reviews from our friends on the end result... they see complete transformation. To see their eyes light up is just magical.",
   },
 ];
 

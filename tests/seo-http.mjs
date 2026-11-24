@@ -142,7 +142,7 @@ for (const path of paths) {
     // Real projects and testimonials show only where they exist; never an empty section.
     const hasProof = ['kitchen-remodeling', 'bathroom-remodeling'].includes(slug);
     assert.equal(main.includes('id="projects-gallery"'), hasProof, `project gallery: ${path}`);
-    assert.equal(main.includes('id="reviews"'), hasProof, `reviews: ${path}`);
+    assert.equal(main.includes('id="reviews"'), hasProof || slug === 'landscaping', `reviews: ${path}`);
   }
   if (/^\/service-areas\/./.test(path)) {
     assert.match(title, /^Home Remodeling Contractor in [A-Za-z ]+, CA \| FORMA$/, `city title: ${path}`);
@@ -169,7 +169,12 @@ for (const path of paths) {
     assert.ok(video && video.contentUrl.endsWith('.mp4') && video.thumbnailUrl && video.uploadDate && video.duration, `VideoObject: ${path}`);
     assert.equal((await fetch(base + new URL(video.contentUrl).pathname, { method: 'HEAD' })).status, 200, 'video file is served');
   }
-  if (path === '/projects') assert.ok((main.match(/<blockquote/g) || []).length >= 6, 'projects page shows all testimonials');
+  if (path === '/projects') {
+    assert.ok((main.match(/<blockquote/g) || []).length >= 6, 'projects page shows all testimonials');
+    // Reviews come from different clients, each named once.
+    const names = [...main.slice(main.indexOf('id="reviews"')).matchAll(/<figcaption><strong>([^<]+)<\/strong>/g)].map((match) => match[1]);
+    assert.ok(names.length >= 6 && new Set(names).size === names.length, `distinct reviewers: ${names}`);
+  }
   if (path === '/services') for (const slug of services) assert.ok(main.includes(`href="/services/${slug}"`), `/services links ${slug}`);
   if (path === '/remodeling-planning-guide') {
     assert.ok(wordCount >= 1500, `planning guide words ${wordCount}`);

@@ -46,10 +46,12 @@ test("reviews and projects: no ratings invented, no client street address, real 
   if (!business.aggregateRating) assert.equal(businessRatingNode([{ "@type": "Review" }]), null);
   assert.equal(businessRatingNode([]), null);
   for (const review of reviews) {
-    assert.ok(review.author && review.city && review.source && review.text.length > 20);
+    assert.ok(review.author && review.source && review.text.length > 20);
     if (review.rating !== undefined) assert.ok(review.rating >= 1 && review.rating <= 5);
     for (const slug of review.services ?? []) assert.ok(services.some((service) => service.slug === slug), slug);
   }
+  // Different clients, not one client repeated.
+  assert.ok(new Set(reviews.map((review) => review.author)).size >= 5);
   for (const project of projects) {
     assert.ok(project.photos.length > 0 && project.city && project.scope);
     assert.doesNotMatch(JSON.stringify(project), /\d{3,5} [A-Z][a-z]+ (Hill )?(Rd|St|Ave|Dr|Blvd|Way|Ct|Ln)\b/, "no street address of a client home");
