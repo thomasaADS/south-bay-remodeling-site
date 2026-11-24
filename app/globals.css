@@ -3487,3 +3487,5 @@ h2 {
 .proof-video + .proof-grid { margin-top: 44px; }
 .proof-more { margin-top: 30px; }
 .proof-more a { border-bottom: 1px solid var(--gold); color: var(--forest); font-weight: 700; padding-bottom: 5px; }
+
+.service-ribbon a:hover { text-decoration: underline; text-underline-offset: 4px; }

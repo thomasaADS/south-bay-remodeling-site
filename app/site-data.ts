@@ -11,6 +11,8 @@ export type Service = {
   image?: string;
   /** Describes the photo itself. These are design-inspiration images, not FORMA projects. */
   imageAlt?: string;
+  /** True when `image` is a photo of a completed FORMA project, not design inspiration. */
+  imageIsProject?: boolean;
   intro: string;
   includes: string[];
   planning: string[];
@@ -28,8 +30,9 @@ export const services: Service[] = [
     metaDescription: "Kitchen remodeling in San Jose by a licensed design-build contractor (CSLB #1162108). Layout, cabinets, permits and build. Book a free consultation.",
     planningNote: "Before comparing kitchen proposals, decide whether the layout will stay in place or move. Cabinet dimensions, appliance specifications and utility locations affect each other. Separate essential improvements from optional finishes, and ask what demolition, electrical, plumbing and installation work each proposal includes.",
     text: "Thoughtful layouts, custom cabinetry, lighting, surfaces and finish details designed around how your household actually lives.",
-    image: "/images/kitchen-remodel.webp",
-    imageAlt: "Kitchen remodeling design inspiration: white oak cabinetry with stone countertops",
+    image: "/images/projects/san-jose-kitchen-remodel-open-plan.webp",
+    imageAlt: "Kitchen remodel in San Jose with an island, built-in wine storage and an open dining area",
+    imageIsProject: true,
     intro: "Keeping the sink and appliances in place is a different job from opening the kitchen to the next room. As a San Jose kitchen remodeling contractor, FORMA helps you define the layout, cabinetry, utilities and installation work to include in your proposal.",
     includes: ["Layout and circulation planning", "Cabinetry and storage direction", "Countertops, tile and finish coordination", "Lighting and electrical planning", "Appliance and fixture coordination", "Construction and finish work"],
     planning: ["How the household cooks, gathers and entertains", "Existing plumbing, electrical and structural conditions", "Storage priorities and appliance requirements", "Material durability, maintenance and budget direction"],
@@ -53,8 +56,9 @@ export const services: Service[] = [
     metaDescription: "Bathroom remodeling in San Jose by a licensed design-build contractor (CSLB #1162108). Showers, tile, plumbing and permits. Book a free consultation.",
     planningNote: "Start a bathroom scope with layout, moisture control and daily use. A shower conversion can affect the drain, floor build-up, waterproofing and door clearances. Confirm these details before ordering tile or fixtures so the finished design can be built within the available space.",
     text: "Calm, highly functional bathrooms—from efficient guest baths to complete primary-suite transformations.",
-    image: "/images/bathroom-remodel.webp",
-    imageAlt: "Bathroom remodeling design inspiration: white oak vanity with green wall tile",
+    image: "/images/projects/san-jose-bathroom-remodel-green-vanity.webp",
+    imageAlt: "Bathroom remodel in San Jose with a green vanity, an oval backlit mirror and a glass-enclosed tiled shower",
+    imageIsProject: true,
     intro: "Replacing a vanity, converting a tub to a shower and moving fixtures are three different construction scopes. FORMA helps San Jose homeowners plan the plumbing, waterproofing, ventilation and finish work their bathroom remodel needs.",
     includes: ["Layout and fixture planning", "Shower and waterproofing scope", "Tile and finish coordination", "Vanity, storage and lighting direction", "Plumbing and ventilation coordination", "Construction and finish work"],
     planning: ["Fixture locations and comfortable clearances", "Waterproofing and moisture control", "Lighting for daily use and atmosphere", "Storage, accessibility and long-term needs"],
