@@ -82,7 +82,7 @@ for (const path of paths) {
     if (!/fetchPriority="high"|fetchpriority="high"/.test(tag) && !/forma-logo/.test(tag)) assert.match(tag, /loading="lazy"/, `lazy image: ${path} ${tag.slice(0, 120)}`);
   }
   if (path === '/' || path.startsWith('/services') || path.startsWith('/service-areas')) {
-    assert.match(head, /<link rel="preload" as="image"[^>]*(hero-indoor-outdoor|kitchen-remodel|bathroom-remodel)/, `hero image preload: ${path}`);
+    assert.match(head, /<link rel="preload" as="image"[^>]*(hero-indoor-outdoor|kitchen-remodel|bathroom-remodel|san-jose-)/, `hero image preload: ${path}`);
   }
 
   // Structured data.
@@ -154,7 +154,8 @@ for (const path of paths) {
   }
   if (path === '/service-areas') assert.doesNotMatch(main.slice(main.indexOf('class="area-list"'), main.indexOf('class="area-services"')), /#consultation/, 'city cards link to city pages');
   if (path === '/') {
-    assert.ok(main.includes('id="projects-gallery"') && main.includes('id="reviews"'), 'home shows real projects and testimonials');
+    assert.ok((main.match(/images%2Fprojects%2F|\/images\/projects\//g) || []).length >= 3 && main.includes('id="reviews"'), 'home shows real project photos and testimonials');
+    assert.doesNotMatch(main, /not completed FORMA projects/, 'home gallery uses real photos');
     assert.ok(main.includes('href="/projects"'), 'home links to the projects page');
     assert.doesNotMatch(html, /Blossom Hill/i, 'client street address is never published');
     assert.equal(title, 'Home Remodeling Contractor in San Jose | FORMA');

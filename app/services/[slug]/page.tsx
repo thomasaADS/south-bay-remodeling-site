@@ -88,7 +88,7 @@ export default async function ServicePage({ params }: PageProps) {
           </div>
           <figure>
             <CoverImage src={service.image || fallbackImage} alt={service.imageAlt || fallbackAlt} sizes="(max-width: 900px) 100vw, 46vw" priority />
-            <figcaption>Design inspiration shown · Not a completed FORMA project</figcaption>
+            <figcaption>{service.imageIsProject ? "Completed FORMA project · San Jose, CA" : "Design inspiration shown · Not a completed FORMA project"}</figcaption>
           </figure>
         </section>
 

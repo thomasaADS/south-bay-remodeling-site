@@ -5,8 +5,10 @@ import Image from "next/image";
 const dimensions: Record<string, { width: number; height: number }> = {
   "/images/hero-indoor-outdoor.webp": { width: 1536, height: 1024 },
   "/images/kitchen-remodel.webp": { width: 1122, height: 1402 },
-  "/images/bathroom-remodel.webp": { width: 1122, height: 1402 },
   "/images/projects/san-jose-kitchen-remodel-island.webp": { width: 1600, height: 1067 },
+  "/images/projects/san-jose-kitchen-remodel-open-plan.webp": { width: 1600, height: 1067 },
+  "/images/projects/san-jose-bathroom-remodel-green-vanity.webp": { width: 1100, height: 1649 },
+  "/images/projects/san-jose-bathroom-remodel-floating-vanity.webp": { width: 1100, height: 1649 },
 };
 
 type Props = { src: string; alt: string; sizes: string; priority?: boolean; decorative?: boolean };

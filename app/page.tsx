@@ -5,7 +5,7 @@ import { business, businessId, businessRatingNode } from "./business";
 import { CoverImage } from "./cover-image";
 import { Navigation, ProjectJourney } from "./site-interactions";
 import { ConsultationForm } from "./consultation-form";
-import { ProjectGallerySection, ReviewsSection, reviewSchema, videoSchema } from "./proof-sections";
+import { ReviewsSection, reviewSchema, videoSchema } from "./proof-sections";
 import { SeoFooter } from "./seo-footer";
 import { cities, faqs, services } from "./site-data";
 import { defaultShareImage, siteUrl, serializeJsonLd, webPageSchema } from "./seo";
@@ -58,6 +58,13 @@ export const metadata: Metadata = {
     },
   },
 };
+
+// Real photos from the completed San Jose full-house remodel (see app/proof.ts).
+const homeProjectPhotos = [
+  { src: "/images/projects/san-jose-kitchen-remodel-island.webp", label: "Kitchen remodel", alt: "Kitchen remodel in San Jose with wood-tone shaker cabinets and a large island with a backlit stone countertop" },
+  { src: "/images/projects/san-jose-bathroom-remodel-green-vanity.webp", label: "Bathroom remodel", alt: "Bathroom remodel in San Jose with a green vanity, an oval backlit mirror and a tiled shower" },
+  { src: "/images/projects/san-jose-bathroom-remodel-floating-vanity.webp", label: "Second bathroom", alt: "Bathroom remodel in San Jose with a floating wood vanity, a backlit mirror and pendant lights" },
+];
 
 export default function Home() {
   // Only published when real reviews are shown on this page (see app/proof.ts).
@@ -127,9 +134,9 @@ export default function Home() {
               <a className="button button-primary" href="#consultation">
                 Start your project
               </a>
-              <a className="button button-secondary" href="#projects">
-                Explore the possibilities
-              </a>
+              <Link className="button button-secondary" href="/projects">
+                See our work
+              </Link>
             </div>
             <div className="trust-line" aria-label="FORMA credentials">
               <span>CSLB #1162108</span>
@@ -163,14 +170,14 @@ export default function Home() {
 
         <div className="service-ribbon" aria-label="Core services">
           {[
-            "Kitchens",
-            "Bathrooms",
-            "Home additions",
-            "Whole-home remodeling",
-            "Landscaping",
-            "Painting",
-          ].map((service) => (
-            <span key={service}>{service}</span>
+            ["Kitchens", "/services/kitchen-remodeling"],
+            ["Bathrooms", "/services/bathroom-remodeling"],
+            ["Home additions", "/services/home-additions"],
+            ["Whole-home remodeling", "/projects"],
+            ["Landscaping", "/services/landscaping"],
+            ["Painting", "/services/interior-exterior-painting"],
+          ].map(([label, href]) => (
+            <span key={label}><Link href={href}>{label}</Link></span>
           ))}
         </div>
 
@@ -282,63 +289,38 @@ export default function Home() {
 
         <section className="projects-section" id="projects">
           <div className="project-copy">
-            <p className="eyebrow">Bright California living</p>
+            <p className="eyebrow">Completed by FORMA</p>
             <h2>
               Spaces that connect everyday life with the best of the Bay Area.
             </h2>
             <p>
-              Natural materials, effortless circulation and a strong
-              relationship between indoors and out create homes that feel calm,
-              useful and enduring.
+              A full-house remodel in San Jose: a new kitchen with a large
+              island, two remodeled bathrooms and updated living areas. Every
+              photo here is from the finished home.
             </p>
-            <a className="text-link" href="#consultation">
-              Explore a project with us
-            </a>
+            <Link className="text-link" href="/projects">
+              See the full project and client video
+            </Link>
           </div>
 
           <div className="project-gallery">
-            <figure className="project-main">
-              <CoverImage
-                src="/images/hero-indoor-outdoor.webp"
-                alt="Design inspiration: indoor-outdoor kitchen opening to a courtyard"
-                sizes="(max-width: 620px) 100vw, (max-width: 900px) 90vw, 45vw"
-              />
-              <figcaption>
-                <span>Indoor + outdoor living</span>
-                <small>Kitchen · Landscape · Entertaining</small>
-              </figcaption>
-            </figure>
-            <figure>
-              <CoverImage
-                src="/images/kitchen-remodel.webp"
-                alt="Kitchen remodeling design inspiration: white oak cabinetry and stone countertops"
-                sizes="(max-width: 620px) 100vw, (max-width: 900px) 45vw, 25vw"
-              />
-              <figcaption>
-                <span>Warm modern kitchen</span>
-                <small>Cabinetry · Stone · Lighting</small>
-              </figcaption>
-            </figure>
-            <figure>
-              <CoverImage
-                src="/images/bathroom-remodel.webp"
-                alt="Bathroom remodeling design inspiration: white oak vanity and green tile"
-                sizes="(max-width: 620px) 100vw, (max-width: 900px) 45vw, 25vw"
-              />
-              <figcaption>
-                <span>Restorative bathroom</span>
-                <small>Tile · Millwork · Fixtures</small>
-              </figcaption>
-            </figure>
+            {homeProjectPhotos.map((photo, index) => (
+              <figure className={index === 0 ? "project-main" : undefined} key={photo.src}>
+                <CoverImage
+                  src={photo.src}
+                  alt={photo.alt}
+                  sizes={index === 0 ? "(max-width: 620px) 100vw, (max-width: 900px) 90vw, 45vw" : "(max-width: 620px) 100vw, (max-width: 900px) 45vw, 25vw"}
+                />
+                <figcaption>
+                  <span>{photo.label}</span>
+                  <small>San Jose, CA · Completed project</small>
+                </figcaption>
+              </figure>
+            ))}
           </div>
-          <p className="imagery-note">
-            Design inspiration shown in this section illustrates possibilities,
-            not completed FORMA projects.
-          </p>
         </section>
 
         {/* Real FORMA projects and client testimonials (data in app/proof.ts). */}
-        <ProjectGallerySection heading="Recent FORMA projects in the South Bay" moreLink />
         <ReviewsSection heading="What San Jose homeowners say about working with us" withVideo moreLink />
 
         <section
