@@ -27,8 +27,8 @@ export type Review = {
 
 // Source: client video testimonial for the full-house remodel in San Jose (April 2025).
 // TODO(owner): confirm the clients agreed to have their first names and words on the website.
-// TODO(owner): add Google reviews here with their real star ratings, then set
-// business.aggregateRating in app/business.ts to the real rating and count.
+// Google reviews do not belong in this file. They are rendered live by Google's widget in
+// app/google-reviews.tsx, never copied, picked or marked up as Review schema here.
 const testimonialAuthor = "Ashwani & Chitvan";
 const testimonialSource = "Video testimonial";
 

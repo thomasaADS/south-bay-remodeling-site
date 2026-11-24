@@ -30,8 +30,12 @@ export const business = {
   // [{ days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], opens: "08:00", closes: "17:00" }]
   // While this is empty, openingHoursSpecification is left out of the schema.
   hours: [] as { days: string[]; opens: string; closes: string }[],
-  // TODO(owner): provide the real rating and review count ONLY once real reviews are shown on
-  // the site (see app/reviews.ts). While this is null no AggregateRating is published.
+  // Official Google Place ID of the verified listing "FORMA Design+Build", 360 S Market St
+  // Unit 1707. Matched by the Maps feature ID 0x60f81f6d5280bd25:0x98da3bb12c71762b, the pin
+  // and the address. Not matched by phone: Maps still shows the old number.
+  googlePlaceId: "ChIJJb2AUm0f-GARK3ZxLLE72pg",
+  // Keep null. Google reviews are shown live by Google's own widget (app/google-reviews.tsx),
+  // so the site stores no rating or count and publishes no AggregateRating for FORMA.
   aggregateRating: null as { ratingValue: number; reviewCount: number } | null,
 } as const;
 

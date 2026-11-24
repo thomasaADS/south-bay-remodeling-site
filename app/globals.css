@@ -3489,3 +3489,15 @@ h2 {
 .proof-more a { border-bottom: 1px solid var(--gold); color: var(--forest); font-weight: 700; padding-bottom: 5px; }
 
 .service-ribbon a:hover { text-decoration: underline; text-underline-offset: 4px; }
+
+/* Live Google reviews (app/google-reviews.tsx). The widget itself is styled by Google. */
+.google-reviews > .google-reviews-note { color: var(--muted); line-height: 1.8; margin: 14px 0 0; max-width: 760px; }
+/* Reserved height while Google's element loads, so the form below does not jump. */
+.google-reviews-widget { color-scheme: light; margin-top: 30px; max-width: 760px; min-height: 600px; position: relative; }
+.google-reviews-widget[data-status="ready"] { min-height: 0; }
+.google-reviews-mount, .google-reviews-mount gmp-place-details { display: block; width: 100%; }
+.google-reviews-skeleton { display: grid; gap: 16px; inset: 0; position: absolute; }
+.google-reviews-skeleton span { background: var(--soft); display: block; height: 130px; }
+.google-reviews-skeleton span:first-child { height: 44px; width: 55%; }
+.google-reviews-status { border: 0; clip: rect(0 0 0 0); height: 1px; margin: -1px; overflow: hidden; padding: 0; position: absolute; white-space: nowrap; width: 1px; }
+.google-reviews .proof-more a:focus-visible { outline: 2px solid var(--forest); outline-offset: 4px; }
