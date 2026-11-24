@@ -3479,3 +3479,11 @@ h2 {
 }
 
 .service-planning p + p { margin-top: 14px; }
+
+/* Client video testimonial and links to the projects page. */
+.proof-video { margin: 30px 0 0; max-width: 960px; }
+.proof-video video { aspect-ratio: 16 / 9; background: var(--dark-green); display: block; height: auto; width: 100%; }
+.proof-video figcaption { color: var(--muted); font-size: 0.875rem; padding-top: 8px; }
+.proof-video + .proof-grid { margin-top: 44px; }
+.proof-more { margin-top: 30px; }
+.proof-more a { border-bottom: 1px solid var(--gold); color: var(--forest); font-weight: 700; padding-bottom: 5px; }

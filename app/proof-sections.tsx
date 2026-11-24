@@ -1,13 +1,44 @@
 import Image from "next/image";
-import { projects, reviews, type Review } from "./proof";
+import Link from "next/link";
+import { siteUrl } from "./business";
+import { projects, reviews, type Project, type ProjectVideo, type Review } from "./proof";
+
+/** Which items a page shows: one service's, the homepage highlights, or everything. */
+type Scope = { service?: string; all?: boolean };
+
+function photosFor(project: Project, { service, all }: Scope) {
+  if (all) return project.photos;
+  return project.photos.filter((photo) => (service ? photo.service === service : photo.featured));
+}
+
+function reviewsFor({ service, all }: Scope): Review[] {
+  if (all) return reviews;
+  return reviews.filter((review) => (service ? review.services?.includes(service) : review.featured));
+}
 
 /**
- * Real project gallery. On a service page it shows only that service's photos; on the homepage
- * it shows the featured photos. Renders nothing when there is nothing to show.
+ * Client video testimonial. The file is not requested until the visitor presses play
+ * (preload="none"), so it does not slow the page down. Captions are part of the video.
  */
-export function ProjectGallerySection({ service, heading }: { service?: string; heading: string }) {
+export function TestimonialVideo({ video }: { video: ProjectVideo }) {
+  return (
+    <figure className="proof-video">
+      <video controls playsInline preload="none" poster={video.poster} width={video.width} height={video.height} aria-label={video.title}>
+        <source src={video.src} type="video/mp4" />
+        <a href={video.src}>Watch the video: {video.title}</a>
+      </video>
+      <figcaption>{video.title} · 2 min</figcaption>
+    </figure>
+  );
+}
+
+/**
+ * Real project gallery. A service page shows that service's photos, the homepage shows the
+ * featured photos, and the projects page shows everything. Renders nothing when empty.
+ */
+export function ProjectGallerySection({ service, all, heading, moreLink = false }: Scope & { heading: string; moreLink?: boolean }) {
   const items = projects
-    .map((project) => ({ project, photos: project.photos.filter((photo) => (service ? photo.service === service : photo.featured)) }))
+    .map((project) => ({ project, photos: photosFor(project, { service, all }) }))
     .filter((item) => item.photos.length > 0);
   if (!items.length) return null;
   return (
@@ -28,22 +59,21 @@ export function ProjectGallerySection({ service, heading }: { service?: string; 
           </div>
         </article>
       ))}
+      {moreLink && <p className="proof-more"><Link href="/projects">See the full project and client video</Link></p>}
     </section>
   );
 }
 
-function reviewsFor(service?: string): Review[] {
-  return reviews.filter((review) => (service ? review.services?.includes(service) : review.featured));
-}
-
-/** Real customer reviews. Renders nothing when there is nothing to show on this page. */
-export function ReviewsSection({ service, heading }: { service?: string; heading: string }) {
-  const items = reviewsFor(service);
+/** Real client testimonials, with the video where one exists. Renders nothing when empty. */
+export function ReviewsSection({ service, all, heading, withVideo = false, moreLink = false }: Scope & { heading: string; withVideo?: boolean; moreLink?: boolean }) {
+  const items = reviewsFor({ service, all });
   if (!items.length) return null;
+  const video = withVideo ? projects.find((project) => project.video)?.video : undefined;
   return (
     <section className="proof-section" id="reviews" aria-labelledby="reviews-title">
       <p className="eyebrow">In our clients&apos; words</p>
       <h2 id="reviews-title">{heading}</h2>
+      {video && <TestimonialVideo video={video} />}
       <div className="proof-grid">
         {items.map((review) => (
           <figure key={review.text}>
@@ -53,8 +83,25 @@ export function ReviewsSection({ service, heading }: { service?: string; heading
           </figure>
         ))}
       </div>
+      {moreLink && <p className="proof-more"><Link href="/projects">See our work and client reviews</Link></p>}
     </section>
   );
+}
+
+/** VideoObject schema for pages where the testimonial video is visible. */
+export function videoSchema(pageUrl: string) {
+  return projects
+    .filter((project) => project.video)
+    .map((project) => ({
+      "@type": "VideoObject",
+      "@id": `${pageUrl}#testimonial-video`,
+      name: project.video!.title,
+      description: project.video!.description,
+      thumbnailUrl: `${siteUrl}${project.video!.poster}`,
+      contentUrl: `${siteUrl}${project.video!.src}`,
+      uploadDate: project.video!.uploadDate,
+      duration: project.video!.duration,
+    }));
 }
 
 /**
@@ -62,7 +109,7 @@ export function ReviewsSection({ service, heading }: { service?: string; heading
  * star rating are shown on the page but never marked up as rated reviews.
  */
 export function reviewSchema(service?: string) {
-  return reviewsFor(service)
+  return reviewsFor({ service })
     .filter((review) => typeof review.rating === "number")
     .map((review) => ({
       "@type": "Review",

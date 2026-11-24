@@ -31,7 +31,7 @@ class Page(HTMLParser):
 
 sitemap = ET.fromstring(urlopen(base + '/sitemap.xml', timeout=30).read())
 paths = [urlparse(node.text).path or '/' for node in sitemap.iter('{http://www.sitemaps.org/schemas/sitemap/0.9}loc')]
-assert len(paths) == 23, (len(paths), paths)
+assert len(paths) == 24, (len(paths), paths)
 assert not any(path in NOINDEX for path in paths), 'noindex pages must not be in the sitemap'
 pages = {}
 for path in paths + NOINDEX:
@@ -46,6 +46,9 @@ for path, page in pages.items():
         if parsed.netloc not in (urlparse(base).netloc, 'formadpb.com'):
             continue
         target = parsed.path or '/'
+        if target.startswith(('/videos/', '/images/')):
+            assert urlopen(base + target, timeout=60).status == 200, (path, href, 'Missing media file')
+            continue
         assert target in pages, (path, href, 'Broken internal link')
         if parsed.fragment:
             assert parsed.fragment in pages[target].ids, (path, href, 'Missing anchor')

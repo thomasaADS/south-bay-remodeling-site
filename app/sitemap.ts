@@ -14,6 +14,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly" as const,
       priority: 0.9,
     })),
+    { url: `${origin}/projects`, changeFrequency: "monthly", priority: 0.8 },
     { url: `${origin}/service-areas`, changeFrequency: "monthly", priority: 0.8 },
     ...cities.map((city) => ({
       url: `${origin}/service-areas/${city.slug}`,

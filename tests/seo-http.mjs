@@ -12,7 +12,7 @@ const services = ['kitchen-remodeling', 'bathroom-remodeling', 'home-additions',
 const cities = ['san-jose', 'fremont', 'santa-clara', 'palo-alto', 'milpitas', 'sunnyvale', 'saratoga', 'los-gatos'];
 const guides = ['bathroom-remodel-cost-san-jose', 'kitchen-remodel-cost-san-jose', 'home-addition-cost-permits-san-jose', 'adu-rules-san-jose', 'how-long-does-a-remodel-take-bay-area'];
 const noindexPaths = ['/privacy-policy', '/terms-of-use'];
-const indexable = ['/', '/services', ...services.map((slug) => `/services/${slug}`), '/service-areas', ...cities.map((slug) => `/service-areas/${slug}`), '/remodeling-planning-guide', '/guides', ...guides.map((slug) => `/guides/${slug}`)];
+const indexable = ['/', '/projects', '/services', ...services.map((slug) => `/services/${slug}`), '/service-areas', ...cities.map((slug) => `/service-areas/${slug}`), '/remodeling-planning-guide', '/guides', ...guides.map((slug) => `/guides/${slug}`)];
 const paths = [...indexable, ...noindexPaths];
 
 const decode = (value) => value.replace(/&amp;/g, '&').replace(/&#x27;/g, "'").replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>');
@@ -66,6 +66,7 @@ for (const path of paths) {
 
   // Brand name, phone and accessibility basics.
   assert.doesNotMatch(html, /Design Plus Build/i, `brand name: ${path}`);
+  assert.doesNotMatch(html, /Blossom Hill/i, `client street address is never published: ${path}`);
   assert.equal((html.match(/class="skip-link"/g) || []).length, 1, `one skip link: ${path}`);
   assert.ok(html.includes('id="main-content"'), `skip link target: ${path}`);
   const contactLinks = [...html.matchAll(/href="(tel|sms):([^"]+)"/g)];
@@ -154,11 +155,20 @@ for (const path of paths) {
   if (path === '/service-areas') assert.doesNotMatch(main.slice(main.indexOf('class="area-list"'), main.indexOf('class="area-services"')), /#consultation/, 'city cards link to city pages');
   if (path === '/') {
     assert.ok(main.includes('id="projects-gallery"') && main.includes('id="reviews"'), 'home shows real projects and testimonials');
+    assert.ok(main.includes('href="/projects"'), 'home links to the projects page');
     assert.doesNotMatch(html, /Blossom Hill/i, 'client street address is never published');
     assert.equal(title, 'Home Remodeling Contractor in San Jose | FORMA');
     assert.ok(description.length <= 150, `home description ${description.length}`);
     for (const slug of services) assert.ok(main.slice(main.indexOf('id="services"')).includes(`href="/services/${slug}"`), `home services section links ${slug}`);
   }
+  if (path === '/' || path === '/projects') {
+    // The testimonial video is visible, lazy (no preload) and described in schema.
+    assert.match(main, /<video[^>]*preload="none"[^>]*poster="[^"]+\.webp"/, `lazy video with poster: ${path}`);
+    const [video] = ofType('VideoObject');
+    assert.ok(video && video.contentUrl.endsWith('.mp4') && video.thumbnailUrl && video.uploadDate && video.duration, `VideoObject: ${path}`);
+    assert.equal((await fetch(base + new URL(video.contentUrl).pathname, { method: 'HEAD' })).status, 200, 'video file is served');
+  }
+  if (path === '/projects') assert.ok((main.match(/<blockquote/g) || []).length >= 6, 'projects page shows all testimonials');
   if (path === '/services') for (const slug of services) assert.ok(main.includes(`href="/services/${slug}"`), `/services links ${slug}`);
   if (path === '/remodeling-planning-guide') {
     assert.ok(wordCount >= 1500, `planning guide words ${wordCount}`);
