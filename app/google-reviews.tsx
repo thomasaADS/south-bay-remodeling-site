@@ -167,7 +167,8 @@ export function GoogleReviews() {
               <span />
             </div>
           )}
-          <div ref={mountRef} className="google-reviews-mount" />
+          {/* Scrollable box: focusable so keyboard users can scroll the reviews. */}
+          <div ref={mountRef} className="google-reviews-mount" tabIndex={0} role="group" aria-label="Google reviews of FORMA Design + Build" />
         </div>
       )}
 

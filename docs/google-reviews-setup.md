@@ -39,8 +39,8 @@ Production is enabled only after the owner confirms billing and the daily cap.
 
 ## QA on the Vercel preview
 
-- [ ] Desktop and mobile: no horizontal scroll; tune `.google-reviews-widget { min-height }` in
-      `app/globals.css` to the real rendered height
+- [ ] Desktop and mobile: no horizontal scroll; the reviews scroll inside a fixed-height box
+      (`.google-reviews-widget { height }` in `app/globals.css`)
 - [ ] Rating and review count equal the Maps listing
 - [ ] Google attribution and reviewer names are visible
 - [ ] Keyboard: tab through the widget and the link with a visible focus

@@ -3492,10 +3492,14 @@ h2 {
 
 /* Live Google reviews (app/google-reviews.tsx). The widget itself is styled by Google. */
 .google-reviews > .google-reviews-note { color: var(--muted); line-height: 1.8; margin: 14px 0 0; max-width: 760px; }
-/* Reserved height while Google's element loads, so the form below does not jump. */
-.google-reviews-widget { color-scheme: light; margin-top: 30px; max-width: 760px; min-height: 600px; position: relative; }
-.google-reviews-widget[data-status="ready"] { min-height: 0; }
-.google-reviews-mount, .google-reviews-mount gmp-place-details { display: block; width: 100%; }
+/* Fixed-height box: the reviews scroll inside it, so the section stays compact and the form
+   below does not jump while Google's element loads. */
+.google-reviews-widget { color-scheme: light; height: 460px; margin-top: 30px; max-width: 760px; position: relative; }
+.google-reviews-mount { border: 1px solid var(--line); border-radius: 12px; height: 100%; overflow-y: auto; overscroll-behavior: contain; }
+.google-reviews-widget[data-status="idle"] .google-reviews-mount, .google-reviews-widget[data-status="loading"] .google-reviews-mount { border-color: transparent; }
+.google-reviews-mount:focus-visible { outline: 2px solid var(--forest); outline-offset: 3px; }
+.google-reviews-mount gmp-place-details { display: block; width: 100%; }
+@media (max-width: 700px) { .google-reviews-widget { height: 420px; } }
 .google-reviews-skeleton { display: grid; gap: 16px; inset: 0; position: absolute; }
 .google-reviews-skeleton span { background: var(--soft); display: block; height: 130px; }
 .google-reviews-skeleton span:first-child { height: 44px; width: 55%; }
