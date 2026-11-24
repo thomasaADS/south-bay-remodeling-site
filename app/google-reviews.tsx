@@ -185,3 +185,69 @@ export function GoogleReviews() {
     </section>
   );
 }
+
+/**
+ * Small floating Google rating shown on the homepage (desktop and tablet). The rating comes live
+ * from Google's compact Places UI Kit element; nothing is stored. It loads once the page is idle,
+ * never blocks rendering, takes no layout space, and renders nothing at all if Google is unavailable.
+ */
+export function GoogleRatingBadge() {
+  const mountRef = useRef<HTMLDivElement>(null);
+  const [state, setState] = useState<"waiting" | "ready" | "hidden">(apiKey ? "waiting" : "hidden");
+  const [nearReviews, setNearReviews] = useState(false);
+
+  useEffect(() => {
+    const mount = mountRef.current;
+    if (state !== "waiting" || !apiKey || !mount) return;
+    // Small screens keep the space for the call and text bar.
+    if (!window.matchMedia("(min-width: 701px)").matches) return;
+
+    let cancelled = false;
+    const start = () => {
+      loadPlacesLibrary(apiKey)
+        .then(() => {
+          if (cancelled) return;
+          const compact = document.createElement("gmp-place-details-compact");
+          compact.setAttribute("orientation", "horizontal");
+          compact.style.colorScheme = "light";
+          const request = document.createElement("gmp-place-details-place-request");
+          request.setAttribute("place", business.googlePlaceId);
+          const attribution = document.createElement("gmp-place-attribution");
+          attribution.setAttribute("light-scheme-color", "gray");
+          attribution.setAttribute("dark-scheme-color", "white");
+          compact.append(request, document.createElement("gmp-place-rating"), attribution);
+          compact.addEventListener("gmp-load", () => !cancelled && setState("ready"));
+          compact.addEventListener("gmp-error", () => !cancelled && setState("hidden"));
+          mount.replaceChildren(compact);
+        })
+        .catch(() => !cancelled && setState("hidden"));
+    };
+    const timer = window.setTimeout(start, 2500);
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timer);
+    };
+  }, [state]);
+
+  // Step aside while the full reviews section is on screen.
+  useEffect(() => {
+    const section = document.getElementById("google-reviews");
+    if (!section) return;
+    const observer = new IntersectionObserver((entries) => setNearReviews(entries.some((entry) => entry.isIntersecting)));
+    observer.observe(section);
+    return () => observer.disconnect();
+  }, []);
+
+  if (state === "hidden") return null;
+  return (
+    <aside className="google-rating-badge" data-visible={state === "ready" && !nearReviews} aria-label="FORMA Design + Build rating on Google">
+      <div ref={mountRef} />
+      <div className="google-rating-badge-actions">
+        <a href="#google-reviews">Read the reviews</a>
+        <button type="button" onClick={() => setState("hidden")} aria-label="Hide Google rating">
+          ×
+        </button>
+      </div>
+    </aside>
+  );
+}
