@@ -21,8 +21,13 @@ test("service metadata, content and entity URLs stay aligned", () => {
     const page = webPageSchema(service.seoTitle, service.metaDescription, path);
     assert.equal(page["@id"], `https://formadpb.com${path}#webpage`);
     assert.equal(page.publisher["@id"], "https://formadpb.com/#business");
-    const meta = pageMetadata(service.seoTitle, service.metaDescription, path, service.image);
+    const meta = pageMetadata(service.seoTitle, service.metaDescription, path);
     assert.equal(meta.alternates?.canonical, path);
   }
   for (const slug of Object.keys(servicePlanning)) assert.ok(services.some((service) => service.slug === slug));
+});
+test("legal pages can be marked noindex,follow while keeping a self-referencing canonical", () => {
+  const meta = pageMetadata("Privacy Policy | FORMA Design + Build", "Example", "/privacy-policy", { noindex: true });
+  assert.deepEqual(meta.robots, { index: false, follow: true, googleBot: { index: false, follow: true } });
+  assert.equal(meta.alternates?.canonical, "/privacy-policy");
 });

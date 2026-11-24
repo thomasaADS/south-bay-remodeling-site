@@ -3,7 +3,7 @@ import { pageMetadata } from "../seo";
 import { Navigation } from "../site-interactions";
 import { SeoFooter } from "../seo-footer";
 
-export const metadata = pageMetadata("Privacy Policy | FORMA Design + Build", "Learn how FORMA Design + Build collects, uses and protects information submitted through formadpb.com.", "/privacy-policy");
+export const metadata = pageMetadata("Privacy Policy | FORMA Design + Build", "Learn how FORMA Design + Build collects, uses and protects information submitted through formadpb.com.", "/privacy-policy", { noindex: true });
 
 export default function PrivacyPolicyPage() {
   return (

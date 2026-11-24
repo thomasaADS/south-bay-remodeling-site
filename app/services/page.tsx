@@ -1,17 +1,17 @@
 import Link from "next/link";
 import { pageMetadata, serializeJsonLd, webPageSchema, breadcrumbSchema } from "../seo";
-import Image from "next/image";
+import { CoverImage } from "../cover-image";
 import { Navigation } from "../site-interactions";
 import { SeoFooter } from "../seo-footer";
 import { services } from "../site-data";
 
-export const metadata = pageMetadata("San Jose Remodeling Services | FORMA Design + Build", "Explore kitchen and bathroom remodeling, landscaping and painting in San Jose. Compare project scopes and plan your South Bay home with FORMA.", "/services");
+export const metadata = pageMetadata("San Jose Remodeling Services | FORMA Design + Build", "Kitchen and bathroom remodeling, home additions, landscaping and painting in San Jose from a licensed design-build contractor. Free consultation.", "/services");
 
 export default function ServicesPage() {
   const structuredData = {
     "@context": "https://schema.org",
     "@graph": [
-      { ...webPageSchema("San Jose Remodeling Services | FORMA Design + Build", "Kitchen and bathroom remodeling, landscaping and painting in San Jose and the South Bay.", "/services", "CollectionPage"), mainEntity: { "@id": "https://formadpb.com/services#service-list" } },
+      { ...webPageSchema("San Jose Remodeling Services | FORMA Design + Build", "Kitchen and bathroom remodeling, home additions, landscaping and painting in San Jose and the South Bay.", "/services", "CollectionPage"), mainEntity: { "@id": "https://formadpb.com/services#service-list" } },
       breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Services", path: "/services" }]),
       {
         "@type": "ItemList",
@@ -38,10 +38,10 @@ export default function ServicesPage() {
             <p className="eyebrow">South Bay remodeling services</p>
             <h1>Home remodeling services in San Jose</h1>
             <p>Explore the planning and construction considerations behind each FORMA service. Every project begins with the property, the people who live there and a clear understanding of the scope.</p>
-            <Link className="button button-primary" href="/#consultation">Start your project</Link>
+            <Link className="button button-primary" href="/#consultation">Book a free consultation</Link>
           </div>
           <figure>
-            <Image src="/images/hero-indoor-outdoor.png" alt="Indoor-outdoor remodeling design inspiration" fill sizes="(max-width: 900px) 100vw, 45vw" priority />
+            <CoverImage src="/images/hero-indoor-outdoor.webp" alt="Design inspiration: a kitchen opening to a California courtyard through wide glass doors" sizes="(max-width: 900px) 100vw, 45vw" priority />
             <figcaption>Design inspiration · South Bay living</figcaption>
           </figure>
         </section>
@@ -60,9 +60,9 @@ export default function ServicesPage() {
             {services.map((service) => (
               <article key={service.slug}>
                 <span>{service.number}</span>
-                <h2>{service.title}</h2>
+                <h3>{service.title}</h3>
                 <p>{service.text}</p>
-                <Link href={`/services/${service.slug}`}>Explore {service.shortTitle.toLowerCase()}</Link>
+                <Link href={`/services/${service.slug}`}>{service.title} in San Jose</Link>
               </article>
             ))}
           </div>

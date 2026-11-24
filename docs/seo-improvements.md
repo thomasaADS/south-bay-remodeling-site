@@ -58,3 +58,28 @@ External authority requires genuine business evidence: authorized profile update
 Local Chromium launch is blocked by runtime socket restrictions. The included optional `tests/seo-ui.mjs` has not passed locally; do not report a browser or visual QA pass without a separate completed check. Rich Results Test and Search Console recrawling are separate from JSON syntax/entity regression tests. Schema cannot guarantee a rich result, ranking or AI citation.
 
 The 323/408 phone discrepancy was resolved in the November 19 update: the confirmed public phone is (323) 975-5574. Obtain current Search Console and analytics data before reporting traffic gains, search positions or conversion changes. Genuine project examples, permitted client testimonials and authorized business-profile updates remain external follow-up work.
+
+
+## November 24, 2026: technical SEO, service, city and guide pages
+
+### Implemented
+
+- www to non-www redirect now returns 301 (was 308). `/services/roofing` 301s to `/services`.
+- Self-referencing canonical on every page; `/privacy-policy` and `/terms-of-use` are `noindex, follow` and removed from the sitemap.
+- Sitewide `GeneralContractor` + `WebSite` JSON-LD in `<head>` from `app/business.ts` (single source for name, address, phone, license).
+- Service pages rebuilt with 1,200+ words each; `/services/home-additions` added.
+- `/service-areas/[city]` for all eight cities; `/guides` with five articles; planning guide expanded.
+- Custom 404 with service links. Images converted to WebP with explicit dimensions.
+
+### Owner TODOs (search the code for `TODO(owner)`)
+
+- `app/business.ts`: local phone number, Google Business Profile URL, business hours, map pin, rating and review count.
+- `app/proof.ts`: real reviews and real projects (photos, city, scope). Sections stay hidden while empty.
+- `app/service-content.ts` and `app/guide-content.ts`: price ranges; review timeline ranges.
+- `app/city-content.ts`: confirm permit office details; replace "projects that suit" with real demand by city.
+- `next.config.ts`: confirm roofing is not offered.
+
+### Validation
+
+- `node --import ./node_modules/tsx/dist/loader.mjs --test tests/*.test.ts`
+- `npm run build && npx next start -p 3100`, then `node tests/seo-http.mjs http://127.0.0.1:3100 --report` and `python3 tests/seo-crawl.py http://127.0.0.1:3100`

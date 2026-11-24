@@ -3,7 +3,7 @@ import { pageMetadata } from "../seo";
 import { Navigation } from "../site-interactions";
 import { SeoFooter } from "../seo-footer";
 
-export const metadata = pageMetadata("Terms of Use | FORMA Design + Build", "Terms governing use of the FORMA Design + Build website and project consultation form.", "/terms-of-use");
+export const metadata = pageMetadata("Terms of Use | FORMA Design + Build", "Terms governing use of the FORMA Design + Build website and project consultation form.", "/terms-of-use", { noindex: true });
 
 export default function TermsOfUsePage() {
   return (

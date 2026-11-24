@@ -2,6 +2,7 @@ export const projectTypes = [
   "Kitchen remodeling",
   "Bathroom remodeling",
   "Whole-home remodeling",
+  "Home addition or ADU",
   "Landscaping",
   "Painting",
 ] as const;

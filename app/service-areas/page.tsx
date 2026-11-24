@@ -1,21 +1,37 @@
 import Link from "next/link";
+import { business } from "../business";
+import { CoverImage } from "../cover-image";
 import { pageMetadata, serializeJsonLd, webPageSchema, breadcrumbSchema } from "../seo";
-import Image from "next/image";
 import { Navigation } from "../site-interactions";
 import { SeoFooter } from "../seo-footer";
 import { cities, services } from "../site-data";
 
-export const metadata = pageMetadata("South Bay Remodeling Service Areas | FORMA Design + Build", "Find FORMA remodeling services in San Jose, Santa Clara, Sunnyvale and the South Bay. Explore service areas and discuss your home project.", "/service-areas");
+const title = "South Bay Remodeling Service Areas | FORMA Design + Build";
+const description = "FORMA serves San Jose, Fremont, Santa Clara, Palo Alto, Milpitas, Sunnyvale, Saratoga and Los Gatos. See local permit notes for each city.";
+
+export const metadata = pageMetadata(title, description, "/service-areas");
 
 export default function ServiceAreasPage() {
   const structuredData = {
     "@context": "https://schema.org",
     "@graph": [
       {
-        ...webPageSchema("South Bay Remodeling Service Areas | FORMA Design + Build", "FORMA serves homeowners in San Jose, Fremont, Santa Clara, Palo Alto, Milpitas, Sunnyvale, Saratoga and Los Gatos.", "/service-areas", "CollectionPage"),
-        about: cities.map((city) => ({ "@type": "City", name: `${city.name}, California` })),
+        ...webPageSchema(title, description, "/service-areas", "CollectionPage"),
+        about: cities.map((city) => ({ "@type": "City", name: city.name, containedInPlace: { "@type": "State", name: "California" } })),
+        mainEntity: { "@id": "https://formadpb.com/service-areas#city-list" },
       },
       breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Service Areas", path: "/service-areas" }]),
+      {
+        "@type": "ItemList",
+        "@id": "https://formadpb.com/service-areas#city-list",
+        name: "Cities served by FORMA Design + Build",
+        itemListElement: cities.map((city, index) => ({
+          "@type": "ListItem",
+          position: index + 1,
+          name: city.name,
+          url: `https://formadpb.com/service-areas/${city.slug}`,
+        })),
+      },
     ],
   };
 
@@ -30,10 +46,10 @@ export default function ServiceAreasPage() {
             <p className="eyebrow">Local by design</p>
             <h1>Remodeling and construction across the South Bay.</h1>
             <p>FORMA Design + Build is based in San Jose and works with homeowners throughout the South Bay. Project planning is shaped around the property, scope and requirements of the city where the work will take place.</p>
-            <Link className="button button-primary" href="/#consultation">Plan a South Bay project</Link>
+            <Link className="button button-primary" href="/#consultation">Book a free consultation</Link>
           </div>
           <figure>
-            <Image src="/images/hero-indoor-outdoor.png" alt="California indoor-outdoor living design inspiration" fill sizes="(max-width: 900px) 100vw, 45vw" priority />
+            <CoverImage src="/images/hero-indoor-outdoor.webp" alt="Design inspiration: a kitchen opening to a California courtyard through wide glass doors" sizes="(max-width: 900px) 100vw, 45vw" priority />
             <figcaption>Based in San Jose · Serving the South Bay</figcaption>
           </figure>
         </section>
@@ -42,14 +58,14 @@ export default function ServiceAreasPage() {
           <div className="content-heading">
             <p className="eyebrow">Core service area</p>
             <h2>Where FORMA works.</h2>
-            <p>Service availability depends on project type, property conditions and schedule. Share the address and scope so the first conversation can begin with the right context.</p>
+            <p>Each city has its own housing stock, building department and review process. Choose a city for local permit notes and the projects that suit its homes.</p>
           </div>
           <div className="area-list">
             {cities.map((city, index) => (
               <article key={city.slug} id={city.slug}>
                 <span>{String(index + 1).padStart(2, "0")}</span>
-                <div><h2>{city.name}</h2><p>{city.description}</p></div>
-                <Link href={`/#consultation`} aria-label={`Discuss a project in ${city.name}`}>Discuss your project</Link>
+                <div><h3>{city.name}</h3><p>{city.description}</p></div>
+                <Link href={`/service-areas/${city.slug}`}>Remodeling in {city.name}</Link>
               </article>
             ))}
           </div>
@@ -67,8 +83,8 @@ export default function ServiceAreasPage() {
         <section className="local-contact">
           <p className="eyebrow">San Jose office</p>
           <h2>Start with the property and the work you are considering.</h2>
-          <address>360 S Market St, Unit 1707<br />San Jose, CA 95113</address>
-          <div><a href="tel:+13239755574">(323) 975-5574</a><a href="mailto:Office@formadpb.com">Office@formadpb.com</a></div>
+          <address>{business.street}<br />{business.city}, {business.region} {business.postalCode}</address>
+          <div><a href={`tel:${business.phoneE164}`}>{business.phoneDisplay}</a><a href={`mailto:${business.email}`}>{business.email}</a></div>
         </section>
       </main>
       <SeoFooter />

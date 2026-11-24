@@ -1,14 +1,19 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
+import { business, businessId, businessRatingNode } from "./business";
+import { CoverImage } from "./cover-image";
 import { Navigation, ProjectJourney } from "./site-interactions";
 import { ConsultationForm } from "./consultation-form";
+import { ProjectGallerySection, ReviewsSection, reviewSchema } from "./proof-sections";
+import { SeoFooter } from "./seo-footer";
 import { cities, faqs, services } from "./site-data";
-import { siteUrl, serializeJsonLd, webPageSchema } from "./seo";
+import { defaultShareImage, siteUrl, serializeJsonLd, webPageSchema } from "./seo";
 
 const title = "Home Remodeling Contractor in San Jose | FORMA";
+// Keep at 150 characters or fewer.
 const description =
-  "Looking for a home remodeling contractor in San Jose? Explore kitchen, bathroom and whole-home remodeling, then discuss the scope of your South Bay project.";
+  "Licensed home remodeling contractor in San Jose (CSLB #1162108). Kitchens, bathrooms, home additions and more. Book a free consultation.";
 
 export const metadata: Metadata = {
   title: {
@@ -28,9 +33,9 @@ export const metadata: Metadata = {
     locale: "en_US",
     images: [
       {
-        url: "/images/hero-indoor-outdoor.png",
-        width: 1536,
-        height: 1024,
+        url: defaultShareImage,
+        width: 1200,
+        height: 630,
         alt: "FORMA Design + Build remodeling inspiration",
       },
     ],
@@ -39,7 +44,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title,
     description,
-    images: ["/images/hero-indoor-outdoor.png"],
+    images: [defaultShareImage],
   },
   robots: {
     index: true,
@@ -55,69 +60,27 @@ export const metadata: Metadata = {
 };
 
 export default function Home() {
+  // Only published when real reviews are shown on this page (see app/proof.ts).
+  const ratingNode = businessRatingNode(reviewSchema());
   const structuredData = {
     "@context": "https://schema.org",
     "@graph": [
-      webPageSchema("Home Remodeling Contractor in San Jose | FORMA", "Kitchen and bathroom remodeling, landscaping and painting for San Jose and South Bay homeowners.", "/"),
+      webPageSchema(title, description, "/"),
+      // The GeneralContractor and WebSite nodes are published sitewide from app/layout.tsx.
       {
-        "@type": "GeneralContractor",
-        "@id": "https://formadpb.com/#business",
-        name: "FORMA Design + Build",
-        url: "https://formadpb.com/",
-        logo: "https://formadpb.com/images/forma-logo-transparent.png",
-        image: "https://formadpb.com/images/hero-indoor-outdoor.png",
-        email: "Office@formadpb.com",
-        telephone: "+1-323-975-5574",
-        address: {
-          "@type": "PostalAddress",
-          streetAddress: "360 S Market St, Unit 1707",
-          addressLocality: "San Jose",
-          addressRegion: "CA",
-          postalCode: "95113",
-          addressCountry: "US",
-        },
-        areaServed: cities.map((city) => ({
-          "@type": "City",
-          name: `${city.name}, California`,
-        })),
-        sameAs: ["https://www.instagram.com/formadpb/"],
-        identifier: {
-          "@type": "PropertyValue",
-          name: "California Contractor License",
-          propertyID: "CSLB",
-          value: "1162108",
-        },
-        hasCredential: {
-          "@type": "EducationalOccupationalCredential",
-          name: "California General Building Contractor License",
-          credentialCategory: "Contractor license",
-          recognizedBy: {
-            "@type": "Organization",
-            name: "Contractors State License Board",
-            url: "https://www.cslb.ca.gov/",
+        "@type": "OfferCatalog",
+        "@id": "https://formadpb.com/#services",
+        name: "Residential remodeling and construction services",
+        itemListElement: services.map((service) => ({
+          "@type": "Offer",
+          itemOffered: {
+            "@type": "Service",
+            "@id": `https://formadpb.com/services/${service.slug}#service`,
+            name: service.title,
+            url: `https://formadpb.com/services/${service.slug}`,
+            provider: { "@id": businessId },
           },
-          identifier: "1162108",
-        },
-        hasOfferCatalog: {
-          "@type": "OfferCatalog",
-          name: "Residential remodeling and construction services",
-          itemListElement: services.map((service) => ({
-            "@type": "Offer",
-            itemOffered: {
-              "@type": "Service",
-              name: service.title,
-              areaServed: "South Bay, California",
-            },
-          })),
-        },
-      },
-      {
-        "@type": "WebSite",
-        "@id": "https://formadpb.com/#website",
-        url: "https://formadpb.com/",
-        name: "FORMA Design + Build",
-        publisher: { "@id": "https://formadpb.com/#business" },
-        inLanguage: "en-US",
+        })),
       },
       {
         "@type": "FAQPage",
@@ -131,6 +94,7 @@ export default function Home() {
           },
         })),
       },
+      ...(ratingNode ? [ratingNode] : []),
     ],
   };
 
@@ -176,17 +140,15 @@ export default function Home() {
           </div>
 
           <div className="hero-visual">
-            <Image
-              src="/images/hero-indoor-outdoor.png"
+            <CoverImage
+              src="/images/hero-indoor-outdoor.webp"
               alt="Design inspiration: a white oak kitchen opening to a California courtyard"
-              fill
               sizes="(max-width: 620px) 100vw, (max-width: 900px) 90vw, 55vw"
               priority
-              fetchPriority="high"
             />
             <div className="hero-trust-card">
               <Image
-                src="/images/forma-logo-transparent.png"
+                src="/images/forma-logo-transparent.webp"
                 alt=""
                 aria-hidden="true"
                 width={240}
@@ -202,6 +164,7 @@ export default function Home() {
           {[
             "Kitchens",
             "Bathrooms",
+            "Home additions",
             "Whole-home remodeling",
             "Landscaping",
             "Painting",
@@ -220,7 +183,7 @@ export default function Home() {
               Verified credentials for work in California.
             </h2>
             <p>
-              FORMA Design Plus Build is a current and active California
+              FORMA Design + Build is a current and active California
               general building contractor with contractor&apos;s bond, general
               liability and workers&apos; compensation coverage.
             </p>
@@ -296,11 +259,10 @@ export default function Home() {
                 key={service.title}
               >
                 {service.image && (
-                  <Image
+                  <CoverImage
                     src={service.image}
                     alt=""
-                    aria-hidden="true"
-                    fill
+                    decorative
                     sizes="(max-width: 620px) 100vw, (max-width: 900px) 90vw, 55vw"
                   />
                 )}
@@ -308,7 +270,7 @@ export default function Home() {
                   <span>{service.number}</span>
                   <h3>{service.title}</h3>
                   <p>{service.text}</p>
-                  <Link href={`/services/${service.slug}`}>
+                  <Link href={`/services/${service.slug}`} aria-label={`${service.title} in San Jose`}>
                     Explore {service.shortTitle.toLowerCase()}
                   </Link>
                 </div>
@@ -335,10 +297,9 @@ export default function Home() {
 
           <div className="project-gallery">
             <figure className="project-main">
-              <Image
-                src="/images/hero-indoor-outdoor.png"
-                alt="Indoor-outdoor kitchen and courtyard design inspiration"
-                fill
+              <CoverImage
+                src="/images/hero-indoor-outdoor.webp"
+                alt="Design inspiration: indoor-outdoor kitchen opening to a courtyard"
                 sizes="(max-width: 620px) 100vw, (max-width: 900px) 90vw, 45vw"
               />
               <figcaption>
@@ -347,10 +308,9 @@ export default function Home() {
               </figcaption>
             </figure>
             <figure>
-              <Image
-                src="/images/kitchen-remodel.png"
-                alt="White oak and stone kitchen design inspiration"
-                fill
+              <CoverImage
+                src="/images/kitchen-remodel.webp"
+                alt="Kitchen remodeling design inspiration: white oak cabinetry and stone countertops"
                 sizes="(max-width: 620px) 100vw, (max-width: 900px) 45vw, 25vw"
               />
               <figcaption>
@@ -359,10 +319,9 @@ export default function Home() {
               </figcaption>
             </figure>
             <figure>
-              <Image
-                src="/images/bathroom-remodel.png"
-                alt="White oak and green tile bathroom design inspiration"
-                fill
+              <CoverImage
+                src="/images/bathroom-remodel.webp"
+                alt="Bathroom remodeling design inspiration: white oak vanity and green tile"
                 sizes="(max-width: 620px) 100vw, (max-width: 900px) 45vw, 25vw"
               />
               <figcaption>
@@ -376,6 +335,11 @@ export default function Home() {
             possibilities, not completed FORMA projects.
           </p>
         </section>
+
+        {/* Real FORMA projects and client reviews. Both render nothing until real data is
+            added to app/proof.ts. TODO(owner): supply projects (photos, city, scope) and reviews. */}
+        <ProjectGallerySection heading="Recent FORMA projects in the South Bay" />
+        <ReviewsSection heading="What South Bay homeowners say about FORMA" />
 
         <section
           className="process-section"
@@ -396,10 +360,9 @@ export default function Home() {
 
         <section className="difference-section">
           <div className="difference-visual">
-            <Image
-              src="/images/kitchen-remodel.png"
+            <CoverImage
+              src="/images/kitchen-remodel.webp"
               alt="Design inspiration: natural oak kitchen cabinetry"
-              fill
               sizes="(max-width: 620px) 100vw, (max-width: 900px) 90vw, 55vw"
             />
             <div className="difference-badge">
@@ -448,7 +411,7 @@ export default function Home() {
                 <span>South Bay cities</span>
               </div>
               <div>
-                <strong>4</strong>
+                <strong>{services.length}</strong>
                 <span>Core service categories</span>
               </div>
               <div>
@@ -476,7 +439,7 @@ export default function Home() {
                 <span>{String(index + 1).padStart(2, "0")}</span>
                 <h3>{city.name}</h3>
                 <p>{city.description}</p>
-                <Link href={`/service-areas#${city.slug}`}>Remodeling in {city.name}</Link>
+                <Link href={`/service-areas/${city.slug}`}>Remodeling in {city.name}</Link>
               </article>
             ))}
           </div>
@@ -520,84 +483,14 @@ export default function Home() {
               <span>Interior + exterior painting</span>
             </div>
             <div className="direct-contact" aria-label="Direct contact options">
-              <a href="tel:+13239755574">Call (323) 975-5574</a>
-              <a href="mailto:Office@formadpb.com">Office@formadpb.com</a>
+              <a href={`tel:${business.phoneE164}`}>Call {business.phoneDisplay}</a>
+              <a href={`mailto:${business.email}`}>{business.email}</a>
             </div>
           </div>
           <ConsultationForm />
         </section>
       </main>
-      <footer>
-        <div className="footer-top">
-          <Image
-            src="/images/forma-logo-transparent.png"
-            alt="FORMA Design + Build"
-            width={240}
-            height={60}
-          />
-          <p>
-            Thoughtful design. Coordinated construction. Homes made for South
-            Bay living.
-          </p>
-          <a href="#top">Back to top</a>
-        </div>
-        <div className="footer-links">
-          <div>
-            <strong>Services</strong>
-            <Link href="/services/kitchen-remodeling">Kitchen Remodeling</Link>
-            <Link href="/services/bathroom-remodeling">Bathroom Remodeling</Link>
-            <Link href="/services/landscaping">Landscaping</Link>
-            <Link href="/services/interior-exterior-painting">Painting</Link>
-            <Link href="/services">All Services</Link>
-            <Link href="/remodeling-planning-guide">Remodeling planning guide</Link>
-          </div>
-          <div>
-            <strong>Explore</strong>
-            <a href="#projects">Project Vision</a>
-            <a href="#about">About FORMA</a>
-            <Link href="/service-areas">Service Areas</Link>
-            <a href="#consultation">Start a Project</a>
-            <a
-              href="https://www.instagram.com/formadpb/"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="FORMA on Instagram (opens in a new tab)"
-            >
-              Instagram
-            </a>
-          </div>
-          <div>
-            <strong>South Bay</strong>
-            <span>San Jose · Fremont</span>
-            <span>Santa Clara · Palo Alto</span>
-            <span>Milpitas · Sunnyvale</span>
-            <span>Saratoga · Los Gatos</span>
-          </div>
-          <div>
-            <strong>Contact</strong>
-            <address>
-              <span>360 S Market St, Unit 1707</span>
-              <span>San Jose, CA 95113</span>
-            </address>
-            <a href="tel:+13239755574">(323) 975-5574</a>
-            <a href="mailto:Office@formadpb.com">Office@formadpb.com</a>
-          </div>
-        </div>
-        <div className="footer-bottom">
-          <span>© 2026 FORMA Design + Build</span>
-          <a
-            href="https://www.cslb.ca.gov/OnlineServices/CheckLicenseII/LicenseDetail.aspx?LicNum=1162108"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            CSLB License #1162108 · B General Building
-          </a>
-          <nav aria-label="Legal">
-            <Link href="/privacy-policy">Privacy Policy</Link>
-            <Link href="/terms-of-use">Terms of Use</Link>
-          </nav>
-        </div>
-      </footer>
+      <SeoFooter home />
     </>
   );
 }
