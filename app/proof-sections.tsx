@@ -64,6 +64,15 @@ export function ProjectGallerySection({ service, all, heading, moreLink = false 
   );
 }
 
+function groupByClient(items: Review[]): Review[][] {
+  const groups = new Map<string, Review[]>();
+  for (const review of items) {
+    const key = `${review.author}|${review.source}`;
+    groups.set(key, [...(groups.get(key) ?? []), review]);
+  }
+  return [...groups.values()];
+}
+
 /** Real client testimonials, with the video where one exists. Renders nothing when empty. */
 export function ReviewsSection({ service, all, heading, withVideo = false, moreLink = false }: Scope & { heading: string; withVideo?: boolean; moreLink?: boolean }) {
   const items = reviewsFor({ service, all });
@@ -74,15 +83,16 @@ export function ReviewsSection({ service, all, heading, withVideo = false, moreL
       <p className="eyebrow">In our clients&apos; words</p>
       <h2 id="reviews-title">{heading}</h2>
       {video && <TestimonialVideo video={video} />}
-      <div className="proof-grid">
-        {items.map((review) => (
-          <figure key={review.text}>
-            {review.rating && <p aria-label={`${review.rating} out of 5 stars`}>{"★".repeat(review.rating)}</p>}
-            <blockquote>&ldquo;{review.text}&rdquo;</blockquote>
-            <figcaption><strong>{review.author}</strong> · {review.city}, CA · {review.source}</figcaption>
-          </figure>
-        ))}
-      </div>
+      {/* Quotes from the same client are shown as one testimonial with a single attribution. */}
+      {groupByClient(items).map((group) => (
+        <figure className="proof-testimonial" key={`${group[0].author}-${group[0].source}`}>
+          {group[0].rating && <p aria-label={`${group[0].rating} out of 5 stars`}>{"★".repeat(group[0].rating)}</p>}
+          <div className="proof-grid">
+            {group.map((review) => <blockquote key={review.text}>&ldquo;{review.text}&rdquo;</blockquote>)}
+          </div>
+          <figcaption><strong>{group[0].author}</strong> · Homeowners in {group[0].city}, CA · {group[0].source}</figcaption>
+        </figure>
+      ))}
       {moreLink && <p className="proof-more"><Link href="/projects">See our work and client reviews</Link></p>}
     </section>
   );
